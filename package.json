@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@songara/pwa-base": "file:../PWA-Base",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "@songara/pwa-base": "file:../PWA-Base"
+    "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
