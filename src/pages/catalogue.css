@@ -5,6 +5,145 @@
   color: var(--platform-color-fg, #1a1a1a);
 }
 
+/* Persistent browse chrome (registry-driven) */
+.cat-nav {
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 0 1rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  display: grid;
+  gap: 0.65rem;
+}
+
+.cat-nav__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.85rem;
+}
+
+.cat-nav__home {
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+.cat-nav__areas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+}
+
+.cat-nav__area {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.cat-nav__area:hover,
+.cat-nav__home:hover,
+.cat-nav__ex:hover,
+.cat-nav__pager-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.cat-nav__link--current {
+  opacity: 1;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.cat-nav__explorations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cat-nav__ex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  padding: 0.25rem 0.45rem;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 0.3rem;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.cat-nav__ex.cat-nav__link--current {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  text-decoration: none;
+}
+
+.cat-nav__ex-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-nav__badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.2rem;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  white-space: nowrap;
+}
+
+.cat-nav__badge--ready {
+  background: color-mix(in srgb, #2a7a3a 22%, transparent);
+}
+
+.cat-nav__badge--experimental {
+  background: color-mix(in srgb, #8a6a12 22%, transparent);
+}
+
+.cat-nav__badge--rejected {
+  background: color-mix(in srgb, #8a3030 22%, transparent);
+}
+
+.cat-nav__badge--investigate {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  opacity: 0.9;
+}
+
+.cat-nav__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.cat-nav__pager-link {
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.cat-nav__pager-link--next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.cat-nav__pager-gap {
+  flex: 1;
+}
+
 .cat__eyebrow {
   margin: 0 0 0.35rem;
   font-size: 0.75rem;

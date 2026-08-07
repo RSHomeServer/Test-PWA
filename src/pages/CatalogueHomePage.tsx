@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { capabilityAreas } from '../catalogue/registry'
+import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
 /** Catalogue home — index of capability areas (engineering reference, not products). */
 export function CatalogueHomePage() {
   return (
     <main className="cat">
+      <CatalogueBrowseNav />
       <header className="cat__header">
         <p className="cat__eyebrow">Songara · Engineering reference</p>
         <h1 className="cat__title">Capability Catalogue</h1>

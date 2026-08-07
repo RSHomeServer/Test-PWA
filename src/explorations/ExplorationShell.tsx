@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { ExplorationRecord } from '../catalogue/types'
+import { CatalogueBrowseNav } from '../pages/CatalogueBrowseNav'
 import '../pages/catalogue.css'
 
 export interface ExplorationShellProps {
@@ -39,6 +40,8 @@ export function ExplorationShell({
 }: ExplorationShellProps) {
   return (
     <main className="cat">
+      <CatalogueBrowseNav areaId={areaId} explorationId={explorationId} />
+
       <nav className="cat__crumb">
         <Link to="/">Catalogue</Link>
         <span aria-hidden="true"> / </span>

@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { getArea } from '../catalogue/registry'
+import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
 /** Capability area summary — comparison table of explorations. */
@@ -11,6 +12,7 @@ export function CapabilitySummaryPage() {
   if (!area) {
     return (
       <main className="cat">
+        <CatalogueBrowseNav />
         <p>Unknown capability area.</p>
         <Link to="/">Back to catalogue</Link>
       </main>
@@ -19,6 +21,8 @@ export function CapabilitySummaryPage() {
 
   return (
     <main className="cat">
+      <CatalogueBrowseNav areaId={area.id} />
+
       <nav className="cat__crumb">
         <Link to="/">Catalogue</Link>
         <span aria-hidden="true"> / </span>

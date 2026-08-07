@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { getExploration } from '../catalogue/registry'
+import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
 /**
@@ -16,6 +17,7 @@ export function ExplorationStubPage() {
   if (!record) {
     return (
       <main className="cat">
+        <CatalogueBrowseNav areaId={areaId || undefined} />
         <p>Unknown exploration.</p>
         <Link to="/">Back to catalogue</Link>
       </main>
@@ -24,6 +26,8 @@ export function ExplorationStubPage() {
 
   return (
     <main className="cat">
+      <CatalogueBrowseNav areaId={areaId} explorationId={explorationId} />
+
       <nav className="cat__crumb">
         <Link to="/">Catalogue</Link>
         <span aria-hidden="true"> / </span>
