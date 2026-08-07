@@ -1,5 +1,9 @@
 # Research Report: OSS capability catalogue for Songara PWAs
 
+> **Historical companion (library-oriented).** The living, capability-first SoT is
+> [`capability-catalogue.md`](./capability-catalogue.md). Keep this file for detailed
+> per-project evidence; do not treat it as the ideation or scoring roadmap.
+>
 > Produced by Discovery for **informational** use. This is a long-term technology
 > survey, not an implementation ticket. Package layout and promotion decisions remain
 > with Architect / Maintainer under [ADR-007](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/007-pwa-base-reusable-foundation.md)
