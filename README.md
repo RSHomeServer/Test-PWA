@@ -1,75 +1,37 @@
-# React + TypeScript + Vite
+# Songara Capability Catalogue (Test-PWA)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is Songara’s **Engineering Capability Catalogue** — a permanent
+reference for mature browser capabilities and the OSS ecosystems behind them.
 
-Currently, two official plugins are available:
+It is **not** a product app and **not** a collection of throwaway demos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> If we wanted to build *X*, what is the state of the art, how capable is it, and how
+> well does it integrate into the Songara ecosystem?
 
-## React Compiler
+## Docs
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Doc | Role |
+| --- | --- |
+| [`docs/architecture/capability-catalogue-app.md`](docs/architecture/capability-catalogue-app.md) | App architecture, routes, ticket shape, PWA-Base relationship |
+| [`docs/research/capability-catalogue.md`](docs/research/capability-catalogue.md) | Scored research SoT + enrichment roadmap |
+| [`docs/research/oss-capability-catalogue.md`](docs/research/oss-capability-catalogue.md) | Historical library-oriented companion |
 
-## Expanding the ESLint configuration
+## App routes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Path | Meaning |
+| --- | --- |
+| `/` | Catalogue home |
+| `/animation`, `/physics`, `/camera`, `/audio`, `/offline-storage` | Area summaries |
+| `/{area}/{exploration}` | One OSS/facet evaluation (stubs until Executor fills) |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Deep dive + full subroute lists: [`docs/architecture/top-five-routes.md`](docs/architecture/top-five-routes.md).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Develop
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+node "${SONGARA_PROJECTS_ROOT:-$HOME/projects}/PWA-Base/scripts/ensure-sibling-file-deps.mjs"
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Depends on `"@songara/pwa-base": "file:../PWA-Base"` — do not rewrite that spec.

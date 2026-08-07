@@ -1,0 +1,166 @@
+.cat {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  color: var(--platform-color-fg, #1a1a1a);
+}
+
+.cat__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.cat__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 650;
+}
+
+.cat__lead {
+  margin: 0 0 1.5rem;
+  max-width: 40rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.cat__header {
+  margin-bottom: 1.5rem;
+}
+
+.cat__crumb {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.cat__crumb a {
+  color: inherit;
+}
+
+.cat__area-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cat__area-link {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.35rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cat__area-link:hover {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.cat__area-name {
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+}
+
+.cat__area-meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.cat__area-desc {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.cat__footnote {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.cat__table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.cat__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.cat__table th,
+.cat__table td {
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cat__table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cat__caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.cat__planned h2 {
+  font-size: 1.1rem;
+}
+
+.cat__panel {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.35rem;
+}
+
+.cat__controls {
+  margin-bottom: 1rem;
+}
+
+.cat__motion-box {
+  width: 6rem;
+  height: 6rem;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 0.5rem;
+}
+
+.cat__motion-box[data-reduced='true'] {
+  transform: none;
+}
+
+.cat__muted {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.cat__grid-notes {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.cat__grid-notes h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.cat__grid-notes p,
+.cat__grid-notes ul {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
