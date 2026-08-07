@@ -110,6 +110,9 @@ re-score when deep-diving a capability.
 
 ## Strategic ranking (by weighted score)
 
+Weighted scores remain the long-term value ranking. **Delivery order is not score order** —
+see [Alternating delivery philosophy](#alternating-delivery-philosophy).
+
 | Rank | Capability | Score | Why it ranks highly |
 | ---: | --- | ---: | --- |
 | 1 | Offline Storage | 211 | Unlocks almost every offline-first product; mature IDB ecosystem |
@@ -124,65 +127,103 @@ re-score when deep-diving a capability.
 | 10 | Internationalisation | 184 | Locale reach without re-solving formatting |
 | 11–20 | Markdown, Audio, Virtualisation, Testing, Files, Camera, Mic, TTS, Canvas, STT | 181–171 | Strong product enablers with clear OSS leaders |
 | … | See master table | | |
-| 54 | Payments | 89 | Weak offline fit; usually out of Songara household scope |
+| — | **Payments** / **On-device LLM Inference** | — | **Parked** — out of near-term strategy (see below) |
+
+### Parked for now
+
+| Capability | Reason |
+| --- | --- |
+| Payments | Weak offline/household fit; not a Songara near-term differentiator |
+| On-device LLM Inference | High cost/complexity; defer until smaller on-device AI and Content Packs are proven in products |
 
 ---
 
-## Discovery roadmap — next five capability areas
+## Alternating delivery philosophy
 
-Prioritised for **depth passes** (not implementation). Ordered by strategic value of further research given current gaps (`partial` / high product upside).
+Foundational PWA infrastructure has high long-term value, but **weeks of invisible plumbing
+before products that exercise it** is the wrong default. Songara should **alternate**:
 
-### 1. Offline Storage depth (ecosystem + patterns)
+1. **Infrastructure** — offline runtime, storage, packaging, accessibility, …
+2. **Visually demonstrable capability** — animation, physics, camera, audio, whiteboards, CV, charts, …
 
-| | |
-| --- | --- |
-| **Why** | #1 score; still needs Songara-oriented patterns (schema, migrations, OPFS, when *not* to sync) |
-| **Mature OSS options** | 4+ (Dexie, idb, RxDB core, localForage legacy; OPFS rising) |
-| **PWAs unlocked** | Journals, inventory, offline forms, media catalogs, settings vaults |
-| **Reusable infra likelihood** | Medium–High *eventually* (thin helpers) — only after multiple products |
-| **Effort** | **Medium** |
+Goals:
 
-### 2. Sync & Collaboration depth (CRDT vs sync engines)
+- Regular visible progress
+- Continuous validation that the platform is worthwhile
+- Discover what infrastructure is *genuinely* needed from real demos/products — not speculative design
 
-| | |
-| --- | --- |
-| **Why** | #7 score; high differentiation; commercial-plugin traps need clarity |
-| **Mature OSS options** | 4+ (Yjs + providers, RxDB, ElectricSQL, PowerSync — verify licences) |
-| **PWAs unlocked** | Shared household boards, multi-device notes, collaborative planners |
-| **Reusable infra likelihood** | Low–Medium (providers often product-specific) |
-| **Effort** | **Large** |
+The shared platform should **emerge** from product development, not be built in isolation.
+Hello / Test-PWA remain smoke examples only — not justification for promotion.
 
-### 3. On-device AI Inference + Embeddings (model hosting story)
+### Role of each top capability
 
-| | |
-| --- | --- |
-| **Why** | #5 / #23; pairs with Content Packs; privacy-first Songara narrative |
-| **Mature OSS options** | 3–5 (ORT Web, Transformers.js, TF.js; embedding models via same) |
-| **PWAs unlocked** | Private classifiers, semantic offline search, home vision helpers |
-| **Reusable infra likelihood** | Low for engines; Medium for pack/loader *contracts* later |
-| **Effort** | **Large** |
+| Capability | Enables | Why valuable | Products unlocked | Primarily | Visually demonstrable? | Likely to reveal reusable infra? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Offline Storage | Durable client state | Core of offline-first | Journals, inventory, drafts, catalogs | **Platform** | No (indirect) | **Yes** — schema/helpers after 2+ apps |
+| Offline-first PWA Runtime | Install, cache, update UX | Table stakes for Songara PWAs | Every installable app | **Platform** | Weak (install/update chrome) | **Yes** — presets/update patterns |
+| Accessibility Primitives | Correct focus, dialogs, menus | Quality + inclusion bar | All consumer UIs | **Both** | Partial (correct UI behaviour) | **Yes** — one headless family wrappers |
+| Content Packs | Hash-verified offline assets | Large models/media without ad-hoc fetch | CV packs, map tiles, curricula | **Platform** | No (enables demos) | **Yes** — already foundation-shaped |
+| On-device AI Inference (non-LLM) | Private classifiers / embeddings | Differentiates privacy story | Home vision helpers, semantic search | **User-facing** | Sometimes (overlays/results) | Maybe pack/loader contracts later |
+| Icons & UI Primitives | Coherent chrome | Brand consistency | All apps | **Both** | Yes (look & feel) | Token/primitive sharing |
+| Sync & Collaboration | Multi-device / multi-user | Household reality | Shared boards, notes | **Both** | Weak | Low–medium; keep app-local first |
+| Animation & Motion | Premium motion, reduced-motion | Felt quality | Any polished PWA / motion lab | **User-facing** | **Yes** | Reduced-motion hooks (partially exists) |
+| Forms & Validation | Reliable data entry | Every settings/wizard flow | Config apps, surveys | **Both** | Weak | Fields/tokens more than engines |
+| Internationalisation | Locale formatting / catalogs | Reach beyond one language | Multi-locale household apps | **Platform** | Weak | Small `Intl` helpers |
+| Audio Playback & Music | Playback, SFX, musical timing | Rich sensory products | Practice tools, ambient rooms | **User-facing** | **Yes** (hear/see meters) | Audio graph patterns (kit exists) |
+| Camera & Image Capture | Stills from device camera | Input for many verticals | Photo logs, document capture | **User-facing** | **Yes** | Thin permission UX only |
+| Computer Vision | Pose/hands/face/gesture | High-wow on-device demos | Fitness, gesture control, mirrors | **User-facing** | **Yes** | Unlikely engines; maybe bootstrap later |
+| Physics Simulation | Believable motion | Labs and toys | Physics playgrounds, simple games | **User-facing** | **Yes** | Numeric helpers only |
+| Charts & Data Viz | Readable quantitative UI | Decision/insight products | Home analytics | **User-facing** | **Yes** | Unlikely shared chart API early |
+| Whiteboards & Diagramming | Infinite canvas | Planning & creative | Family boards, sketch plans | **User-facing** | **Yes** | Never full product in foundation |
+| Maps / Offline Maps | Geo context offline | Place-based products | Trail/garden/site tools | **User-facing** | **Yes** | Tile pack conventions maybe |
+| Canvas & SVG Foundations | Custom drawing loops | Building block for labs | Custom visualisations | **Both** | **Yes** | Render kit (partially exists) |
+| Testing Harness | Fast trustworthy CI | Engineering leverage | All repos | **Platform** | No | Shared configs later |
+| Markdown Rendering | Safe rich content | Help/docs surfaces | Content viewers | **Both** | Mild | Kit already exists |
 
-### 4. Offline Maps & Tile Packs
+---
 
-| | |
-| --- | --- |
-| **Why** | High offline differentiation; currently `partial`; MapLibre+PMTiles is state of the art |
-| **Mature OSS options** | 3+ (MapLibre, PMTiles/Protomaps, Turf) |
-| **PWAs unlocked** | Trail maps, garden/site plans, offline navigation aids |
-| **Reusable infra likelihood** | Medium for pack conventions; Low for map UI |
-| **Effort** | **Medium** |
+## Alternating implementation roadmap
 
-### 5. WebGPU + on-device LLM posture
+Intentionally **infra ↔ visual**. Each visual slice should be a small demo/product that
+*stresses* the previous infra slice. Extract shared code only when a second real product
+needs the same API unchanged.
 
-| | |
-| --- | --- |
-| **Why** | Longevity + strategic differentiation; browser support still uneven; LLMs are `partial` |
-| **Mature OSS options** | WebGPU helpers 2–3; LLM runtimes 2–4 (WebLLM, MLC, HF) |
-| **PWAs unlocked** | Local copilots, heavy compute labs, advanced graphics |
-| **Reusable infra likelihood** | Low (capability probes maybe); engines stay app-local |
-| **Effort** | **Large** |
+| Phase | Lane | Capability focus | What to ship (shape) | Validates / surfaces |
+| ---: | --- | --- | --- | --- |
+| **A1** | Visual | Animation & Motion | Motion lab PWA (springs, scroll, reduced-motion) | Felt quality; existing animation kit gaps |
+| **A2** | Infra | Offline Storage (minimal) | Persist lab prefs/scenes in IDB (Dexie/idb in the app) | Real schema/migration needs |
+| **B1** | Visual | Physics Simulation | Physics playground (Rapier/Matter) | Canvas/render loop needs |
+| **B2** | Infra | Offline-first PWA Runtime | Install + update UX on the playground | Precache/update pain points |
+| **C1** | Visual | Charts & Data Viz | Small offline analytics demo with sample data | Export/download + list virtualisation pressure |
+| **C2** | Infra | Accessibility Primitives | One headless overlay family on an existing demo | Focus trap / dialog patterns worth sharing |
+| **D1** | Visual | Camera & Image Capture | Photo-log demo | Permission UX; file/DnD adjacent |
+| **D2** | Infra | Content Packs (light) | Ship sample assets (images/models) as a pack into a demo | Pack client gaps without speculative redesign |
+| **E1** | Visual | Computer Vision | Pose/hands overlay on camera demo (MediaPipe; privacy check) | Model size → pack story becomes real |
+| **E2** | Infra | Harden packs + storage from E1 | Only the helpers E1 actually needed | Genuine infra, not speculative |
+| **F1** | Visual | Audio Playback & Music | Practice/ambient audio demo | Audio kit + offline asset needs |
+| **F2** | Infra | Icons & UI / theming pass | Token + icon consistency across demos | What chrome is truly shared |
+| **G1** | Visual | Whiteboards *or* Offline Maps | One canvas or one map demo (pick by appetite) | Large offline assets; collaboration later |
+| **G2** | Infra | Virtualisation / Markdown / i18n (pick from pain) | Only what G1 or prior demos blocked on | Catalogue expands via evidence |
 
-**Not in next five (already well-covered at catalogue level):** Accessibility headless families, Testing harness shape, Markdown (foundation already has a kit), Payments.
+### Explicitly defer in this cadence
+
+- **Payments** — parked
+- **On-device LLM** — parked (non-LLM on-device AI may appear in E1 as CV/classifiers only)
+- **Sync & Collaboration** — after at least two single-device products exist
+- **WebGPU deep dive** — when a visual demo hits WebGL limits
+- **Multi-week infra-only programmes** — replace with one infra phase at a time, driven by the last visual slice
+
+### Discovery depth passes (docs) aligned to this cadence
+
+Still research-only tickets that **update this catalogue** before/during each pair:
+
+1. **Animation & Motion** patterns for Songara demos — **Small**
+2. **Offline Storage** minimal patterns (Dexie/idb; no sync yet) — **Medium**
+3. **Physics + Canvas** demo shape — **Small**
+4. **PWA Runtime** update/precache checklist for demos — **Small**
+5. **Camera → CV → Content Packs** chain (privacy + model hosting) — **Large**
+
+(Replaces the prior “next five” that front-loaded Serwist/sync/LLM plumbing.)
 
 ---
 
@@ -302,14 +343,16 @@ totals down despite high user wow-factor.
 
 - [x] Organised by capability, not by “what to add to PWA-Base”.
 - [x] Master table with required scoring columns and weighted scores.
-- [x] Ranked strategic list + next five discovery areas with effort estimates.
-- [x] No implementation tickets; no dependency additions; no code changes outside docs.
-- [ ] Future discovery tickets **must** update this file’s master table (do not fork stale reports).
+- [x] Ranked strategic list + alternating infra↔visual delivery roadmap.
+- [x] Payments and on-device LLM parked for near-term strategy.
+- [x] No implementation tickets in this docs PR; no speculative multi-week infra programmes.
+- [ ] Future discovery / demo tickets **must** update this file’s master table (do not fork stale reports).
 
 ## Follow-ups
 
-- Execute next-five depth passes as separate Discovery tickets (docs-only), each updating this SoT.
-- Architect may later cite this catalogue when designing a *specific* product — still no promote work without multi-product proof.
+- Start **A1** (Animation & Motion lab) as the first visual product slice; then **A2** storage only as needed.
+- Depth Discovery passes should follow the alternating cadence table, not infra-first score order.
+- Extract to PWA-Base only when a second real product needs the same API unchanged.
 - Optional: migrate detailed per-OSS fields from [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) into `docs/research/capabilities/*.md` during depth passes.
 
-_No implementation is expected from this research catalogue._
+_No implementation is expected from this research catalogue alone; the alternating roadmap is the delivery strategy for subsequent tickets._

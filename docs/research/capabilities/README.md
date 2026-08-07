@@ -1,16 +1,16 @@
 # Capability depth stubs
 
-Deep-dive notes for the **next five** roadmap items from
-[`../capability-catalogue.md`](../capability-catalogue.md). Fill these during dedicated
-Discovery passes; keep the master catalogue scores in sync.
+Deep-dive notes aligned to the **alternating delivery roadmap** in
+[`../capability-catalogue.md`](../capability-catalogue.md). Fill during dedicated
+Discovery passes; keep master catalogue scores in sync.
 
 | File | Capability | Status |
 | --- | --- | --- |
-| (pending) | Offline Storage depth | Stub — next |
-| (pending) | Sync & Collaboration depth | Stub — next |
-| (pending) | On-device AI + Embeddings | Stub — next |
-| (pending) | Offline Maps & Tile Packs | Stub — next |
-| (pending) | WebGPU + on-device LLM | Stub — next |
+| (pending) | Animation & Motion (visual A1) | Stub — next |
+| (pending) | Offline Storage minimal (infra A2) | Stub — next |
+| (pending) | Physics + Canvas (visual B1) | Stub — next |
+| (pending) | PWA Runtime checklist (infra B2) | Stub — next |
+| (pending) | Camera → CV → Content Packs chain | Stub — later |
 
-Until depth passes land, use the master catalogue briefs and the historical OSS companion
+Parked: Payments, on-device LLM. Until depth passes land, use the master catalogue and
 [`../oss-capability-catalogue.md`](../oss-capability-catalogue.md) for library evidence.
