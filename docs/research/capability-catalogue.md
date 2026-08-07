@@ -17,11 +17,13 @@
 ## Philosophy
 
 1. Research **capabilities** first (“Offline Storage”), then survey implementations.
-2. Ask: *What premium offline-first PWAs become possible because this exists?*
-3. Hello, Test-PWA, and demos are **examples only** — never product consumers for shared-infra justification.
-4. Most capabilities stay application-local forever. Shared infrastructure is rare and must be
-   proven across multiple real Songara products — do not recommend promotion from this catalogue alone.
-5. Prefer MIT / Apache-2.0 / BSD; flag licence exceptions (GSAP, tldraw, MediaPipe notices).
+2. Ask: *If we wanted to build X, what is the state of the art?*
+3. The **Test-PWA app** is the Engineering Capability Catalogue (routes + evaluations) —
+   see [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
+4. Hello / demos are **not** product consumers for PWA-Base promotion.
+5. Most capabilities stay application-local forever. Shared infrastructure emerges only
+   from repeated evidence across future products — never speculative extraction from this catalogue alone.
+6. Prefer MIT / Apache-2.0 / BSD; flag licence exceptions (GSAP, tldraw, MediaPipe notices).
 
 ## Evaluation framework
 
@@ -110,6 +112,9 @@ re-score when deep-diving a capability.
 
 ## Strategic ranking (by weighted score)
 
+Weighted scores remain the long-term value ranking. **Delivery order is not score order** —
+see [Alternating delivery philosophy](#alternating-delivery-philosophy).
+
 | Rank | Capability | Score | Why it ranks highly |
 | ---: | --- | ---: | --- |
 | 1 | Offline Storage | 211 | Unlocks almost every offline-first product; mature IDB ecosystem |
@@ -124,65 +129,80 @@ re-score when deep-diving a capability.
 | 10 | Internationalisation | 184 | Locale reach without re-solving formatting |
 | 11–20 | Markdown, Audio, Virtualisation, Testing, Files, Camera, Mic, TTS, Canvas, STT | 181–171 | Strong product enablers with clear OSS leaders |
 | … | See master table | | |
-| 54 | Payments | 89 | Weak offline fit; usually out of Songara household scope |
+| — | **Payments** / **On-device LLM Inference** | — | **Parked** — out of near-term strategy (see below) |
+
+### Parked for now
+
+| Capability | Reason |
+| --- | --- |
+| Payments | Weak offline/household fit; not a Songara near-term differentiator |
+| On-device LLM Inference | High cost/complexity; defer until smaller on-device AI and Content Packs are proven in products |
 
 ---
 
-## Discovery roadmap — next five capability areas
+## Engineering Capability Catalogue (runtime)
 
-Prioritised for **depth passes** (not implementation). Ordered by strategic value of further research given current gaps (`partial` / high product upside).
+**Test-PWA is the Engineering Capability Catalogue app** — not a product, not a demo farm.
+Architecture SoT: [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
 
-### 1. Offline Storage depth (ecosystem + patterns)
+Question every exploration answers:
 
-| | |
+> If we wanted to build *X*, what is the state of the art, how capable is it, and how
+> well does it integrate into the Songara ecosystem?
+
+| Route pattern | Meaning |
 | --- | --- |
-| **Why** | #1 score; still needs Songara-oriented patterns (schema, migrations, OPFS, when *not* to sync) |
-| **Mature OSS options** | 4+ (Dexie, idb, RxDB core, localForage legacy; OPFS rising) |
-| **PWAs unlocked** | Journals, inventory, offline forms, media catalogs, settings vaults |
-| **Reusable infra likelihood** | Medium–High *eventually* (thin helpers) — only after multiple products |
-| **Effort** | **Medium** |
+| `/` | Index of capability areas |
+| `/{area}` | Summary comparison table (registry-driven) |
+| `/{area}/{exploration}` | One facet or one OSS implementation + full evaluation artefact |
 
-### 2. Sync & Collaboration depth (CRDT vs sync engines)
+KanDev work is organised as **capability → exploration sub-tickets**. Each sub-ticket leaves a
+permanent route and updates the area summary. Nothing throwaway.
 
-| | |
+PWA-Base promotions still require repeated evidence across **future products** (ADR-003) —
+explorations here are engineering evidence, not product consumers.
+
+### Role of high-value capabilities (catalogue areas)
+
+| Capability area | Enables | Why catalogue it | Future products (ideation only) | Platform vs user-facing | Visual eval? | May later inform shared infra? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Offline Storage | Durable client state | Core offline-first knowledge | Journals, inventory, drafts | Platform | Indirect | Yes, after multi-product proof |
+| PWA Runtime | Install / cache / updates | Table stakes patterns | Any installable PWA | Platform | Weak | Yes |
+| Accessibility | Overlays / AT behaviour | Quality bar | All UIs | Both | Partial | Yes |
+| Content Packs | Verified offline assets | Asset distribution knowledge | CV, maps, curricula | Platform | No | Already foundation-shaped |
+| Animation | Motion stacks | Compare WAAPI vs Motion vs GSAP… | Polished UIs | User-facing | Yes | Reduced-motion hooks maybe |
+| Physics | Engines & constraints | Compare Rapier vs Matter… | Labs, toys | User-facing | Yes | Helpers only |
+| Camera | Capture | Device input patterns | Photo logs | User-facing | Yes | Thin UX |
+| Computer Vision | Pose/hands/gesture | MediaPipe etc. fit + privacy | Fitness, mirrors | User-facing | Yes | Unlikely engines |
+| Audio | Playback / music | Tone vs Howler vs Web Audio | Practice, ambient | User-facing | Yes | Audio kit gaps |
+| Charts | Data viz | ECharts vs Visx… | Analytics | User-facing | Yes | Unlikely early |
+| Maps | Geo + offline tiles | MapLibre / PMTiles | Site/trail tools | User-facing | Yes | Pack conventions maybe |
+| Whiteboards | Infinite canvas | Excalidraw / tldraw diligence | Planning boards | User-facing | Yes | Never full product in base |
+
+**Parked:** Payments; on-device LLM.
+
+---
+
+## Catalogue enrichment roadmap
+
+Future tickets **build and enrich this catalogue** (routes + registry + evaluation notes).
+
+**Top five areas (scaffolded):** see [`../architecture/top-five-routes.md`](../architecture/top-five-routes.md)
+
+| Area | Example subroutes |
 | --- | --- |
-| **Why** | #7 score; high differentiation; commercial-plugin traps need clarity |
-| **Mature OSS options** | 4+ (Yjs + providers, RxDB, ElectricSQL, PowerSync — verify licences) |
-| **PWAs unlocked** | Shared household boards, multi-device notes, collaborative planners |
-| **Reusable infra likelihood** | Low–Medium (providers often product-specific) |
-| **Effort** | **Large** |
+| `/animation` | waapi (done), motion, springs, lottie, rive, gsap, … |
+| `/physics` | rapier2d, matter, constraints, … |
+| `/camera` | getusermedia, react-webcam, permissions-ux, … |
+| `/audio` | web-audio, tone, howler, songara-audio-kit, … |
+| `/offline-storage` | indexeddb-raw, idb, dexie, migrations, opfs, … |
 
-### 3. On-device AI Inference + Embeddings (model hosting story)
+Later: computer-vision, ocr, charts, maps, whiteboards, pwa-runtime.
 
-| | |
-| --- | --- |
-| **Why** | #5 / #23; pairs with Content Packs; privacy-first Songara narrative |
-| **Mature OSS options** | 3–5 (ORT Web, Transformers.js, TF.js; embedding models via same) |
-| **PWAs unlocked** | Private classifiers, semantic offline search, home vision helpers |
-| **Reusable infra likelihood** | Low for engines; Medium for pack/loader *contracts* later |
-| **Effort** | **Large** |
+### Executor area tickets
 
-### 4. Offline Maps & Tile Packs
-
-| | |
-| --- | --- |
-| **Why** | High offline differentiation; currently `partial`; MapLibre+PMTiles is state of the art |
-| **Mature OSS options** | 3+ (MapLibre, PMTiles/Protomaps, Turf) |
-| **PWAs unlocked** | Trail maps, garden/site plans, offline navigation aids |
-| **Reusable infra likelihood** | Medium for pack conventions; Low for map UI |
-| **Effort** | **Medium** |
-
-### 5. WebGPU + on-device LLM posture
-
-| | |
-| --- | --- |
-| **Why** | Longevity + strategic differentiation; browser support still uneven; LLMs are `partial` |
-| **Mature OSS options** | WebGPU helpers 2–3; LLM runtimes 2–4 (WebLLM, MLC, HF) |
-| **PWAs unlocked** | Local copilots, heavy compute labs, advanced graphics |
-| **Reusable infra likelihood** | Low (capability probes maybe); engines stay app-local |
-| **Effort** | **Large** |
-
-**Not in next five (already well-covered at catalogue level):** Accessibility headless families, Testing harness shape, Markdown (foundation already has a kit), Payments.
+One Executor ticket **per area** (not per subroute). Each ticket completes all scaffolded
+subroutes for that area, updates registry scores/status, and leaves permanent routes.
 
 ---
 
@@ -302,14 +322,15 @@ totals down despite high user wow-factor.
 
 - [x] Organised by capability, not by “what to add to PWA-Base”.
 - [x] Master table with required scoring columns and weighted scores.
-- [x] Ranked strategic list + next five discovery areas with effort estimates.
-- [x] No implementation tickets; no dependency additions; no code changes outside docs.
-- [ ] Future discovery tickets **must** update this file’s master table (do not fork stale reports).
+- [x] Ranked strategic list + **Engineering Capability Catalogue** enrichment roadmap.
+- [x] Runtime architecture: [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
+- [x] Payments and on-device LLM parked for near-term strategy.
+- [ ] Future exploration tickets **must** update the in-app registry and this master table.
 
 ## Follow-ups
 
-- Execute next-five depth passes as separate Discovery tickets (docs-only), each updating this SoT.
-- Architect may later cite this catalogue when designing a *specific* product — still no promote work without multi-product proof.
-- Optional: migrate detailed per-OSS fields from [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) into `docs/research/capabilities/*.md` during depth passes.
+- Executor Wave 1: Animation explorations (`/animation/motion`, springs, …) as sub-tickets.
+- Keep research scores and in-app summary tables aligned when Recommended/Status changes.
+- Extract to PWA-Base only after repeated evidence across future **products** (not this catalogue alone).
 
-_No implementation is expected from this research catalogue._
+_This research catalogue is the scored knowledge base; the Test-PWA app is the browsable Engineering Capability Catalogue that implements explorations._

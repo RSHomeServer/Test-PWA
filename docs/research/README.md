@@ -4,14 +4,16 @@
 
 | Doc | Role |
 | --- | --- |
-| [`capability-catalogue.md`](./capability-catalogue.md) | **Living master catalogue** — capabilities, scores, ranking, next-five roadmap |
-| [`capabilities/`](./capabilities/) | Depth-pass notes (filled by follow-on Discovery) |
-| [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) | Historical library-oriented survey (evidence companion; not SoT for product ideation) |
+| [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md) | **App architecture** — routes, exploration contract, KanDev ticket shape |
+| [`capability-catalogue.md`](./capability-catalogue.md) | **Living research catalogue** — capabilities, scores, ranking, enrichment roadmap |
+| [`capabilities/`](./capabilities/) | Optional depth-pass markdown notes |
+| [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) | Historical library-oriented survey (evidence companion) |
 
 ## Philosophy
 
-Capabilities first. Libraries are evidence. The catalogue inspires future offline-first
-PWAs; it does **not** select dependencies or schedule PWA-Base promotions.
+Capabilities first. Libraries are evidence. Test-PWA is the browsable Engineering
+Capability Catalogue. It does **not** select product dependencies or schedule PWA-Base
+promotions from a single exploration.
 
 ## Diligence reminders
 
