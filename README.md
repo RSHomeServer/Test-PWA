@@ -21,11 +21,10 @@ It is **not** a product app and **not** a collection of throwaway demos.
 | Path | Meaning |
 | --- | --- |
 | `/` | Catalogue home |
-| `/animation` | Animation area summary table |
-| `/animation/waapi` | First exploration (Web Animations API baseline) |
+| `/animation`, `/physics`, `/camera`, `/audio`, `/offline-storage` | Area summaries |
+| `/{area}/{exploration}` | One OSS/facet evaluation (stubs until Executor fills) |
 
-Further areas and explorations are added via KanDev **capability → exploration** tickets.
-Each ticket leaves a route and updates `src/catalogue/registry.ts`.
+Deep dive + full subroute lists: [`docs/architecture/top-five-routes.md`](docs/architecture/top-five-routes.md).
 
 ## Develop
 
