@@ -164,3 +164,89 @@
   font-size: 0.9rem;
   line-height: 1.45;
 }
+
+.cat__demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.cat__layout-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  max-width: 22rem;
+}
+
+.cat__layout-item {
+  min-height: 4rem;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.cat__layout-item[data-expanded='true'] {
+  grid-column: 1 / -1;
+  min-height: 7rem;
+}
+
+.cat__particle-host {
+  position: relative;
+  height: 12rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.cat__lottie-host,
+.cat__rive-host {
+  width: 8rem;
+  height: 8rem;
+  display: grid;
+  place-items: center;
+}
+
+.cat__shared-stage {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.cat__shared-card {
+  flex: 1 1 10rem;
+  min-height: 6rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  cursor: pointer;
+}
+
+.cat__shared-card[data-active='true'] {
+  outline: 2px solid color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.cat__gsap-bar {
+  height: 0.75rem;
+  width: 0;
+  max-width: 16rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 35%, transparent);
+  margin-top: 0.5rem;
+}
+
+.cat__spring-ball {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 25%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
