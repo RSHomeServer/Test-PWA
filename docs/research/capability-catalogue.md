@@ -17,11 +17,13 @@
 ## Philosophy
 
 1. Research **capabilities** first (“Offline Storage”), then survey implementations.
-2. Ask: *What premium offline-first PWAs become possible because this exists?*
-3. Hello, Test-PWA, and demos are **examples only** — never product consumers for shared-infra justification.
-4. Most capabilities stay application-local forever. Shared infrastructure is rare and must be
-   proven across multiple real Songara products — do not recommend promotion from this catalogue alone.
-5. Prefer MIT / Apache-2.0 / BSD; flag licence exceptions (GSAP, tldraw, MediaPipe notices).
+2. Ask: *If we wanted to build X, what is the state of the art?*
+3. The **Test-PWA app** is the Engineering Capability Catalogue (routes + evaluations) —
+   see [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
+4. Hello / demos are **not** product consumers for PWA-Base promotion.
+5. Most capabilities stay application-local forever. Shared infrastructure emerges only
+   from repeated evidence across future products — never speculative extraction from this catalogue alone.
+6. Prefer MIT / Apache-2.0 / BSD; flag licence exceptions (GSAP, tldraw, MediaPipe notices).
 
 ## Evaluation framework
 
@@ -138,92 +140,76 @@ see [Alternating delivery philosophy](#alternating-delivery-philosophy).
 
 ---
 
-## Alternating delivery philosophy
+## Engineering Capability Catalogue (runtime)
 
-Foundational PWA infrastructure has high long-term value, but **weeks of invisible plumbing
-before products that exercise it** is the wrong default. Songara should **alternate**:
+**Test-PWA is the Engineering Capability Catalogue app** — not a product, not a demo farm.
+Architecture SoT: [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
 
-1. **Infrastructure** — offline runtime, storage, packaging, accessibility, …
-2. **Visually demonstrable capability** — animation, physics, camera, audio, whiteboards, CV, charts, …
+Question every exploration answers:
 
-Goals:
+> If we wanted to build *X*, what is the state of the art, how capable is it, and how
+> well does it integrate into the Songara ecosystem?
 
-- Regular visible progress
-- Continuous validation that the platform is worthwhile
-- Discover what infrastructure is *genuinely* needed from real demos/products — not speculative design
+| Route pattern | Meaning |
+| --- | --- |
+| `/` | Index of capability areas |
+| `/{area}` | Summary comparison table (registry-driven) |
+| `/{area}/{exploration}` | One facet or one OSS implementation + full evaluation artefact |
 
-The shared platform should **emerge** from product development, not be built in isolation.
-Hello / Test-PWA remain smoke examples only — not justification for promotion.
+KanDev work is organised as **capability → exploration sub-tickets**. Each sub-ticket leaves a
+permanent route and updates the area summary. Nothing throwaway.
 
-### Role of each top capability
+PWA-Base promotions still require repeated evidence across **future products** (ADR-003) —
+explorations here are engineering evidence, not product consumers.
 
-| Capability | Enables | Why valuable | Products unlocked | Primarily | Visually demonstrable? | Likely to reveal reusable infra? |
+### Role of high-value capabilities (catalogue areas)
+
+| Capability area | Enables | Why catalogue it | Future products (ideation only) | Platform vs user-facing | Visual eval? | May later inform shared infra? |
 | --- | --- | --- | --- | --- | --- | --- |
-| Offline Storage | Durable client state | Core of offline-first | Journals, inventory, drafts, catalogs | **Platform** | No (indirect) | **Yes** — schema/helpers after 2+ apps |
-| Offline-first PWA Runtime | Install, cache, update UX | Table stakes for Songara PWAs | Every installable app | **Platform** | Weak (install/update chrome) | **Yes** — presets/update patterns |
-| Accessibility Primitives | Correct focus, dialogs, menus | Quality + inclusion bar | All consumer UIs | **Both** | Partial (correct UI behaviour) | **Yes** — one headless family wrappers |
-| Content Packs | Hash-verified offline assets | Large models/media without ad-hoc fetch | CV packs, map tiles, curricula | **Platform** | No (enables demos) | **Yes** — already foundation-shaped |
-| On-device AI Inference (non-LLM) | Private classifiers / embeddings | Differentiates privacy story | Home vision helpers, semantic search | **User-facing** | Sometimes (overlays/results) | Maybe pack/loader contracts later |
-| Icons & UI Primitives | Coherent chrome | Brand consistency | All apps | **Both** | Yes (look & feel) | Token/primitive sharing |
-| Sync & Collaboration | Multi-device / multi-user | Household reality | Shared boards, notes | **Both** | Weak | Low–medium; keep app-local first |
-| Animation & Motion | Premium motion, reduced-motion | Felt quality | Any polished PWA / motion lab | **User-facing** | **Yes** | Reduced-motion hooks (partially exists) |
-| Forms & Validation | Reliable data entry | Every settings/wizard flow | Config apps, surveys | **Both** | Weak | Fields/tokens more than engines |
-| Internationalisation | Locale formatting / catalogs | Reach beyond one language | Multi-locale household apps | **Platform** | Weak | Small `Intl` helpers |
-| Audio Playback & Music | Playback, SFX, musical timing | Rich sensory products | Practice tools, ambient rooms | **User-facing** | **Yes** (hear/see meters) | Audio graph patterns (kit exists) |
-| Camera & Image Capture | Stills from device camera | Input for many verticals | Photo logs, document capture | **User-facing** | **Yes** | Thin permission UX only |
-| Computer Vision | Pose/hands/face/gesture | High-wow on-device demos | Fitness, gesture control, mirrors | **User-facing** | **Yes** | Unlikely engines; maybe bootstrap later |
-| Physics Simulation | Believable motion | Labs and toys | Physics playgrounds, simple games | **User-facing** | **Yes** | Numeric helpers only |
-| Charts & Data Viz | Readable quantitative UI | Decision/insight products | Home analytics | **User-facing** | **Yes** | Unlikely shared chart API early |
-| Whiteboards & Diagramming | Infinite canvas | Planning & creative | Family boards, sketch plans | **User-facing** | **Yes** | Never full product in foundation |
-| Maps / Offline Maps | Geo context offline | Place-based products | Trail/garden/site tools | **User-facing** | **Yes** | Tile pack conventions maybe |
-| Canvas & SVG Foundations | Custom drawing loops | Building block for labs | Custom visualisations | **Both** | **Yes** | Render kit (partially exists) |
-| Testing Harness | Fast trustworthy CI | Engineering leverage | All repos | **Platform** | No | Shared configs later |
-| Markdown Rendering | Safe rich content | Help/docs surfaces | Content viewers | **Both** | Mild | Kit already exists |
+| Offline Storage | Durable client state | Core offline-first knowledge | Journals, inventory, drafts | Platform | Indirect | Yes, after multi-product proof |
+| PWA Runtime | Install / cache / updates | Table stakes patterns | Any installable PWA | Platform | Weak | Yes |
+| Accessibility | Overlays / AT behaviour | Quality bar | All UIs | Both | Partial | Yes |
+| Content Packs | Verified offline assets | Asset distribution knowledge | CV, maps, curricula | Platform | No | Already foundation-shaped |
+| Animation | Motion stacks | Compare WAAPI vs Motion vs GSAP… | Polished UIs | User-facing | Yes | Reduced-motion hooks maybe |
+| Physics | Engines & constraints | Compare Rapier vs Matter… | Labs, toys | User-facing | Yes | Helpers only |
+| Camera | Capture | Device input patterns | Photo logs | User-facing | Yes | Thin UX |
+| Computer Vision | Pose/hands/gesture | MediaPipe etc. fit + privacy | Fitness, mirrors | User-facing | Yes | Unlikely engines |
+| Audio | Playback / music | Tone vs Howler vs Web Audio | Practice, ambient | User-facing | Yes | Audio kit gaps |
+| Charts | Data viz | ECharts vs Visx… | Analytics | User-facing | Yes | Unlikely early |
+| Maps | Geo + offline tiles | MapLibre / PMTiles | Site/trail tools | User-facing | Yes | Pack conventions maybe |
+| Whiteboards | Infinite canvas | Excalidraw / tldraw diligence | Planning boards | User-facing | Yes | Never full product in base |
+
+**Parked:** Payments; on-device LLM.
 
 ---
 
-## Alternating implementation roadmap
+## Catalogue enrichment roadmap
 
-Intentionally **infra ↔ visual**. Each visual slice should be a small demo/product that
-*stresses* the previous infra slice. Extract shared code only when a second real product
-needs the same API unchanged.
+Future tickets **build and enrich this catalogue** (routes + registry + evaluation notes),
+not isolated demonstrations or products.
 
-| Phase | Lane | Capability focus | What to ship (shape) | Validates / surfaces |
-| ---: | --- | --- | --- | --- |
-| **A1** | Visual | Animation & Motion | Motion lab PWA (springs, scroll, reduced-motion) | Felt quality; existing animation kit gaps |
-| **A2** | Infra | Offline Storage (minimal) | Persist lab prefs/scenes in IDB (Dexie/idb in the app) | Real schema/migration needs |
-| **B1** | Visual | Physics Simulation | Physics playground (Rapier/Matter) | Canvas/render loop needs |
-| **B2** | Infra | Offline-first PWA Runtime | Install + update UX on the playground | Precache/update pain points |
-| **C1** | Visual | Charts & Data Viz | Small offline analytics demo with sample data | Export/download + list virtualisation pressure |
-| **C2** | Infra | Accessibility Primitives | One headless overlay family on an existing demo | Focus trap / dialog patterns worth sharing |
-| **D1** | Visual | Camera & Image Capture | Photo-log demo | Permission UX; file/DnD adjacent |
-| **D2** | Infra | Content Packs (light) | Ship sample assets (images/models) as a pack into a demo | Pack client gaps without speculative redesign |
-| **E1** | Visual | Computer Vision | Pose/hands overlay on camera demo (MediaPipe; privacy check) | Model size → pack story becomes real |
-| **E2** | Infra | Harden packs + storage from E1 | Only the helpers E1 actually needed | Genuine infra, not speculative |
-| **F1** | Visual | Audio Playback & Music | Practice/ambient audio demo | Audio kit + offline asset needs |
-| **F2** | Infra | Icons & UI / theming pass | Token + icon consistency across demos | What chrome is truly shared |
-| **G1** | Visual | Whiteboards *or* Offline Maps | One canvas or one map demo (pick by appetite) | Large offline assets; collaboration later |
-| **G2** | Infra | Virtualisation / Markdown / i18n (pick from pain) | Only what G1 or prior demos blocked on | Catalogue expands via evidence |
+| Wave | Capability areas | Example exploration subroutes |
+| ---: | --- | --- |
+| **0** | Scaffold (done in app) | `/` · `/animation` · `/animation/waapi` |
+| **1** | Animation | `/motion`, `/springs`, `/lottie`, `/rive`, `/gsap`, … |
+| **2** | Physics | `/rapier`, `/matter`, `/planck`, `/constraints`, … |
+| **3** | Camera → Computer Vision → OCR | Capture stacks, MediaPipe tasks, Tesseract |
+| **4** | Audio | Web Audio, Tone, Howler |
+| **5** | Charts · Maps · Whiteboards | One OSS per subroute |
+| **6** | Offline Storage · PWA Runtime | Same artefact contract; platform focus |
 
-### Explicitly defer in this cadence
+Within an area: prefer **many thin OSS comparisons** over one deep product-like build.
+Understand → evaluate → integrate enough to judge → benchmark → document.
 
-- **Payments** — parked
-- **On-device LLM** — parked (non-LLM on-device AI may appear in E1 as CV/classifiers only)
-- **Sync & Collaboration** — after at least two single-device products exist
-- **WebGPU deep dive** — when a visual demo hits WebGL limits
-- **Multi-week infra-only programmes** — replace with one infra phase at a time, driven by the last visual slice
+### Next five exploration tickets (Executor)
 
-### Discovery depth passes (docs) aligned to this cadence
+1. **Animation / Motion** (`/animation/motion`) — Small  
+2. **Animation / springs** — Small  
+3. **Physics / Rapier** — Medium  
+4. **Physics / Matter.js** — Small  
+5. **Camera / getUserMedia baseline** — Medium  
 
-Still research-only tickets that **update this catalogue** before/during each pair:
-
-1. **Animation & Motion** patterns for Songara demos — **Small**
-2. **Offline Storage** minimal patterns (Dexie/idb; no sync yet) — **Medium**
-3. **Physics + Canvas** demo shape — **Small**
-4. **PWA Runtime** update/precache checklist for demos — **Small**
-5. **Camera → CV → Content Packs** chain (privacy + model hosting) — **Large**
-
-(Replaces the prior “next five” that front-loaded Serwist/sync/LLM plumbing.)
+Each updates `src/catalogue/registry.ts` and the live `/{area}` summary table.
 
 ---
 
@@ -343,16 +329,15 @@ totals down despite high user wow-factor.
 
 - [x] Organised by capability, not by “what to add to PWA-Base”.
 - [x] Master table with required scoring columns and weighted scores.
-- [x] Ranked strategic list + alternating infra↔visual delivery roadmap.
+- [x] Ranked strategic list + **Engineering Capability Catalogue** enrichment roadmap.
+- [x] Runtime architecture: [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
 - [x] Payments and on-device LLM parked for near-term strategy.
-- [x] No implementation tickets in this docs PR; no speculative multi-week infra programmes.
-- [ ] Future discovery / demo tickets **must** update this file’s master table (do not fork stale reports).
+- [ ] Future exploration tickets **must** update the in-app registry and this master table.
 
 ## Follow-ups
 
-- Start **A1** (Animation & Motion lab) as the first visual product slice; then **A2** storage only as needed.
-- Depth Discovery passes should follow the alternating cadence table, not infra-first score order.
-- Extract to PWA-Base only when a second real product needs the same API unchanged.
-- Optional: migrate detailed per-OSS fields from [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) into `docs/research/capabilities/*.md` during depth passes.
+- Executor Wave 1: Animation explorations (`/animation/motion`, springs, …) as sub-tickets.
+- Keep research scores and in-app summary tables aligned when Recommended/Status changes.
+- Extract to PWA-Base only after repeated evidence across future **products** (not this catalogue alone).
 
-_No implementation is expected from this research catalogue alone; the alternating roadmap is the delivery strategy for subsequent tickets._
+_This research catalogue is the scored knowledge base; the Test-PWA app is the browsable Engineering Capability Catalogue that implements explorations._

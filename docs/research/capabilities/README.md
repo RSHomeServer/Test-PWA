@@ -1,16 +1,12 @@
-# Capability depth stubs
+# Capability depth notes
 
-Deep-dive notes aligned to the **alternating delivery roadmap** in
-[`../capability-catalogue.md`](../capability-catalogue.md). Fill during dedicated
-Discovery passes; keep master catalogue scores in sync.
+Optional markdown companions to in-app explorations. The **browsable SoT** for area
+summaries is `src/catalogue/registry.ts` + `/{area}` routes.
 
-| File | Capability | Status |
-| --- | --- | --- |
-| (pending) | Animation & Motion (visual A1) | Stub — next |
-| (pending) | Offline Storage minimal (infra A2) | Stub — next |
-| (pending) | Physics + Canvas (visual B1) | Stub — next |
-| (pending) | PWA Runtime checklist (infra B2) | Stub — next |
-| (pending) | Camera → CV → Content Packs chain | Stub — later |
+See [`../architecture/capability-catalogue-app.md`](../../architecture/capability-catalogue-app.md).
 
-Parked: Payments, on-device LLM. Until depth passes land, use the master catalogue and
-[`../oss-capability-catalogue.md`](../oss-capability-catalogue.md) for library evidence.
+| Area | Next exploration tickets |
+| --- | --- |
+| Animation | motion, springs, lottie, rive, gsap |
+| Physics | rapier, matter, planck, constraints |
+| … | Per enrichment roadmap in capability-catalogue.md |
