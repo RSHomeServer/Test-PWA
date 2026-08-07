@@ -185,31 +185,24 @@ explorations here are engineering evidence, not product consumers.
 
 ## Catalogue enrichment roadmap
 
-Future tickets **build and enrich this catalogue** (routes + registry + evaluation notes),
-not isolated demonstrations or products.
+Future tickets **build and enrich this catalogue** (routes + registry + evaluation notes).
 
-| Wave | Capability areas | Example exploration subroutes |
-| ---: | --- | --- |
-| **0** | Scaffold (done in app) | `/` · `/animation` · `/animation/waapi` |
-| **1** | Animation | `/motion`, `/springs`, `/lottie`, `/rive`, `/gsap`, … |
-| **2** | Physics | `/rapier`, `/matter`, `/planck`, `/constraints`, … |
-| **3** | Camera → Computer Vision → OCR | Capture stacks, MediaPipe tasks, Tesseract |
-| **4** | Audio | Web Audio, Tone, Howler |
-| **5** | Charts · Maps · Whiteboards | One OSS per subroute |
-| **6** | Offline Storage · PWA Runtime | Same artefact contract; platform focus |
+**Top five areas (scaffolded):** see [`../architecture/top-five-routes.md`](../architecture/top-five-routes.md)
 
-Within an area: prefer **many thin OSS comparisons** over one deep product-like build.
-Understand → evaluate → integrate enough to judge → benchmark → document.
+| Area | Example subroutes |
+| --- | --- |
+| `/animation` | waapi (done), motion, springs, lottie, rive, gsap, … |
+| `/physics` | rapier2d, matter, constraints, … |
+| `/camera` | getusermedia, react-webcam, permissions-ux, … |
+| `/audio` | web-audio, tone, howler, songara-audio-kit, … |
+| `/offline-storage` | indexeddb-raw, idb, dexie, migrations, opfs, … |
 
-### Next five exploration tickets (Executor)
+Later: computer-vision, ocr, charts, maps, whiteboards, pwa-runtime.
 
-1. **Animation / Motion** (`/animation/motion`) — Small  
-2. **Animation / springs** — Small  
-3. **Physics / Rapier** — Medium  
-4. **Physics / Matter.js** — Small  
-5. **Camera / getUserMedia baseline** — Medium  
+### Executor area tickets
 
-Each updates `src/catalogue/registry.ts` and the live `/{area}` summary table.
+One Executor ticket **per area** (not per subroute). Each ticket completes all scaffolded
+subroutes for that area, updates registry scores/status, and leaves permanent routes.
 
 ---
 

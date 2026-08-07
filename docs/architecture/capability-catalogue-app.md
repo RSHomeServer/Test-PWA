@@ -171,20 +171,15 @@ Promotion still follows ADR-003 / promote-to-pwa-base. Hello and this catalogue 
 
 ## Delivery roadmap (catalogue enrichment)
 
-Order work to **expand the catalogue**, alternating *kinds of evidence* without treating
-slices as product demos:
-
 | Wave | Focus | Intent |
 | ---: | --- | --- |
-| 0 | Scaffold (this PR) | Home index + one area (`/animation`) + one exploration |
-| 1 | Animation area | Add Motion, springs, Lottie/Rive/GSAP explorations as sub-tickets |
-| 2 | Physics area | Rapier, Matter, constraints, … |
-| 3 | Camera → CV → OCR | Capture and vision stack comparisons |
-| 4 | Audio | Web Audio, Tone, Howler |
-| 5 | Charts / Maps / Whiteboards | Visual data & spatial stacks |
-| 6 | Offline storage / PWA runtime | Platform capability pages (same contract; less “visual wow”) |
+| 0 | Scaffold | Home + registry-driven routes |
+| 1 | **Top five areas** | `/animation` · `/physics` · `/camera` · `/audio` · `/offline-storage` — see [`top-five-routes.md`](./top-five-routes.md) |
+| 2 | Computer vision · OCR | After camera baseline |
+| 3 | Charts · Maps · Whiteboards | Visual data & spatial stacks |
+| 4 | PWA runtime · Accessibility · Content packs | Platform pages with same artefact contract |
 
-**Parked:** Payments; on-device LLM (may revisit after smaller on-device AI explorations).
+**Parked:** Payments; on-device LLM.
 
 Within an area, prefer **several thin OSS comparisons** over one deep product-like build.
 
@@ -192,11 +187,13 @@ Within an area, prefer **several thin OSS comparisons** over one deep product-li
 
 ```text
 src/
-  catalogue/           # Registry + types (SoT for summary tables)
-  explorations/        # One folder per area / exploration implementation
-  pages/               # Home, summary shell, shared exploration chrome
-  site.ts              # defineSite routes (generated from registry or listed)
+  catalogue/           # Registry + types + stubs (SoT for summary tables)
+  explorations/        # Concrete exploration implementations (e.g. animation/waapi)
+  pages/               # Home, summary shell, ExplorationStubPage
+  site.ts              # defineSite routes generated from registry
 ```
+
+Deep dive for the first five areas: [`top-five-routes.md`](./top-five-routes.md).
 
 ## Validation
 
