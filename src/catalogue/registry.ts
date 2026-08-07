@@ -433,6 +433,31 @@ export function getExploration(areaId: string, explorationId: string) {
   return area?.explorations.find((e) => e.id === explorationId)
 }
 
+/** Adjacent explorations in registry order within an area (for prev/next chrome). */
+export function getAdjacentExplorations(
+  areaId: string,
+  explorationId: string,
+): {
+  prev: { id: string; capability: string } | null
+  next: { id: string; capability: string } | null
+} {
+  const area = getArea(areaId)
+  if (!area) return { prev: null, next: null }
+  const index = area.explorations.findIndex((e) => e.id === explorationId)
+  if (index < 0) return { prev: null, next: null }
+  const toNav = (e: (typeof area.explorations)[number]) => ({
+    id: e.id,
+    capability: e.capability,
+  })
+  return {
+    prev: index > 0 ? toNav(area.explorations[index - 1]!) : null,
+    next:
+      index < area.explorations.length - 1
+        ? toNav(area.explorations[index + 1]!)
+        : null,
+  }
+}
+
 /** All catalogue routes for SoloSiteApp (explorations before area summaries). */
 export function catalogueSiteRoutes(): { path: string; kind: 'area' | 'exploration'; areaId: string; explorationId?: string }[] {
   const routes: {
