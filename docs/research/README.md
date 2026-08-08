@@ -4,16 +4,19 @@
 
 | Doc | Role |
 | --- | --- |
-| [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md) | **App architecture** — routes, exploration contract, KanDev ticket shape |
+| [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md) | **App architecture** — routes, exploration contract, KanDev ticket shape, Preview consume model |
+| [`../architecture/oss-adoption-plan.md`](../architecture/oss-adoption-plan.md) | Adoption plan + **ADR-008 status note** (Preview vs Stable) |
 | [`capability-catalogue.md`](./capability-catalogue.md) | **Living research catalogue** — capabilities, scores, ranking, enrichment roadmap |
 | [`capabilities/`](./capabilities/) | Optional depth-pass markdown notes |
-| [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) | Historical library-oriented survey (evidence companion) |
+| [`oss-capability-catalogue.md`](./oss-capability-catalogue.md) | Historical library-oriented survey (evidence companion; two-consumer wording is historical — see ADR-008) |
 
 ## Philosophy
 
 Capabilities first. Libraries are evidence. Test-PWA is the browsable Engineering
-Capability Catalogue. It does **not** select product dependencies or schedule PWA-Base
-promotions from a single exploration.
+Capability Catalogue. PWA-Base owns Preview wrappers (`@songara/pwa-base/preview/*`);
+the catalogue validates by consuming those exports. Catalogue demos alone do **not**
+graduate Preview → Stable (products never depend on Test-PWA). See
+[ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md).
 
 ## Diligence reminders
 

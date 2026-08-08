@@ -7,8 +7,9 @@
 
 | | |
 | --- | --- |
-| **Date** | 2026-08-07 |
-| **Consumes** | `@songara/pwa-base` via `file:../PWA-Base` (SoloSiteApp shell only) |
+| **Date** | 2026-08-08 |
+| **Consumes** | `@songara/pwa-base` via `file:../PWA-Base` (SoloSiteApp shell) **and** `@songara/pwa-base/preview/*` wherever a Preview package exists |
+| **Lifecycle SoT** | [ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md) · [capability-lifecycle](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/guides/capability-lifecycle.md) · [preview-packages](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/guides/preview-packages.md) |
 | **Research SoT** | [`../research/capability-catalogue.md`](../research/capability-catalogue.md) |
 | **App entry** | [`../../src/site.ts`](../../src/site.ts), [`../../src/catalogue/`](../../src/catalogue/) |
 
@@ -27,7 +28,9 @@ platform API — they are catalogue artefacts, not products.
 
 - Building customer-facing products in this repo
 - Throwaway demos that are deleted after a spike
-- Promoting code into PWA-Base because a single exploration was useful
+- Implementing Preview wrappers here — wrappers live in PWA-Base `packages/preview-*`
+- Graduating Preview → Stable from catalogue evidence alone (products never depend on
+  Test-PWA)
 - Re-implementing libraries that already exist (understand → evaluate → integrate →
   benchmark → document)
 
@@ -143,7 +146,10 @@ Each sub-ticket **must**:
 ### Ticket brief expectations
 
 - Role: Executor (implementation) or Discovery (research-only depth notes)
-- Out of scope: product polish, PWA-Base promotion, unrelated refactors
+- Out of scope: product polish, implementing Preview packages in this repo, unrelated
+  refactors
+- When Preview exists for the capability: import `@songara/pwa-base/preview/<name>` —
+  do not duplicate the wrapper locally
 - Validation: exploration checklist above + visual check when relevant
 - Wrap-up: feature branch → PR → never merge from agents
 
@@ -154,20 +160,37 @@ Each sub-ticket **must**:
 | Understand mature OSS | Rebuild the library |
 | Integrate enough to judge fit | Ship a mini-product |
 | Benchmark and document | Optimise for App Store narratives |
-| Capture reusable *ideas* | Speculatively extract packages |
+| Consume Preview when it exists | Maintain a parallel local wrapper |
 | Mark Rejected honestly | Keep weak stacks as “Ready” |
 
 ## Relationship with PWA-Base
 
-This catalogue **consumes** `@songara/pwa-base` for chrome/runtime/tokens. It does not
-exist to feed PWA-Base.
+Lifecycle ([ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md)):
 
-Ask only after **repeated evidence across multiple future products**:
+```text
+Research → Catalogue (Test-PWA) → Engineering evaluation
+  → Preview integration (PWA-Base) → Product consumption → Stable API (PWA-Base)
+```
 
-> What reusable abstractions naturally emerged?
+| Concern | Owner |
+| --- | --- |
+| Research, demos, comparisons, benchmarks, scoring, docs | **This catalogue** |
+| Thin Preview wrappers (`packages/preview-*`) | **PWA-Base** |
+| Runtime, theme, Stable kits | **PWA-Base** |
+| Real product usage | **Sibling product repos** (never depend on Test-PWA) |
 
-Promotion still follows ADR-003 / promote-to-pwa-base. Hello and this catalogue app are
-**not** product consumers for that gate.
+This catalogue **consumes** `@songara/pwa-base` for chrome/runtime/tokens and
+**consumes** `@songara/pwa-base/preview/*` to validate the same integration products
+will use. It does **not** own wrapper implementations.
+
+**Preview entry** is gated by engineering confidence and standardisation intent
+([capability-lifecycle](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/guides/capability-lifecycle.md)) —
+not by “catalogue Ready alone,” and not by holding every wrap until two products exist.
+
+**Stable graduation** still requires real **product** usage of the Preview API
+unchanged. Hello and this catalogue are **not** product consumers for Stable.
+ADR-003’s two-consumer check remains a preferred Stable confidence signal when a
+second product exists; it is no longer the primary gate for entering Preview.
 
 ## Delivery roadmap (catalogue enrichment)
 

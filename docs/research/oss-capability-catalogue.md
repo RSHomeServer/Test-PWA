@@ -5,12 +5,17 @@
 > per-project evidence; do not treat it as the ideation or scoring roadmap.
 >
 > Produced by Discovery for **informational** use. This is a long-term technology
-> survey, not an implementation ticket. Package layout and promotion decisions remain
-> with Architect / Maintainer under [ADR-007](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/007-pwa-base-reusable-foundation.md)
-> and the [two-consumer rule](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/003-phase2-shared-packages.md)
-> ([promote-to-pwa-base](https://github.com/RSHomeServer/PWA-Base/blob/main/.kandev/workflows/promote-to-pwa-base.md)).
+> survey, not an implementation ticket. **Lifecycle update (2026-08-08):** Preview entry
+> and package layout follow
+> [ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md)
+> ([capability-lifecycle](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/guides/capability-lifecycle.md),
+> [preview-packages](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/guides/preview-packages.md)).
+> Body text below still mentions ADR-003’s two-consumer rule as written at Discovery
+> time — that rule remains a **Stable** confidence signal, not a blanket hold on
+> Preview. See also [ADR-007](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/007-pwa-base-reusable-foundation.md)
+> and [promote-to-pwa-base](https://github.com/RSHomeServer/PWA-Base/blob/main/.kandev/workflows/promote-to-pwa-base.md).
 
-- **Date:** 2026-08-06
+- **Date:** 2026-08-06 (lifecycle banner 2026-08-08)
 - **Author:** Discovery (Test-PWA research lane)
 - **Question:** Which mature, browser-first open-source projects should Songara treat as the default reference set when future PWAs need common capabilities—without inventing that infrastructure from scratch?
 
