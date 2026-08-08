@@ -36,7 +36,8 @@ export const capabilityAreas: CapabilityArea[] = [
       {
         id: 'motion',
         capability: 'Motion (React)',
-        implementation: 'motion/react spring toggle with reduced-motion gate',
+        implementation:
+          '@songara/pwa-base/preview/motion spring toggle + resolveTransition',
         status: 'Ready',
         oss: 'motion',
         ossUrl: 'https://github.com/motiondivision/motion',
@@ -51,12 +52,13 @@ export const capabilityAreas: CapabilityArea[] = [
         recommended: true,
         overallScore: 9,
         notes:
-          'Default React UI motion kit when WAAPI becomes verbose. Honour reduced motion; watch bundle size.',
+          'Consumes Preview Motion (Wave 1) — same import products use. Default React UI motion kit when WAAPI becomes verbose; watch bundle size.',
       },
       {
         id: 'springs',
         capability: 'Spring animations',
-        implementation: 'Motion spring ball target flip vs reduced-motion snap',
+        implementation:
+          '@songara/pwa-base/preview/motion spring ball + resolveTransition',
         status: 'Ready',
         oss: 'Motion springs / WAAPI compare',
         ossUrl: 'https://motion.dev/docs/react-transitions',
@@ -71,12 +73,13 @@ export const capabilityAreas: CapabilityArea[] = [
         recommended: true,
         overallScore: 8,
         notes:
-          'Use 2–3 shared spring presets. WAAPI lacks first-class springs — Motion wins for tactile UX.',
+          'Preview consume. Use 2–3 shared spring presets. WAAPI lacks first-class springs — Motion wins for tactile UX.',
       },
       {
         id: 'layout-transitions',
         capability: 'Layout transitions',
-        implementation: 'Motion layout expand/collapse tile grid',
+        implementation:
+          '@songara/pwa-base/preview/motion layout expand/collapse tile grid',
         status: 'Ready',
         oss: 'Motion layout / View Transitions',
         ossUrl: 'https://motion.dev/docs/react-layout-animations',
@@ -91,12 +94,13 @@ export const capabilityAreas: CapabilityArea[] = [
         recommended: true,
         overallScore: 8,
         notes:
-          'Great for small groups; avoid animating large lists. Disable under reduced motion.',
+          'Preview consume. Great for small groups; avoid animating large lists. Disable under reduced motion.',
       },
       {
         id: 'shared-element',
         capability: 'Shared-element transitions',
-        implementation: 'Motion layoutId highlight + View Transitions capability note',
+        implementation:
+          '@songara/pwa-base/preview/motion layoutId highlight + View Transitions note',
         status: 'Experimental',
         oss: 'Motion / View Transitions API',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API',
@@ -111,7 +115,7 @@ export const capabilityAreas: CapabilityArea[] = [
         recommended: false,
         overallScore: 6,
         notes:
-          'layoutId solid in-route; document View Transitions still uneven — keep fallbacks.',
+          'Preview consume. layoutId solid in-route; document View Transitions still uneven — keep fallbacks.',
       },
       {
         id: 'particles',

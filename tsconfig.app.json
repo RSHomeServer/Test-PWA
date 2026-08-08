@@ -10,7 +10,9 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@platform/animation": ["./src/shims/platform-animation.ts"]
+      "@platform/animation": ["./src/shims/platform-animation.ts"],
+      "motion": ["./node_modules/motion"],
+      "motion/*": ["./node_modules/motion/*"]
     },
 
     /* Bundler mode */

@@ -1,18 +1,30 @@
 import { useId, useState } from 'react'
-import { motion, useReducedMotion as useMotionReducedMotion } from 'motion/react'
+import {
+  motion,
+  resolveTransition,
+  useSongaraMotion,
+} from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../catalogue/registry'
 import { ExplorationShell } from '../ExplorationShell'
 
+const SPRING = {
+  type: 'spring',
+  stiffness: 180,
+  damping: 12,
+  mass: 0.8,
+} as const
+
 /**
- * Exploration: spring physics UX patterns (Motion springs vs stiff easing).
+ * Exploration: spring physics UX patterns via Preview Motion.
  */
 export function AnimationSpringsPage() {
   const record = getExploration('animation', 'springs')
-  const systemReduce = useMotionReducedMotion()
+  const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
   const [x, setX] = useState(0)
-  const reduce = forceReduce || !!systemReduce
+  const reduce = forceReduce || systemReduce
+  const transition = resolveTransition(reduce, SPRING)
 
   if (!record) return null
 
@@ -21,7 +33,7 @@ export function AnimationSpringsPage() {
       areaId="animation"
       explorationId="springs"
       record={record}
-      lead="Spring physics for tactile UI motion. Compare Motion spring configs against linear/ease WAAPI substitutes."
+      lead="Spring physics for tactile UI motion via `@songara/pwa-base/preview/motion`. Compare Preview spring configs against linear/ease WAAPI substitutes."
       visualNote="Visual validation: ball should overshoot and settle when springs are on; hard jump when reduced motion is on."
       performance={
         <p>
@@ -30,7 +42,7 @@ export function AnimationSpringsPage() {
         </p>
       }
       browserCompatibility={
-        <p>Via Motion JS runtime — same as Motion. Score {record.browserSupport}/5.</p>
+        <p>Via Motion JS runtime — same as Motion Preview. Score {record.browserSupport}/5.</p>
       }
       strengths={
         <ul>
@@ -48,7 +60,7 @@ export function AnimationSpringsPage() {
       }
       developerExperience={
         <p>
-          Motion spring transitions are straightforward. Score{' '}
+          Preview <code>resolveTransition</code> snaps under reduced motion. Score{' '}
           {record.developerExperience}/5.
         </p>
       }
@@ -60,8 +72,8 @@ export function AnimationSpringsPage() {
       }
       reusableIdeas={
         <p>
-          Standardise 2–3 spring presets (snappy, soft, heavy). Disable overshoot
-          under reduced motion; snap to end state.
+          Standardise 2–3 spring presets (snappy, soft, heavy). Pass them through
+          Preview <code>resolveTransition</code> / <code>useSongaraMotion</code>.
         </p>
       }
     >
@@ -82,12 +94,8 @@ export function AnimationSpringsPage() {
         </button>
         <motion.div
           className="cat__spring-ball"
-          animate={{ x: reduce ? x : x }}
-          transition={
-            reduce
-              ? { duration: 0 }
-              : { type: 'spring', stiffness: 180, damping: 12, mass: 0.8 }
-          }
+          animate={{ x }}
+          transition={transition}
           aria-label="Spring demo ball"
         />
       </div>
