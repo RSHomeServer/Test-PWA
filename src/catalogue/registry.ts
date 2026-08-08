@@ -392,17 +392,48 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'idb',
         ossUrl: 'https://github.com/jakearchibald/idb',
       }),
-      investigationStub({
+      {
         id: 'dexie',
         capability: 'Dexie.js',
+        implementation:
+          '@songara/pwa-base/preview/dexie createSongaraDb + songaraDbName notes CRUD',
+        status: 'Ready',
         oss: 'dexie',
         ossUrl: 'https://github.com/dexie/Dexie.js',
-      }),
-      investigationStub({
+        maturity: 5,
+        performance: 4,
+        browserSupport: 5,
+        offline: 5,
+        developerExperience: 5,
+        visualQuality: 3,
+        accessibility: 4,
+        complexity: 3,
+        recommended: true,
+        overallScore: 9,
+        notes:
+          'Consumes Preview Dexie (Wave 1) — same import products use. App-owned schema; no Dexie Cloud. Peer `dexie` required in the consumer.',
+      },
+      {
         id: 'migrations',
         capability: 'Schema migrations',
-        oss: 'Dexie / idb patterns',
-      }),
+        implementation:
+          '@songara/pwa-base/preview/dexie sortSchemaVersions + upgrade hooks (v1→v2)',
+        status: 'Ready',
+        oss: 'Dexie / Preview schema helpers',
+        ossUrl: 'https://github.com/dexie/Dexie.js',
+        maturity: 4,
+        performance: 4,
+        browserSupport: 5,
+        offline: 5,
+        developerExperience: 5,
+        visualQuality: 3,
+        accessibility: 4,
+        complexity: 3,
+        recommended: true,
+        overallScore: 8,
+        notes:
+          'Preview consume. Demonstrates SongaraSchemaVersion upgrade hooks; keep product migrations forward-only.',
+      },
       investigationStub({
         id: 'live-queries',
         capability: 'Live queries',

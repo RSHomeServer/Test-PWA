@@ -12,7 +12,9 @@
     "paths": {
       "@platform/animation": ["./src/shims/platform-animation.ts"],
       "motion": ["./node_modules/motion"],
-      "motion/*": ["./node_modules/motion/*"]
+      "motion/*": ["./node_modules/motion/*"],
+      "dexie": ["./node_modules/dexie"],
+      "dexie/*": ["./node_modules/dexie/*"]
     },
 
     /* Bundler mode */

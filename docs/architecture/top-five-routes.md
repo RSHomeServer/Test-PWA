@@ -105,8 +105,8 @@ Later waves (not in this five): computer-vision, ocr, charts, maps, whiteboards,
 | --- | --- | --- | --- |
 | `/offline-storage/indexeddb-raw` | Raw IDB baseline | Platform IndexedDB | P0 |
 | `/offline-storage/idb` | Tiny promise wrapper | `idb` | P0 |
-| `/offline-storage/dexie` | Ergonomic queries / versions | Dexie.js | P0 |
-| `/offline-storage/migrations` | Schema version patterns | Dexie / idb | P0 |
+| `/offline-storage/dexie` | Ergonomic queries / versions | `@songara/pwa-base/preview/dexie` (Dexie.js) | P0 |
+| `/offline-storage/migrations` | Schema version patterns | Preview Dexie schema helpers | P0 |
 | `/offline-storage/live-queries` | Reactive local reads | Dexie liveQuery / RxDB note | P1 |
 | `/offline-storage/opfs` | Origin Private File System | Platform OPFS | P1 |
 | `/offline-storage/localforage` | Legacy compare | localForage | P2 |

@@ -65,6 +65,16 @@ const explorationPages: Record<string, ComponentType> = {
       default: m.AnimationReducedMotionPage,
     })),
   ),
+  'offline-storage/dexie': lazyPage(() =>
+    import('./explorations/offline-storage/dexie').then((m) => ({
+      default: m.OfflineStorageDexiePage,
+    })),
+  ),
+  'offline-storage/migrations': lazyPage(() =>
+    import('./explorations/offline-storage/migrations').then((m) => ({
+      default: m.OfflineStorageMigrationsPage,
+    })),
+  ),
 }
 
 /**
