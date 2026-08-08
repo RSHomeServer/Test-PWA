@@ -312,6 +312,26 @@
   margin-bottom: 0.75rem;
 }
 
+.cat__note-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cat__note-list li {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.cat__demo-row input {
+  margin-left: 0.35rem;
+  min-width: 12rem;
+}
+
 .cat__layout-grid {
   display: grid;
   gap: 0.75rem;
