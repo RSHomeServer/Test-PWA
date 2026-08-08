@@ -2,17 +2,21 @@
 
 > **Authoritative engineering catalogue** for Songara. Capabilities first; libraries are
 > evidence. This document inspires future offline-first PWAs and informs later design —
-> it is **not** a dependency selection list and **not** a PWA-Base promotion plan.
+> it is **not** a dependency selection list and **not** a schedule for Preview packages.
+>
+> Lifecycle: [ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md)
+> — PWA-Base owns Preview; this catalogue consumes `@songara/pwa-base/preview/*` when
+> present. Stable still requires product usage (never catalogue-alone).
 >
 > Prior library-oriented survey (historical companion):
 > [`oss-capability-catalogue.md`](./oss-capability-catalogue.md).
 
 | | |
 | --- | --- |
-| **Date** | 2026-08-07 |
+| **Date** | 2026-08-07 (lifecycle note 2026-08-08) |
 | **Status** | Living SoT — update in place on every discovery pass |
 | **Question** | Which mature browser-first capabilities should Songara know about so future PWAs maximise OSS leverage and minimise reinvention? |
-| **Placement legend** | **Application-local** · **Potential shared infra** (only after multiple real products prove the same need) · **Never likely shared infra** |
+| **Placement legend** | **Application-local** · **Potential shared infra** (Preview under ADR-008; Stable after product confidence) · **Never likely shared infra** |
 
 ## Philosophy
 
@@ -20,9 +24,10 @@
 2. Ask: *If we wanted to build X, what is the state of the art?*
 3. The **Test-PWA app** is the Engineering Capability Catalogue (routes + evaluations) —
    see [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
-4. Hello / demos are **not** product consumers for PWA-Base promotion.
-5. Most capabilities stay application-local forever. Shared infrastructure emerges only
-   from repeated evidence across future products — never speculative extraction from this catalogue alone.
+4. Hello / catalogue demos are **not** product consumers for **Stable** graduation.
+5. Most capabilities stay application-local forever. **Preview** may land in PWA-Base
+   when engineering confidence and standardisation intent pass ADR-008 — not from a
+   single exploration alone, and not by holding every wrap until two products exist.
 6. Prefer MIT / Apache-2.0 / BSD; flag licence exceptions (GSAP, tldraw, MediaPipe notices).
 
 ## Evaluation framework
@@ -159,8 +164,10 @@ Question every exploration answers:
 KanDev work is organised as **capability → exploration sub-tickets**. Each sub-ticket leaves a
 permanent route and updates the area summary. Nothing throwaway.
 
-PWA-Base promotions still require repeated evidence across **future products** (ADR-003) —
-explorations here are engineering evidence, not product consumers.
+Preview packages are owned by PWA-Base; catalogue explorations **consume**
+`@songara/pwa-base/preview/*` when available. **Stable** graduation still needs
+**product** usage (ADR-008 / preferred ADR-003 two-consumer signal) — explorations
+here are engineering evidence, not product consumers.
 
 ### Role of high-value capabilities (catalogue areas)
 
