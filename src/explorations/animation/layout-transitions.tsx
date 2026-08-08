@@ -1,20 +1,27 @@
 import { useId, useState } from 'react'
-import { LayoutGroup, motion, useReducedMotion as useMotionReducedMotion } from 'motion/react'
+import {
+  LayoutGroup,
+  motion,
+  resolveTransition,
+  useSongaraMotion,
+} from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../catalogue/registry'
 import { ExplorationShell } from '../ExplorationShell'
 
 const ITEMS = ['A', 'B', 'C', 'D'] as const
+const SPRING = { type: 'spring', stiffness: 320, damping: 28 } as const
 
 /**
- * Exploration: shared layout / FLIP-style transitions via Motion layout.
+ * Exploration: shared layout / FLIP-style transitions via Preview Motion layout.
  */
 export function AnimationLayoutTransitionsPage() {
   const record = getExploration('animation', 'layout-transitions')
-  const systemReduce = useMotionReducedMotion()
+  const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
   const [expanded, setExpanded] = useState<string | null>('A')
-  const reduce = forceReduce || !!systemReduce
+  const reduce = forceReduce || systemReduce
+  const transition = resolveTransition(reduce, SPRING)
 
   if (!record) return null
 
@@ -23,7 +30,7 @@ export function AnimationLayoutTransitionsPage() {
       areaId="animation"
       explorationId="layout-transitions"
       record={record}
-      lead="Layout transitions (FLIP-style) when boxes resize or reorder. Motion layout props vs manual WAAPI FLIP."
+      lead="Layout transitions (FLIP-style) when boxes resize or reorder — via `@songara/pwa-base/preview/motion` layout props vs manual WAAPI FLIP."
       visualNote="Visual validation: click tiles — expanded tile should morph size/position when motion is allowed."
       performance={
         <p>
@@ -62,8 +69,8 @@ export function AnimationLayoutTransitionsPage() {
       }
       reusableIdeas={
         <p>
-          Scope layout animations to small groups; disable under reduced motion;
-          prefer opacity+transform for decorative-only cases.
+          Scope layout animations to small groups; disable under reduced motion
+          via Preview helpers; prefer opacity+transform for decorative-only cases.
         </p>
       }
     >
@@ -90,9 +97,7 @@ export function AnimationLayoutTransitionsPage() {
                 className="cat__layout-item"
                 data-expanded={isExpanded ? 'true' : 'false'}
                 layout={!reduce}
-                transition={
-                  reduce ? { duration: 0 } : { type: 'spring', stiffness: 320, damping: 28 }
-                }
+                transition={transition}
                 onClick={() => setExpanded(isExpanded ? null : id)}
               >
                 {id}

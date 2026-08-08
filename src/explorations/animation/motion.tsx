@@ -1,18 +1,25 @@
 import { useId, useState } from 'react'
-import { motion, useReducedMotion as useMotionReducedMotion } from 'motion/react'
+import {
+  motion,
+  resolveTransition,
+  useSongaraMotion,
+} from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../catalogue/registry'
 import { ExplorationShell } from '../ExplorationShell'
 
+const SPRING = { type: 'spring', stiffness: 260, damping: 18 } as const
+
 /**
- * Exploration: Motion (ex-Framer Motion) for declarative React UI animation.
+ * Exploration: Motion via `@songara/pwa-base/preview/motion` (same API products use).
  */
 export function AnimationMotionPage() {
   const record = getExploration('animation', 'motion')
-  const systemReduce = useMotionReducedMotion()
+  const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
   const [toggled, setToggled] = useState(false)
-  const reduce = forceReduce || !!systemReduce
+  const reduce = forceReduce || systemReduce
+  const transition = resolveTransition(reduce, SPRING)
 
   if (!record) return null
 
@@ -21,8 +28,8 @@ export function AnimationMotionPage() {
       areaId="animation"
       explorationId="motion"
       record={record}
-      lead="Declarative React motion library (Motion / formerly Framer Motion). Compare gesture, variants, and springs against the WAAPI baseline."
-      visualNote="Visual validation: box should spring between sizes when reduced motion is off; snap when on."
+      lead="Declarative React motion via PWA-Base Preview (`@songara/pwa-base/preview/motion`). Validates the same surface products will import — not a local wrapper."
+      visualNote="Visual validation: box should spring between sizes when reduced motion is off; snap when on (system preference or Simulate)."
       performance={
         <p>
           Excellent for UI-scale motion; layout animations can thrash if overused.
@@ -38,19 +45,21 @@ export function AnimationMotionPage() {
         <ul>
           <li>React-first API and variants</li>
           <li>Springs, gestures, layout in one kit</li>
-          <li>Strong docs and community</li>
+          <li>Songara Preview helpers honour foundation reduced-motion</li>
         </ul>
       }
       weaknesses={
         <ul>
           <li>Bundle cost vs WAAPI/CSS</li>
           <li>Easy to over-animate</li>
-          <li>Another abstraction over platform APIs</li>
+          <li>Preview API may evolve before Stable graduation</li>
         </ul>
       }
       developerExperience={
         <p>
-          High DX for component motion. Score {record.developerExperience}/5.
+          High DX for component motion; Preview re-exports Motion plus{' '}
+          <code>useSongaraMotion</code> / <code>resolveTransition</code>. Score{' '}
+          {record.developerExperience}/5.
         </p>
       }
       productIdeas={
@@ -61,8 +70,9 @@ export function AnimationMotionPage() {
       }
       reusableIdeas={
         <p>
-          Prefer Motion for app-wide React motion systems; keep WAAPI/CSS for
-          one-off decorative pulses. Always honour reduced motion.
+          Import <code>@songara/pwa-base/preview/motion</code> in products — never
+          deep-import <code>@platform/preview-motion</code> or duplicate a local
+          wrapper. Keep WAAPI/CSS for one-off decorative pulses.
         </p>
       }
     >
@@ -91,9 +101,7 @@ export function AnimationMotionPage() {
                   borderRadius: toggled ? '1.25rem' : '0.5rem',
                 }
           }
-          transition={
-            reduce ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 18 }
-          }
+          transition={transition}
         >
           Motion
         </motion.div>

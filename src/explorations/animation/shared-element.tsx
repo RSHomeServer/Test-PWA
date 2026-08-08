@@ -1,20 +1,28 @@
 import { useId, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion as useMotionReducedMotion } from 'motion/react'
+import {
+  AnimatePresence,
+  motion,
+  resolveTransition,
+  useSongaraMotion,
+} from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../catalogue/registry'
 import { ExplorationShell } from '../ExplorationShell'
 
 type CardId = 'alpha' | 'beta'
 
+const SPRING = { type: 'spring', stiffness: 380, damping: 32 } as const
+
 /**
- * Exploration: shared-element continuity (Motion layoutId + View Transitions note).
+ * Exploration: shared-element continuity via Preview Motion layoutId + View Transitions note.
  */
 export function AnimationSharedElementPage() {
   const record = getExploration('animation', 'shared-element')
-  const systemReduce = useMotionReducedMotion()
+  const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
   const [active, setActive] = useState<CardId>('alpha')
-  const reduce = forceReduce || !!systemReduce
+  const reduce = forceReduce || systemReduce
+  const transition = resolveTransition(reduce, SPRING)
   const supportsViewTransitions =
     typeof document !== 'undefined' && 'startViewTransition' in document
 
@@ -25,7 +33,7 @@ export function AnimationSharedElementPage() {
       areaId="animation"
       explorationId="shared-element"
       record={record}
-      lead="Cross-state shared-element continuity: Motion layoutId for in-tree morphs; View Transitions API for document navigations."
+      lead="Cross-state shared-element continuity via `@songara/pwa-base/preview/motion` layoutId; View Transitions API for document navigations."
       visualNote="Visual validation: switching cards should morph the shared highlight when motion is allowed."
       performance={
         <p>
@@ -69,8 +77,9 @@ export function AnimationSharedElementPage() {
       }
       reusableIdeas={
         <p>
-          Use layoutId within a route; adopt View Transitions for navigations when
-          support is acceptable; always provide an instant fallback.
+          Use Preview layoutId within a route; adopt View Transitions for
+          navigations when support is acceptable; always provide an instant
+          fallback under reduced motion.
         </p>
       }
     >
@@ -101,11 +110,7 @@ export function AnimationSharedElementPage() {
                   layoutId={reduce ? undefined : 'shared-highlight'}
                   className="cat__gsap-bar"
                   style={{ width: '70%', marginTop: '1rem' }}
-                  transition={
-                    reduce
-                      ? { duration: 0 }
-                      : { type: 'spring', stiffness: 380, damping: 32 }
-                  }
+                  transition={transition}
                 />
               ) : null}
             </AnimatePresence>
