@@ -26,7 +26,12 @@ export default defineConfig({
       'react-router-dom': resolve(rootDir, 'node_modules/react-router-dom'),
       motion: resolve(rootDir, 'node_modules/motion'),
       dexie: resolve(rootDir, 'node_modules/dexie'),
-      'lottie-react': resolve(rootDir, 'node_modules/lottie-react'),
+      // lottie-react CJS default breaks under Vite (SongaraLottie renders an object).
+      // Force the ESM build so `import Lottie from 'lottie-react'` is a component.
+      'lottie-react': resolve(
+        rootDir,
+        'node_modules/lottie-react/build/index.es.js',
+      ),
       '@platform/animation': resolve(rootDir, 'src/shims/platform-animation.ts'),
     },
   },

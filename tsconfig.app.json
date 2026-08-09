@@ -15,7 +15,7 @@
       "motion/*": ["./node_modules/motion/*"],
       "dexie": ["./node_modules/dexie"],
       "dexie/*": ["./node_modules/dexie/*"],
-      "lottie-react": ["./node_modules/lottie-react"],
+      "lottie-react": ["./node_modules/lottie-react/build/index.d.ts"],
       "lottie-react/*": ["./node_modules/lottie-react/*"],
       "react": ["./node_modules/@types/react/index.d.ts"],
       "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"]
