@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 /**
  * Exploration: GSAP timelines — industry timeline tool with licence diligence.
  */
 export function AnimationGsapPage() {
-  const record = getExploration('animation', 'gsap')
+  const record = getExploration('animation', 'GSAP/Timelines')
   const boxRef = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const reduceId = useId()
@@ -43,7 +43,7 @@ export function AnimationGsapPage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="gsap"
+      relativePath="GSAP/Timelines"
       record={record}
       lead="GSAP timeline sequencing for complex choreography. Powerful — but licence diligence is mandatory for commercial Songara use."
       visualNote="Visual validation: box and progress bar should timeline-tween when motion is allowed; static when reduced."

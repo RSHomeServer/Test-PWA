@@ -4,8 +4,8 @@ import {
   resolveTransition,
   useSongaraMotion,
 } from '@songara/pwa-base/preview/motion'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 const SPRING = {
   type: 'spring',
@@ -18,7 +18,7 @@ const SPRING = {
  * Exploration: spring physics UX patterns via Preview Motion.
  */
 export function AnimationSpringsPage() {
-  const record = getExploration('animation', 'springs')
+  const record = getExploration('animation', 'Motion/Springs')
   const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
@@ -31,7 +31,7 @@ export function AnimationSpringsPage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="springs"
+      relativePath="Motion/Springs"
       record={record}
       lead="Spring physics for tactile UI motion via `@songara/pwa-base/preview/motion`. Compare Preview spring configs against linear/ease WAAPI substitutes."
       visualNote="Visual validation: ball should overshoot and settle when springs are on; hard jump when reduced motion is on."

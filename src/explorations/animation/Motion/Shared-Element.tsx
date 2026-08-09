@@ -1,85 +1,84 @@
 import { useId, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   AnimatePresence,
   motion,
   resolveTransition,
   useSongaraMotion,
 } from '@songara/pwa-base/preview/motion'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 type CardId = 'alpha' | 'beta'
 
 const SPRING = { type: 'spring', stiffness: 380, damping: 32 } as const
 
 /**
- * Exploration: shared-element continuity via Preview Motion layoutId + View Transitions note.
+ * Exploration: shared-element continuity via Preview Motion layoutId.
+ * Document View Transitions live under /animation/native/View-Transitions.
  */
 export function AnimationSharedElementPage() {
-  const record = getExploration('animation', 'shared-element')
+  const record = getExploration('animation', 'Motion/Shared-Element')
   const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
   const [active, setActive] = useState<CardId>('alpha')
   const reduce = forceReduce || systemReduce
   const transition = resolveTransition(reduce, SPRING)
-  const supportsViewTransitions =
-    typeof document !== 'undefined' && 'startViewTransition' in document
 
   if (!record) return null
 
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="shared-element"
+      relativePath="Motion/Shared-Element"
       record={record}
-      lead="Cross-state shared-element continuity via `@songara/pwa-base/preview/motion` layoutId; View Transitions API for document navigations."
+      lead="Cross-state shared-element continuity via `@songara/pwa-base/preview/motion` layoutId within a route."
       visualNote="Visual validation: switching cards should morph the shared highlight when motion is allowed."
       performance={
         <p>
-          In-tree layoutId is fine for a few elements; document View Transitions
-          cost depends on captured layers. Score {record.performance}/5.
+          In-tree layoutId is fine for a few elements. Score {record.performance}
+          /5.
         </p>
       }
       browserCompatibility={
         <p>
-          Motion: evergreen. View Transitions: Chromium solid; Safari improving;
-          Firefox partial. Detected here:{' '}
-          {supportsViewTransitions ? 'supported' : 'not supported'}. Score{' '}
-          {record.browserSupport}/5.
+          Motion JS runtime — evergreen browsers. Score {record.browserSupport}/5.
         </p>
       }
       strengths={
         <ul>
-          <li>Continuity sells premium navigation</li>
-          <li>layoutId is simple for same-route morphs</li>
-          <li>View Transitions unlock cross-route without custom FLIP</li>
+          <li>Continuity sells premium in-route UI</li>
+          <li>layoutId is simple for same-tree morphs</li>
+          <li>Pairs with spring transitions</li>
         </ul>
       }
       weaknesses={
         <ul>
-          <li>Cross-route VT still uneven across browsers</li>
-          <li>React Router integration needs careful wrappers</li>
-          <li>Fallback UX must not flash</li>
+          <li>Not a document navigation API</li>
+          <li>Too many shared ids become hard to reason about</li>
+          <li>Must snap under reduced motion</li>
         </ul>
       }
       developerExperience={
         <p>
-          Good for same-tree; cross-route needs platform checks. Score{' '}
+          Strong for same-tree morphs via Preview. Score{' '}
           {record.developerExperience}/5.
         </p>
       }
       productIdeas={
         <p>
-          Gallery → detail morphs, tab indicators, hero image continuity between
-          list and detail routes.
+          Tab indicators, selected-card highlights, hero continuity between list
+          and detail within one screen.
         </p>
       }
       reusableIdeas={
         <p>
-          Use Preview layoutId within a route; adopt View Transitions for
-          navigations when support is acceptable; always provide an instant
-          fallback under reduced motion.
+          Use Preview layoutId within a route; for document navigations see{' '}
+          <Link to="/animation/native/View-Transitions">
+            /animation/native/View-Transitions
+          </Link>
+          ; always provide an instant fallback under reduced motion.
         </p>
       }
     >

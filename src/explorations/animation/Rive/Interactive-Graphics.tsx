@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 /** Public sample for catalogue smoke — product apps should ship .riv offline. */
 const SAMPLE_RIV =
@@ -11,7 +11,7 @@ const SAMPLE_RIV =
  * Exploration: Rive interactive state-machine graphics.
  */
 export function AnimationRivePage() {
-  const record = getExploration('animation', 'rive')
+  const record = getExploration('animation', 'Rive/Interactive-Graphics')
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(() =>
     typeof window !== 'undefined'
@@ -41,7 +41,7 @@ export function AnimationRivePage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="rive"
+      relativePath="Rive/Interactive-Graphics"
       record={record}
       lead="Interactive state-machine graphics via Rive. Strong for stateful illustrations; compare to Lottie for one-shot playback."
       visualNote="Visual validation: sample vehicle animation plays when motion is allowed; pauses when reduced. Requires network for the CDN sample."

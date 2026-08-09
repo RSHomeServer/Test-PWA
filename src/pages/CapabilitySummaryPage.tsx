@@ -1,5 +1,9 @@
 import { Link, useLocation } from 'react-router-dom'
-import { getArea } from '../catalogue/registry'
+import {
+  explorationCount,
+  getArea,
+  listExplorations,
+} from '../catalogue/registry'
 import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
@@ -19,6 +23,9 @@ export function CapabilitySummaryPage() {
     )
   }
 
+  const entries = listExplorations(area)
+  const grouped = Boolean(area.groups?.length)
+
   return (
     <main className="cat">
       <CatalogueBrowseNav areaId={area.id} />
@@ -34,13 +41,36 @@ export function CapabilitySummaryPage() {
         <p className="cat__lead">{area.description}</p>
       </header>
 
+      {grouped ? (
+        <section className="cat__group-index" aria-label="OSS and native groups">
+          <h2 className="cat__section-title">Stacks</h2>
+          <ul className="cat__group-list">
+            {area.groups!.map((g) => (
+              <li key={g.id}>
+                <Link className="cat__group-card" to={`/${area.id}/${g.id}`}>
+                  <span className="cat__group-card-title">{g.title}</span>
+                  <span className="cat__group-card-meta">
+                    {g.explorations.length} offering
+                    {g.explorations.length === 1 ? '' : 's'}
+                  </span>
+                  {g.description ? (
+                    <span className="cat__group-card-desc">{g.description}</span>
+                  ) : null}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <div className="cat__table-wrap">
         <table className="cat__table">
           <caption className="cat__caption">
-            Explorations in this area (registry-driven)
+            Explorations in this area ({explorationCount(area)} registry rows)
           </caption>
           <thead>
             <tr>
+              {grouped ? <th>Stack</th> : null}
               <th>Capability</th>
               <th>Implementation</th>
               <th>Status</th>
@@ -59,33 +89,46 @@ export function CapabilitySummaryPage() {
             </tr>
           </thead>
           <tbody>
-            {area.explorations.map((row) => (
-              <tr key={row.id}>
+            {entries.map((entry) => (
+              <tr key={entry.relativePath}>
+                {grouped ? (
+                  <td>
+                    <Link to={`/${area.id}/${entry.group!.id}`}>
+                      {entry.group!.title}
+                    </Link>
+                  </td>
+                ) : null}
                 <td>
-                  <Link to={`/${area.id}/${row.id}`}>{row.capability}</Link>
+                  <Link to={`/${area.id}/${entry.relativePath}`}>
+                    {entry.record.capability}
+                  </Link>
                 </td>
-                <td>{row.implementation}</td>
-                <td>{row.status}</td>
+                <td>{entry.record.implementation}</td>
+                <td>{entry.record.status}</td>
                 <td>
-                  {row.ossUrl ? (
-                    <a href={row.ossUrl} rel="noreferrer" target="_blank">
-                      {row.oss}
+                  {entry.record.ossUrl ? (
+                    <a
+                      href={entry.record.ossUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {entry.record.oss}
                     </a>
                   ) : (
-                    row.oss
+                    entry.record.oss
                   )}
                 </td>
-                <td>{row.maturity}</td>
-                <td>{row.performance}</td>
-                <td>{row.browserSupport}</td>
-                <td>{row.offline}</td>
-                <td>{row.developerExperience}</td>
-                <td>{row.visualQuality}</td>
-                <td>{row.accessibility}</td>
-                <td>{row.complexity}</td>
-                <td>{row.recommended ? 'Yes' : 'No'}</td>
-                <td>{row.overallScore}</td>
-                <td>{row.notes}</td>
+                <td>{entry.record.maturity}</td>
+                <td>{entry.record.performance}</td>
+                <td>{entry.record.browserSupport}</td>
+                <td>{entry.record.offline}</td>
+                <td>{entry.record.developerExperience}</td>
+                <td>{entry.record.visualQuality}</td>
+                <td>{entry.record.accessibility}</td>
+                <td>{entry.record.complexity}</td>
+                <td>{entry.record.recommended ? 'Yes' : 'No'}</td>
+                <td>{entry.record.overallScore}</td>
+                <td>{entry.record.notes}</td>
               </tr>
             ))}
           </tbody>
