@@ -441,62 +441,110 @@ export const capabilityAreas: CapabilityArea[] = [
     title: 'Physics',
     description:
       '2D/3D rigid-body and constraint simulation for interactive Songara experiences.',
-    explorations: [
-      investigationStub({
-        id: 'rapier2d',
-        capability: 'Rapier 2D',
-        oss: '@dimforge/rapier2d-compat',
-        ossUrl: 'https://github.com/dimforge/rapier',
-      }),
-      investigationStub({
-        id: 'rapier3d',
-        capability: 'Rapier 3D',
-        oss: '@dimforge/rapier3d-compat',
-        ossUrl: 'https://github.com/dimforge/rapier',
-      }),
-      investigationStub({
-        id: 'matter',
-        capability: 'Matter.js 2D',
-        oss: 'matter-js',
-        ossUrl: 'https://github.com/liabru/matter-js',
-      }),
-      investigationStub({
-        id: 'planck',
-        capability: 'Planck.js',
-        oss: 'planck-js',
-        ossUrl: 'https://github.com/piqnt/planck.js',
-      }),
-      investigationStub({
+    groups: [
+      {
+        id: 'Rapier',
+        title: 'Rapier',
+        oss: 'Rapier',
+        ossUrl: 'https://rapier.rs',
+        description:
+          'Modern WASM physics (2D/3D). Songara default engine candidate; Preview held for Wave 1b + product commit.',
+        explorations: [
+          investigationStub({
+            id: 'Overview-2D',
+            capability: 'Overview 2D',
+            oss: 'Rapier (@dimforge/rapier2d-compat)',
+            ossUrl: 'https://github.com/dimforge/rapier',
+          }),
+          investigationStub({
+            id: 'Overview-3D',
+            capability: 'Overview 3D',
+            oss: 'Rapier (@dimforge/rapier3d-compat)',
+            ossUrl: 'https://github.com/dimforge/rapier',
+          }),
+          investigationStub({
+            id: 'Joints',
+            capability: 'Joints',
+            oss: 'Rapier',
+            ossUrl: 'https://rapier.rs/docs/user_guides/javascript/joints',
+          }),
+          investigationStub({
+            id: 'Soft-Bodies',
+            capability: 'Soft Bodies',
+            oss: 'Rapier',
+            ossUrl: 'https://rapier.rs',
+          }),
+          investigationStub({
+            id: 'Rope',
+            capability: 'Rope',
+            oss: 'Rapier',
+            ossUrl: 'https://rapier.rs',
+          }),
+          investigationStub({
+            id: 'Cloth',
+            capability: 'Cloth',
+            oss: 'Rapier',
+            ossUrl: 'https://rapier.rs',
+          }),
+          investigationStub({
+            id: 'Vehicles',
+            capability: 'Vehicles',
+            oss: 'Rapier',
+            ossUrl: 'https://rapier.rs',
+          }),
+        ],
+      },
+      {
+        id: 'Matter.js',
+        title: 'Matter.js',
+        oss: 'Matter.js',
+        ossUrl: 'https://brm.io/matter-js/',
+        description: 'Approachable 2D rigid-body engine for the web.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'Matter.js',
+            ossUrl: 'https://github.com/liabru/matter-js',
+          }),
+          investigationStub({
+            id: 'Constraints',
+            capability: 'Constraints',
+            oss: 'Matter.js',
+            ossUrl: 'https://brm.io/matter-js/docs/classes/Constraint.html',
+          }),
+        ],
+      },
+      {
+        id: 'Planck.js',
+        title: 'Planck.js',
+        oss: 'Planck.js',
+        ossUrl: 'https://piqnt.com/planck.js/',
+        description: 'Box2D-style 2D physics for JavaScript.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'Planck.js',
+            ossUrl: 'https://github.com/piqnt/planck.js',
+          }),
+        ],
+      },
+      {
         id: 'cannon-es',
-        capability: 'cannon-es 3D',
+        title: 'cannon-es',
         oss: 'cannon-es',
         ossUrl: 'https://github.com/pmndrs/cannon-es',
-      }),
-      investigationStub({
-        id: 'constraints',
-        capability: 'Joints & constraints',
-        oss: 'Rapier / Matter patterns',
-      }),
-      investigationStub({
-        id: 'soft-bodies',
-        capability: 'Soft bodies',
-        oss: 'Engine-specific / investigate',
-      }),
-      investigationStub({
-        id: 'rope',
-        capability: 'Rope / cable',
-        oss: 'Engine-specific / investigate',
-      }),
-      investigationStub({
-        id: 'cloth',
-        capability: 'Cloth',
-        oss: 'Engine-specific / investigate',
-      }),
-      investigationStub({
-        id: 'vehicles',
-        capability: 'Vehicle controllers',
-        oss: 'Rapier / custom',
-      }),
+        description: 'Classic 3D rigid-body engine (ES module fork of cannon.js).',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'cannon-es',
+            ossUrl: 'https://github.com/pmndrs/cannon-es',
+          }),
+        ],
+      },
     ],
   },
   {
@@ -504,45 +552,73 @@ export const capabilityAreas: CapabilityArea[] = [
     title: 'Camera',
     description:
       'Camera access, device selection, still capture, and permission UX for Songara PWAs.',
-    explorations: [
-      investigationStub({
-        id: 'getusermedia',
-        capability: 'getUserMedia baseline',
-        oss: 'MediaDevices API',
+    groups: [
+      {
+        id: 'native',
+        title: 'Native',
+        oss: 'Platform MediaDevices',
         ossUrl:
-          'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia',
-      }),
-      investigationStub({
+          'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices',
+        description:
+          'Browser platform camera APIs and permission patterns — baseline before wrappers.',
+        explorations: [
+          investigationStub({
+            id: 'GetUserMedia',
+            capability: 'GetUserMedia',
+            oss: 'MediaDevices API',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia',
+          }),
+          investigationStub({
+            id: 'Device-Selection',
+            capability: 'Device Selection',
+            oss: 'MediaDevices.enumerateDevices',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices',
+          }),
+          investigationStub({
+            id: 'Still-Capture',
+            capability: 'Still Capture',
+            oss: 'Platform canvas / ImageCapture',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/ImageCapture',
+          }),
+          investigationStub({
+            id: 'Track-Constraints',
+            capability: 'Track Constraints',
+            oss: 'MediaTrackConstraints',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints',
+          }),
+          investigationStub({
+            id: 'Permissions-UX',
+            capability: 'Permissions UX',
+            oss: 'Platform patterns',
+          }),
+          investigationStub({
+            id: 'Secure-Context',
+            capability: 'Secure Context',
+            oss: 'Platform',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts',
+          }),
+        ],
+      },
+      {
         id: 'react-webcam',
-        capability: 'react-webcam',
+        title: 'react-webcam',
         oss: 'react-webcam',
         ossUrl: 'https://github.com/mozmorris/react-webcam',
-      }),
-      investigationStub({
-        id: 'device-selection',
-        capability: 'Device selection',
-        oss: 'MediaDevices.enumerateDevices',
-      }),
-      investigationStub({
-        id: 'still-capture',
-        capability: 'Still capture',
-        oss: 'Platform canvas / ImageCapture',
-      }),
-      investigationStub({
-        id: 'constraints',
-        capability: 'Track constraints',
-        oss: 'MediaTrackConstraints',
-      }),
-      investigationStub({
-        id: 'permissions-ux',
-        capability: 'Permissions UX',
-        oss: 'Patterns (platform)',
-      }),
-      investigationStub({
-        id: 'secure-context',
-        capability: 'Secure context requirements',
-        oss: 'Platform',
-      }),
+        description: 'Thin React glue around getUserMedia.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'react-webcam',
+            ossUrl: 'https://github.com/mozmorris/react-webcam',
+          }),
+        ],
+      },
     ],
   },
   {
@@ -550,45 +626,112 @@ export const capabilityAreas: CapabilityArea[] = [
     title: 'Audio',
     description:
       'Playback, SFX, musical graphs, and comparison with the Songara audio kit.',
-    explorations: [
-      investigationStub({
-        id: 'web-audio',
-        capability: 'Web Audio API',
-        oss: 'Platform AudioContext',
+    groups: [
+      {
+        id: 'native',
+        title: 'Native',
+        oss: 'Platform audio APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
-      }),
-      investigationStub({
-        id: 'tone',
-        capability: 'Tone.js',
-        oss: 'tone',
-        ossUrl: 'https://github.com/Tonejs/Tone.js',
-      }),
-      investigationStub({
-        id: 'howler',
-        capability: 'Howler.js',
-        oss: 'howler',
-        ossUrl: 'https://github.com/goldfire/howler.js',
-      }),
-      investigationStub({
-        id: 'media-element',
-        capability: 'HTMLAudioElement',
-        oss: 'Platform',
-      }),
-      investigationStub({
-        id: 'worklet',
-        capability: 'AudioWorklet',
-        oss: 'Platform AudioWorklet',
-      }),
-      investigationStub({
-        id: 'recording-playback',
-        capability: 'Record then play',
-        oss: 'MediaRecorder + Web Audio',
-      }),
-      investigationStub({
-        id: 'songara-audio-kit',
-        capability: 'Songara audio kit',
+        description: 'Web Audio, media element, worklets, and recording baselines.',
+        explorations: [
+          investigationStub({
+            id: 'Web-Audio-API',
+            capability: 'Web Audio API',
+            oss: 'Platform AudioContext',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
+          }),
+          investigationStub({
+            id: 'HTMLAudioElement',
+            capability: 'HTMLAudioElement',
+            oss: 'Platform',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement',
+          }),
+          investigationStub({
+            id: 'AudioWorklet',
+            capability: 'AudioWorklet',
+            oss: 'Platform AudioWorklet',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet',
+          }),
+          investigationStub({
+            id: 'MediaRecorder',
+            capability: 'MediaRecorder',
+            oss: 'MediaRecorder',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder',
+          }),
+        ],
+      },
+      {
+        id: 'Tone.js',
+        title: 'Tone.js',
+        oss: 'Tone.js',
+        ossUrl: 'https://tonejs.github.io/',
+        description: 'Musical timing, synthesis, and transport for the web.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'Tone.js',
+            ossUrl: 'https://github.com/Tonejs/Tone.js',
+          }),
+          investigationStub({
+            id: 'Synthesis',
+            capability: 'Synthesis',
+            oss: 'Tone.js',
+            ossUrl: 'https://tonejs.github.io/',
+          }),
+          investigationStub({
+            id: 'Transport',
+            capability: 'Transport',
+            oss: 'Tone.js',
+            ossUrl: 'https://tonejs.github.io/docs/15.0.4/classes/Transport.html',
+          }),
+        ],
+      },
+      {
+        id: 'Howler.js',
+        title: 'Howler.js',
+        oss: 'Howler.js',
+        ossUrl: 'https://howlerjs.com/',
+        description: 'Simple multi-format SFX playback.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'Howler.js',
+            ossUrl: 'https://github.com/goldfire/howler.js',
+          }),
+          investigationStub({
+            id: 'Sprites',
+            capability: 'Sprites',
+            oss: 'Howler.js',
+            ossUrl: 'https://github.com/goldfire/howler.js#documentation',
+          }),
+        ],
+      },
+      {
+        id: 'Songara-Audio-Kit',
+        title: 'Songara Audio Kit',
         oss: '@songara/pwa-base/audio',
-      }),
+        ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
+        description:
+          'Foundation Stable audio kit — compare against Tone/Howler/platform for Songara PWAs.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: '@songara/pwa-base/audio',
+          }),
+          investigationStub({
+            id: 'Playback-Loop',
+            capability: 'Playback Loop',
+            oss: '@songara/pwa-base/audio + MediaRecorder patterns',
+          }),
+        ],
+      },
     ],
   },
   {
@@ -596,82 +739,132 @@ export const capabilityAreas: CapabilityArea[] = [
     title: 'Offline Storage',
     description:
       'Durable client-side data: IndexedDB ergonomics, migrations, OPFS — no sync product yet.',
-    explorations: [
-      investigationStub({
-        id: 'indexeddb-raw',
-        capability: 'Raw IndexedDB',
-        oss: 'Platform IndexedDB',
+    groups: [
+      {
+        id: 'native',
+        title: 'Native',
+        oss: 'Platform storage APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
-      }),
-      investigationStub({
+        description: 'Raw IndexedDB and Origin Private File System baselines.',
+        explorations: [
+          investigationStub({
+            id: 'IndexedDB',
+            capability: 'IndexedDB',
+            oss: 'Platform IndexedDB',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
+          }),
+          investigationStub({
+            id: 'OPFS',
+            capability: 'OPFS',
+            oss: 'Platform OPFS',
+            ossUrl:
+              'https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system',
+          }),
+        ],
+      },
+      {
         id: 'idb',
-        capability: 'idb wrapper',
+        title: 'idb',
         oss: 'idb',
         ossUrl: 'https://github.com/jakearchibald/idb',
-      }),
-      {
-        id: 'dexie',
-        capability: 'Dexie.js',
-        implementation:
-          '@songara/pwa-base/preview/dexie createSongaraDb + songaraDbName notes CRUD',
-        status: 'Ready',
-        oss: 'dexie',
-        ossUrl: 'https://github.com/dexie/Dexie.js',
-        maturity: 5,
-        performance: 4,
-        browserSupport: 5,
-        offline: 5,
-        developerExperience: 5,
-        visualQuality: 3,
-        accessibility: 4,
-        complexity: 3,
-        recommended: true,
-        overallScore: 9,
-        notes:
-          'Consumes Preview Dexie (Wave 1) — same import products use. App-owned schema; no Dexie Cloud. Peer `dexie` required in the consumer.',
+        description: 'Tiny promise wrapper around IndexedDB.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'idb',
+            ossUrl: 'https://github.com/jakearchibald/idb',
+          }),
+        ],
       },
       {
-        id: 'migrations',
-        capability: 'Schema migrations',
-        implementation:
-          '@songara/pwa-base/preview/dexie sortSchemaVersions + upgrade hooks (v1→v2)',
-        status: 'Ready',
-        oss: 'Dexie / Preview schema helpers',
-        ossUrl: 'https://github.com/dexie/Dexie.js',
-        maturity: 4,
-        performance: 4,
-        browserSupport: 5,
-        offline: 5,
-        developerExperience: 5,
-        visualQuality: 3,
-        accessibility: 4,
-        complexity: 3,
-        recommended: true,
-        overallScore: 8,
-        notes:
-          'Preview consume. Demonstrates SongaraSchemaVersion upgrade hooks; keep product migrations forward-only.',
+        id: 'Dexie.js',
+        title: 'Dexie.js',
+        oss: 'Dexie.js',
+        ossUrl: 'https://dexie.org/',
+        description:
+          'Ergonomic IndexedDB via `@songara/pwa-base/preview/dexie` (Wave 1 Preview).',
+        explorations: [
+          {
+            id: 'Overview',
+            capability: 'Overview',
+            implementation:
+              '@songara/pwa-base/preview/dexie createSongaraDb + songaraDbName notes CRUD',
+            status: 'Ready',
+            oss: 'Dexie.js',
+            ossUrl: 'https://github.com/dexie/Dexie.js',
+            maturity: 5,
+            performance: 4,
+            browserSupport: 5,
+            offline: 5,
+            developerExperience: 5,
+            visualQuality: 3,
+            accessibility: 4,
+            complexity: 3,
+            recommended: true,
+            overallScore: 9,
+            notes:
+              'Consumes Preview Dexie (Wave 1) — same import products use. App-owned schema; no Dexie Cloud. Peer `dexie` required in the consumer.',
+          },
+          {
+            id: 'Migrations',
+            capability: 'Migrations',
+            implementation:
+              '@songara/pwa-base/preview/dexie sortSchemaVersions + upgrade hooks (v1→v2)',
+            status: 'Ready',
+            oss: 'Dexie.js',
+            ossUrl: 'https://github.com/dexie/Dexie.js',
+            maturity: 4,
+            performance: 4,
+            browserSupport: 5,
+            offline: 5,
+            developerExperience: 5,
+            visualQuality: 3,
+            accessibility: 4,
+            complexity: 3,
+            recommended: true,
+            overallScore: 8,
+            notes:
+              'Preview consume. Demonstrates SongaraSchemaVersion upgrade hooks; keep product migrations forward-only.',
+          },
+          investigationStub({
+            id: 'Live-Queries',
+            capability: 'Live Queries',
+            oss: 'Dexie.js',
+            ossUrl: 'https://dexie.org/docs/liveQuery()',
+          }),
+        ],
       },
-      investigationStub({
-        id: 'live-queries',
-        capability: 'Live queries',
-        oss: 'Dexie liveQuery',
-      }),
-      investigationStub({
-        id: 'opfs',
-        capability: 'Origin Private File System',
-        oss: 'Platform OPFS',
-      }),
-      investigationStub({
-        id: 'localforage',
-        capability: 'localForage (legacy)',
-        oss: 'localforage',
-        ossUrl: 'https://github.com/localForage/localForage',
-      }),
-      investigationStub({
-        id: 'pack-store',
-        capability: 'Foundation packStore contrast',
+      {
+        id: 'localForage',
+        title: 'localForage',
+        oss: 'localForage',
+        ossUrl: 'https://localforage.github.io/localForage/',
+        description: 'Legacy async storage wrapper — compare only.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: 'localForage',
+            ossUrl: 'https://github.com/localForage/localForage',
+          }),
+        ],
+      },
+      {
+        id: 'Songara-Pack-Store',
+        title: 'Songara Pack Store',
         oss: '@songara/pwa-base runtime storage',
-      }),
+        ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
+        description: 'Foundation packStore contrast for content packs vs app IDB.',
+        explorations: [
+          investigationStub({
+            id: 'Overview',
+            capability: 'Overview',
+            oss: '@songara/pwa-base runtime storage',
+          }),
+        ],
+      },
     ],
   },
 ]
@@ -765,8 +958,8 @@ export type CatalogueSiteRoute = {
   relativePath?: string
 }
 
-/** Legacy flat animation URLs → nested paths. */
-export const animationLegacyRedirects: Record<string, string> = {
+/** Legacy flat catalogue URLs → nested OSS/native paths. */
+export const catalogueLegacyRedirects: Record<string, string> = {
   'animation/waapi': 'animation/native/Web-Animations-API',
   'animation/reduced-motion': 'animation/native/Reduced-Motion',
   'animation/motion': 'animation/Motion/Overview',
@@ -777,7 +970,42 @@ export const animationLegacyRedirects: Record<string, string> = {
   'animation/rive': 'animation/Rive/Interactive-Graphics',
   'animation/gsap': 'animation/GSAP/Timelines',
   'animation/particles': 'animation/tsParticles/Ambient-Field',
+  'physics/rapier2d': 'physics/Rapier/Overview-2D',
+  'physics/rapier3d': 'physics/Rapier/Overview-3D',
+  'physics/matter': 'physics/Matter.js/Overview',
+  'physics/planck': 'physics/Planck.js/Overview',
+  'physics/cannon-es': 'physics/cannon-es/Overview',
+  'physics/constraints': 'physics/Rapier/Joints',
+  'physics/soft-bodies': 'physics/Rapier/Soft-Bodies',
+  'physics/rope': 'physics/Rapier/Rope',
+  'physics/cloth': 'physics/Rapier/Cloth',
+  'physics/vehicles': 'physics/Rapier/Vehicles',
+  'camera/getusermedia': 'camera/native/GetUserMedia',
+  'camera/device-selection': 'camera/native/Device-Selection',
+  'camera/still-capture': 'camera/native/Still-Capture',
+  'camera/constraints': 'camera/native/Track-Constraints',
+  'camera/permissions-ux': 'camera/native/Permissions-UX',
+  'camera/secure-context': 'camera/native/Secure-Context',
+  'camera/react-webcam': 'camera/react-webcam/Overview',
+  'audio/web-audio': 'audio/native/Web-Audio-API',
+  'audio/media-element': 'audio/native/HTMLAudioElement',
+  'audio/worklet': 'audio/native/AudioWorklet',
+  'audio/recording-playback': 'audio/native/MediaRecorder',
+  'audio/tone': 'audio/Tone.js/Overview',
+  'audio/howler': 'audio/Howler.js/Overview',
+  'audio/songara-audio-kit': 'audio/Songara-Audio-Kit/Overview',
+  'offline-storage/indexeddb-raw': 'offline-storage/native/IndexedDB',
+  'offline-storage/opfs': 'offline-storage/native/OPFS',
+  'offline-storage/idb': 'offline-storage/idb/Overview',
+  'offline-storage/dexie': 'offline-storage/Dexie.js/Overview',
+  'offline-storage/migrations': 'offline-storage/Dexie.js/Migrations',
+  'offline-storage/live-queries': 'offline-storage/Dexie.js/Live-Queries',
+  'offline-storage/localforage': 'offline-storage/localForage/Overview',
+  'offline-storage/pack-store': 'offline-storage/Songara-Pack-Store/Overview',
 }
+
+/** @deprecated Use catalogueLegacyRedirects */
+export const animationLegacyRedirects = catalogueLegacyRedirects
 
 /** All catalogue routes for SoloSiteApp (leaf routes before area summaries). */
 export function catalogueSiteRoutes(): CatalogueSiteRoute[] {

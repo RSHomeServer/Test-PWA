@@ -57,20 +57,24 @@ Legacy flat paths (`/animation/motion`, `/animation/waapi`, …) redirect to the
 
 **Question:** Which 2D/3D physics engines fit Songara labs and interactive PWAs?
 
-| Subroute | Focus | OSS | Priority |
-| --- | --- | --- | --- |
-| `/physics/rapier2d` | Modern WASM 2D | `@dimforge/rapier2d-compat` | P0 |
-| `/physics/rapier3d` | Modern WASM 3D | `@dimforge/rapier3d-compat` | P1 |
-| `/physics/matter` | Approachable 2D | Matter.js | P0 |
-| `/physics/planck` | Box2D-style 2D | Planck.js | P1 |
-| `/physics/cannon-es` | Classic 3D | cannon-es | P2 |
-| `/physics/constraints` | Joints / motors patterns | Rapier or Matter | P1 |
-| `/physics/soft-bodies` | Soft body feasibility | Engine-specific | P2 |
-| `/physics/rope` | Rope / cable | Engine-specific | P2 |
-| `/physics/cloth` | Cloth | Engine-specific | P2 |
-| `/physics/vehicles` | Vehicle controllers | Rapier / custom | P2 |
+Nested IA: `/physics/{Engine}/{Offering}`.
 
-**Notes:** Prefer one small scene per subroute (box stacks, joints). Do not build a game.
+| Route | Focus | Status |
+| --- | --- | --- |
+| `/physics/Rapier` | Rapier hub | Hub |
+| `/physics/Rapier/Overview-2D` | WASM 2D baseline | Needs investigation |
+| `/physics/Rapier/Overview-3D` | WASM 3D baseline | Needs investigation |
+| `/physics/Rapier/Joints` | Joints / motors | Needs investigation |
+| `/physics/Rapier/Soft-Bodies` | Soft body feasibility | Needs investigation |
+| `/physics/Rapier/Rope` | Rope / cable | Needs investigation |
+| `/physics/Rapier/Cloth` | Cloth | Needs investigation |
+| `/physics/Rapier/Vehicles` | Vehicle controllers | Needs investigation |
+| `/physics/Matter.js/Overview` | Approachable 2D | Needs investigation |
+| `/physics/Matter.js/Constraints` | Matter constraints | Needs investigation |
+| `/physics/Planck.js/Overview` | Box2D-style 2D | Needs investigation |
+| `/physics/cannon-es/Overview` | Classic 3D | Needs investigation |
+
+**Notes:** Prefer one small scene per offering. Do not build a game. Legacy flat `/physics/*` paths redirect.
 
 ---
 
@@ -78,17 +82,18 @@ Legacy flat paths (`/animation/motion`, `/animation/waapi`, …) redirect to the
 
 **Question:** How should Songara apps capture stills and manage devices/permissions?
 
-| Subroute | Focus | OSS / API | Priority |
-| --- | --- | --- | --- |
-| `/camera/getusermedia` | Platform MediaDevices baseline | `navigator.mediaDevices` | P0 |
-| `/camera/react-webcam` | React glue | react-webcam | P0 |
-| `/camera/device-selection` | Multi-camera enumeration | Platform API | P0 |
-| `/camera/still-capture` | Snapshot to canvas/Blob | Platform | P0 |
-| `/camera/constraints` | Resolution / facingMode / torch | Platform constraints | P1 |
-| `/camera/permissions-ux` | Permission denied / iOS quirks | Patterns (no OSS required) | P0 |
-| `/camera/secure-context` | HTTPS / secure context requirements | Platform | P1 |
+| Route | Focus | Status |
+| --- | --- | --- |
+| `/camera/native` | Platform hub | Hub |
+| `/camera/native/GetUserMedia` | MediaDevices baseline | Needs investigation |
+| `/camera/native/Device-Selection` | Multi-camera enumeration | Needs investigation |
+| `/camera/native/Still-Capture` | Snapshot to canvas/Blob | Needs investigation |
+| `/camera/native/Track-Constraints` | Resolution / facingMode / torch | Needs investigation |
+| `/camera/native/Permissions-UX` | Permission denied / iOS quirks | Needs investigation |
+| `/camera/native/Secure-Context` | HTTPS / secure context | Needs investigation |
+| `/camera/react-webcam/Overview` | React glue | Needs investigation |
 
-**Out of scope for this area ticket:** MediaPipe / CV (separate `/computer-vision` wave).
+**Out of scope for this area:** MediaPipe / CV (separate `/computer-vision` wave).
 
 ---
 
@@ -96,15 +101,20 @@ Legacy flat paths (`/animation/motion`, `/animation/waapi`, …) redirect to the
 
 **Question:** Playback, SFX, and musical graphs — platform vs Tone vs Howler?
 
-| Subroute | Focus | OSS / API | Priority |
-| --- | --- | --- | --- |
-| `/audio/web-audio` | Platform AudioContext graph | Web Audio API | P0 |
-| `/audio/tone` | Musical timing / synthesis | Tone.js | P0 |
-| `/audio/howler` | Simple multi-format SFX | Howler.js | P0 |
-| `/audio/media-element` | `HTMLAudioElement` baseline | Platform | P1 |
-| `/audio/worklet` | AudioWorklet processing | Platform | P1 |
-| `/audio/recording-playback` | Record then play loop | MediaRecorder + Web Audio | P1 |
-| `/audio/songara-audio-kit` | Compare foundation `@songara/pwa-base/audio` | PWA-Base audio kit | P0 |
+| Route | Focus | Status |
+| --- | --- | --- |
+| `/audio/native` | Platform hub | Hub |
+| `/audio/native/Web-Audio-API` | AudioContext graph | Needs investigation |
+| `/audio/native/HTMLAudioElement` | Media element baseline | Needs investigation |
+| `/audio/native/AudioWorklet` | Worklet processing | Needs investigation |
+| `/audio/native/MediaRecorder` | Record baseline | Needs investigation |
+| `/audio/Tone.js/Overview` | Tone.js entry | Needs investigation |
+| `/audio/Tone.js/Synthesis` | Synthesis | Needs investigation |
+| `/audio/Tone.js/Transport` | Transport / timing | Needs investigation |
+| `/audio/Howler.js/Overview` | Howler entry | Needs investigation |
+| `/audio/Howler.js/Sprites` | Audio sprites | Needs investigation |
+| `/audio/Songara-Audio-Kit/Overview` | Foundation kit | Needs investigation |
+| `/audio/Songara-Audio-Kit/Playback-Loop` | Record/play patterns | Needs investigation |
 
 **Notes:** Autoplay policies must be documented; gesture-to-start patterns required.
 
@@ -114,28 +124,28 @@ Legacy flat paths (`/animation/motion`, `/animation/waapi`, …) redirect to the
 
 **Question:** What is the Songara default for durable client data (no sync product yet)?
 
-| Subroute | Focus | OSS / API | Priority |
-| --- | --- | --- | --- |
-| `/offline-storage/indexeddb-raw` | Raw IDB baseline | Platform IndexedDB | P0 |
-| `/offline-storage/idb` | Tiny promise wrapper | `idb` | P0 |
-| `/offline-storage/dexie` | Ergonomic queries / versions | `@songara/pwa-base/preview/dexie` (Dexie.js) | P0 |
-| `/offline-storage/migrations` | Schema version patterns | Preview Dexie schema helpers | P0 |
-| `/offline-storage/live-queries` | Reactive local reads | Dexie liveQuery / RxDB note | P1 |
-| `/offline-storage/opfs` | Origin Private File System | Platform OPFS | P1 |
-| `/offline-storage/localforage` | Legacy compare | localForage | P2 |
-| `/offline-storage/pack-store` | Contrast foundation packStore | PWA-Base runtime storage | P1 |
+| Route | Focus | Status |
+| --- | --- | --- |
+| `/offline-storage/native/IndexedDB` | Raw IDB baseline | Needs investigation |
+| `/offline-storage/native/OPFS` | Origin Private File System | Needs investigation |
+| `/offline-storage/idb/Overview` | Tiny promise wrapper | Needs investigation |
+| `/offline-storage/Dexie.js/Overview` | Preview Dexie CRUD | Ready |
+| `/offline-storage/Dexie.js/Migrations` | Schema upgrades | Ready |
+| `/offline-storage/Dexie.js/Live-Queries` | liveQuery | Needs investigation |
+| `/offline-storage/localForage/Overview` | Legacy compare | Needs investigation |
+| `/offline-storage/Songara-Pack-Store/Overview` | packStore contrast | Needs investigation |
 
 **Out of scope:** RxDB sync plugins, ElectricSQL, Yjs collab (later Sync area).
 
 ---
 
-## Scaffolding contract (this PR)
+## Scaffolding contract
 
-For every subroute listed above:
+For every leaf listed above:
 
 1. Registry row in `src/catalogue/registry.ts` (status `Needs investigation` until filled)
-2. Route wired via registry → `src/site.ts`
-3. Page shell: real exploration (`waapi`) or `ExplorationStubPage` placeholder
+2. Route wired via registry → `src/site.tsx`
+3. Page shell: real exploration or `ExplorationStubPage` placeholder
 4. Area summary at `/{area}` aggregates all rows
 
 Executors replace stubs with practical implementations and update scores/status/notes.
@@ -144,7 +154,7 @@ Executors replace stubs with practical implementations and update scores/status/
 
 | Area | Suggested branch | Subroutes in scope |
 | --- | --- | --- |
-| Animation | `feat/catalogue-animation` | All `/animation/*` except leave `waapi` unless improving it |
+| Animation | `feat/catalogue-animation` | All `/animation/*` |
 | Physics | `feat/catalogue-physics` | All `/physics/*` |
 | Camera | `feat/catalogue-camera` | All `/camera/*` |
 | Audio | `feat/catalogue-audio` | All `/audio/*` |

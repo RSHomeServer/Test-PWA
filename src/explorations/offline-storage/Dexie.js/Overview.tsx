@@ -4,8 +4,8 @@ import {
   songaraDbName,
   type EntityTable,
 } from '@songara/pwa-base/preview/dexie'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 type NoteRow = {
   id: number
@@ -36,7 +36,7 @@ function openNotesDb(): CatalogueNotesDb {
  * Exploration: Dexie via `@songara/pwa-base/preview/dexie` (same API products use).
  */
 export function OfflineStorageDexiePage() {
-  const record = getExploration('offline-storage', 'dexie')
+  const record = getExploration('offline-storage', 'Dexie.js/Overview')
   const titleId = useId()
   const [title, setTitle] = useState('')
   const [notes, setNotes] = useState<NoteRow[]>([])
@@ -93,7 +93,7 @@ export function OfflineStorageDexiePage() {
   return (
     <ExplorationShell
       areaId="offline-storage"
-      explorationId="dexie"
+      relativePath="Dexie.js/Overview"
       record={record}
       lead="Ergonomic IndexedDB via PWA-Base Preview (`@songara/pwa-base/preview/dexie`). Validates the same surface products will import — not a local wrapper."
       visualNote="Visual validation: adding a note should persist across reload; Clear DB should empty the list. Status line shows songaraDbName + schema version."

@@ -6,8 +6,8 @@ import {
   type EntityTable,
   type SongaraSchemaVersion,
 } from '@songara/pwa-base/preview/dexie'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 type ItemRow = {
   id: number
@@ -43,7 +43,7 @@ const V2: SongaraSchemaVersion = {
  * Exploration: schema migrations via Preview Dexie version helpers.
  */
 export function OfflineStorageMigrationsPage() {
-  const record = getExploration('offline-storage', 'migrations')
+  const record = getExploration('offline-storage', 'Dexie.js/Migrations')
   const seedId = useId()
   const [seedTitle, setSeedTitle] = useState('seed')
   const [log, setLog] = useState<string[]>([])
@@ -107,7 +107,7 @@ export function OfflineStorageMigrationsPage() {
   return (
     <ExplorationShell
       areaId="offline-storage"
-      explorationId="migrations"
+      relativePath="Dexie.js/Migrations"
       record={record}
       lead="Schema version patterns via `@songara/pwa-base/preview/dexie` (`createSongaraDb`, `sortSchemaVersions`, upgrade hooks). App owns tables; Preview owns conventions."
       visualNote="Visual validation: Seed v1 → rows have title only; Migrate to v2 → label copied from title and schema verno becomes 2."

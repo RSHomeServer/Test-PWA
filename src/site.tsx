@@ -2,7 +2,7 @@ import { lazy, type ComponentType } from 'react'
 import { Navigate } from 'react-router-dom'
 import { defineSite, SITE_CAPABILITY } from '@songara/pwa-base'
 import {
-  animationLegacyRedirects,
+  catalogueLegacyRedirects,
   catalogueSiteRoutes,
 } from './catalogue/registry'
 import { CatalogueHomePage } from './pages/CatalogueHomePage'
@@ -111,13 +111,13 @@ const explorationPages: Record<string, ComponentType> = {
       default: m.AnimationParticlesPage,
     })),
   ),
-  'offline-storage/dexie': lazyPage(() =>
-    import('./explorations/offline-storage/dexie').then((m) => ({
+  'offline-storage/Dexie.js/Overview': lazyPage(() =>
+    import('./explorations/offline-storage/Dexie.js/Overview').then((m) => ({
       default: m.OfflineStorageDexiePage,
     })),
   ),
-  'offline-storage/migrations': lazyPage(() =>
-    import('./explorations/offline-storage/migrations').then((m) => ({
+  'offline-storage/Dexie.js/Migrations': lazyPage(() =>
+    import('./explorations/offline-storage/Dexie.js/Migrations').then((m) => ({
       default: m.OfflineStorageMigrationsPage,
     })),
   ),
@@ -134,7 +134,7 @@ export const testSite = defineSite({
   capabilities: [SITE_CAPABILITY.offline],
   routes: [
     { path: '', component: CatalogueHomePage },
-    ...Object.entries(animationLegacyRedirects).map(([from, to]) => ({
+    ...Object.entries(catalogueLegacyRedirects).map(([from, to]) => ({
       path: from,
       component: redirectPage(to),
     })),
