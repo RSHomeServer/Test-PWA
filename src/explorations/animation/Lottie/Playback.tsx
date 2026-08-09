@@ -1,6 +1,6 @@
-import { useId, useState, type ComponentType } from 'react'
+import { useEffect, useId, useRef, useState, type ComponentType } from 'react'
 import lottieReact from 'lottie-react'
-import type { LottieComponentProps } from 'lottie-react'
+import type { LottieComponentProps, LottieRefCurrentProps } from 'lottie-react'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
 import pulseAnimation from '../lottie-pulse.json'
@@ -38,11 +38,35 @@ const Lottie = resolveLottieComponent(lottieReact)
 export function AnimationLottiePage() {
   const record = getExploration('animation', 'Lottie/Playback')
   const reduceId = useId()
-  const [forceReduce, setForceReduce] = useState(() =>
+  const lottieRef = useRef<LottieRefCurrentProps>(null)
+  const [systemReduce, setSystemReduce] = useState(() =>
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false,
   )
+  const [forceReduce, setForceReduce] = useState(false)
+  const reduce = forceReduce || systemReduce
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const onChange = () => setSystemReduce(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  // lottie-react only flips the autoplay flag when the prop changes — it does
+  // not call play()/stop(). Drive playback explicitly.
+  useEffect(() => {
+    const api = lottieRef.current
+    if (!api) return
+    if (reduce) {
+      api.goToAndStop(0, true)
+    } else {
+      api.setSpeed(1)
+      api.goToAndPlay(0, true)
+    }
+  }, [reduce])
 
   if (!record) return null
 
@@ -52,7 +76,7 @@ export function AnimationLottiePage() {
       relativePath="Lottie/Playback"
       record={record}
       lead="After Effects JSON playback for designer-authored motion. lottie-react (and later dotLottie) vs hand-coded WAAPI."
-      visualNote="Visual validation: square should pulse via Lottie when motion is allowed; freeze on frame 0 when reduced."
+      visualNote="Visual validation: blue square should scale up/down in a loop when motion is allowed; hold on frame 0 when reduced (system preference or Simulate)."
       performance={
         <p>
           Canvas/SVG renderers are fine for small assets; large comps hurt mobile.
@@ -90,7 +114,8 @@ export function AnimationLottiePage() {
       reusableIdeas={
         <p>
           Prefer small looping icons; gate autoplay on reduced motion; consider
-          dotLottie for smaller payloads later.
+          dotLottie for smaller payloads later. Drive play/stop via the Lottie
+          ref — do not rely on toggling the <code>autoplay</code> prop alone.
         </p>
       }
     >
@@ -104,12 +129,21 @@ export function AnimationLottiePage() {
           />{' '}
           Simulate reduced motion
         </label>
+        {systemReduce ? (
+          <p className="cat__muted">
+            System <code>prefers-reduced-motion</code> is on — playback stays
+            frozen unless you are only testing the checkbox path after disabling
+            the OS/browser setting.
+          </p>
+        ) : null}
       </div>
       <div className="cat__lottie-host">
         <Lottie
+          key={reduce ? 'reduced' : 'motion'}
+          lottieRef={lottieRef}
           animationData={pulseAnimation}
-          loop={!forceReduce}
-          autoplay={!forceReduce}
+          loop={!reduce}
+          autoplay={!reduce}
           style={{ width: 120, height: 120 }}
         />
       </div>
