@@ -1,8 +1,14 @@
 import { useId, useState } from 'react'
-import Lottie from 'lottie-react'
+import LottieReact from 'lottie-react'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
 import pulseAnimation from '../lottie-pulse.json'
+
+/** Vite ESM interop: default export is sometimes the module namespace, not the component. */
+const Lottie =
+  typeof LottieReact === 'function'
+    ? LottieReact
+    : ((LottieReact as { default?: unknown }).default as typeof LottieReact)
 
 /**
  * Exploration: Lottie / After Effects JSON playback via lottie-react.
