@@ -2,8 +2,8 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import Particles, { ParticlesProvider } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
 import type { Engine, ISourceOptions } from '@tsparticles/engine'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 async function registerSlim(engine: Engine) {
   await loadSlim(engine)
@@ -13,7 +13,7 @@ async function registerSlim(engine: Engine) {
  * Exploration: ambient particle fields via tsparticles (slim preset).
  */
 export function AnimationParticlesPage() {
-  const record = getExploration('animation', 'particles')
+  const record = getExploration('animation', 'tsParticles/Ambient-Field')
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(() =>
     typeof window !== 'undefined'
@@ -56,7 +56,7 @@ export function AnimationParticlesPage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="particles"
+      relativePath="tsParticles/Ambient-Field"
       record={record}
       lead="Ambient particle fields for atmosphere. tsparticles slim vs Songara ParticleField in @songara/pwa-base/animation."
       visualNote="Visual validation: soft linked particles when motion is allowed; empty field when reduced."

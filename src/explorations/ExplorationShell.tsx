@@ -6,7 +6,8 @@ import '../pages/catalogue.css'
 
 export interface ExplorationShellProps {
   areaId: string
-  explorationId: string
+  /** Path under area, e.g. Motion/Layout-Transitions or rapier2d */
+  relativePath: string
   record: ExplorationRecord
   /** One-line concise explanation under the title */
   lead: string
@@ -25,7 +26,7 @@ export interface ExplorationShellProps {
 /** Shared artefact-contract layout for catalogue explorations. */
 export function ExplorationShell({
   areaId,
-  explorationId,
+  relativePath,
   record,
   lead,
   children,
@@ -38,16 +39,30 @@ export function ExplorationShell({
   reusableIdeas,
   visualNote,
 }: ExplorationShellProps) {
+  const segments = relativePath.split('/').filter(Boolean)
+  const groupId = segments.length > 1 ? segments[0] : undefined
+  const offeringId = segments.length > 1 ? segments.slice(1).join('/') : segments[0]
+
   return (
     <main className="cat">
-      <CatalogueBrowseNav areaId={areaId} explorationId={explorationId} />
+      <CatalogueBrowseNav
+        areaId={areaId}
+        groupId={groupId}
+        relativePath={relativePath}
+      />
 
       <nav className="cat__crumb">
         <Link to="/">Catalogue</Link>
         <span aria-hidden="true"> / </span>
         <Link to={`/${areaId}`}>{areaId}</Link>
+        {groupId ? (
+          <>
+            <span aria-hidden="true"> / </span>
+            <Link to={`/${areaId}/${groupId}`}>{groupId}</Link>
+          </>
+        ) : null}
         <span aria-hidden="true"> / </span>
-        <span>{explorationId}</span>
+        <span>{offeringId}</span>
       </nav>
 
       <header className="cat__header">

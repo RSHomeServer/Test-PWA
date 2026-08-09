@@ -3,6 +3,8 @@ import {
   capabilityAreas,
   getAdjacentExplorations,
   getArea,
+  getGroup,
+  listExplorations,
 } from '../catalogue/registry'
 import type { ExplorationStatus } from '../catalogue/types'
 
@@ -22,26 +24,31 @@ function statusClass(status: ExplorationStatus): string {
 }
 
 export type CatalogueBrowseNavProps = {
-  /** Active capability area id when on /{area} or /{area}/{exploration} */
+  /** Active capability area id when on /{area} or deeper */
   areaId?: string
-  /** Active exploration id when on /{area}/{exploration} */
-  explorationId?: string
+  /** Active OSS/native group id when on /{area}/{group}/… */
+  groupId?: string
+  /** Path under area for the active exploration, e.g. Motion/Layout-Transitions */
+  relativePath?: string
 }
 
 /**
- * Persistent catalogue browse chrome — areas from registry; explorations
- * under the active area with status badge and current highlight; prev/next
- * within the area in registry order.
+ * Persistent catalogue browse chrome — areas from registry; groups then
+ * offerings under the active area; prev/next in registry order.
  */
 export function CatalogueBrowseNav({
   areaId,
-  explorationId,
+  groupId,
+  relativePath,
 }: CatalogueBrowseNavProps) {
   const area = areaId ? getArea(areaId) : undefined
+  const group =
+    areaId && groupId ? getGroup(areaId, groupId) : undefined
   const adjacent =
-    areaId && explorationId
-      ? getAdjacentExplorations(areaId, explorationId)
+    areaId && relativePath
+      ? getAdjacentExplorations(areaId, relativePath)
       : null
+  const flatEntries = area && !area.groups?.length ? listExplorations(area) : []
 
   return (
     <nav className="cat-nav" aria-label="Catalogue browse">
@@ -61,7 +68,7 @@ export function CatalogueBrowseNav({
                 <Link
                   className={`cat-nav__area${current ? ' cat-nav__link--current' : ''}`}
                   to={`/${a.id}`}
-                  aria-current={current && !explorationId ? 'page' : undefined}
+                  aria-current={current && !groupId && !relativePath ? 'page' : undefined}
                 >
                   /{a.id}
                 </Link>
@@ -71,22 +78,66 @@ export function CatalogueBrowseNav({
         </ul>
       </div>
 
-      {area ? (
+      {area?.groups?.length ? (
+        <ul className="cat-nav__groups">
+          {area.groups.map((g) => {
+            const current = g.id === groupId
+            return (
+              <li key={g.id}>
+                <Link
+                  className={`cat-nav__group${current ? ' cat-nav__link--current' : ''}`}
+                  to={`/${area.id}/${g.id}`}
+                  aria-current={current && !relativePath ? 'page' : undefined}
+                >
+                  {g.title}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      ) : null}
+
+      {group ? (
         <ul className="cat-nav__explorations">
-          {area.explorations.map((ex) => {
-            const current = ex.id === explorationId
+          {group.explorations.map((ex) => {
+            const path = `${group.id}/${ex.id}`
+            const current = path === relativePath
             return (
               <li key={ex.id}>
                 <Link
                   className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${area.id}/${ex.id}`}
+                  to={`/${areaId}/${path}`}
                   aria-current={current ? 'page' : undefined}
                 >
                   <span className="cat-nav__ex-name">{ex.capability}</span>
-                  <span
-                    className={`cat-nav__badge ${statusClass(ex.status)}`}
-                  >
+                  <span className={`cat-nav__badge ${statusClass(ex.status)}`}>
                     {ex.status}
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      ) : null}
+
+      {flatEntries.length > 0 ? (
+        <ul className="cat-nav__explorations">
+          {flatEntries.map((entry) => {
+            const current = entry.relativePath === relativePath
+            return (
+              <li key={entry.relativePath}>
+                <Link
+                  className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
+                  to={`/${areaId}/${entry.relativePath}`}
+                  aria-current={current ? 'page' : undefined}
+                >
+                  <span className="cat-nav__ex-name">
+                    {entry.record.capability}
+                  </span>
+                  <span
+                    className={`cat-nav__badge ${statusClass(entry.record.status)}`}
+                  >
+                    {entry.record.status}
                   </span>
                 </Link>
               </li>
@@ -100,7 +151,7 @@ export function CatalogueBrowseNav({
           {adjacent.prev ? (
             <Link
               className="cat-nav__pager-link"
-              to={`/${areaId}/${adjacent.prev.id}`}
+              to={`/${areaId}/${adjacent.prev.relativePath}`}
               rel="prev"
             >
               ← {adjacent.prev.capability}
@@ -111,7 +162,7 @@ export function CatalogueBrowseNav({
           {adjacent.next ? (
             <Link
               className="cat-nav__pager-link cat-nav__pager-link--next"
-              to={`/${areaId}/${adjacent.next.id}`}
+              to={`/${areaId}/${adjacent.next.relativePath}`}
               rel="next"
             >
               {adjacent.next.capability} →

@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { useReducedMotion } from '../../shims/platform-animation'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { useReducedMotion } from '../../../shims/platform-animation'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 /**
  * Exploration: reduced-motion policy patterns (platform + Songara animation kit).
  */
 export function AnimationReducedMotionPage() {
-  const record = getExploration('animation', 'reduced-motion')
+  const record = getExploration('animation', 'native/Reduced-Motion')
   const kitReduced = useReducedMotion()
   const boxRef = useRef<HTMLDivElement>(null)
   const overrideId = useId()
@@ -39,7 +39,7 @@ export function AnimationReducedMotionPage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="reduced-motion"
+      relativePath="native/Reduced-Motion"
       record={record}
       lead="Accessibility motion policy: honour prefers-reduced-motion, provide app overrides for QA, and use the foundation useReducedMotion hook (@songara/pwa-base/animation)."
       visualNote="Visual validation: box floats when motion allowed; static when reduced. Kit preference is shown live."

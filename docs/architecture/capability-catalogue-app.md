@@ -39,39 +39,43 @@ platform API — they are catalogue artefacts, not products.
 ```text
 /                          Catalogue home (all capability areas)
 /{area}                    Capability summary (comparison table of subroutes)
-/{area}/{exploration}      One capability facet OR one OSS implementation
+/{area}/{stack}            OSS or native hub (when the area uses nested IA)
+/{area}/{stack}/{offering} One capability facet under that stack
+/{area}/{exploration}      Flat areas (physics, camera, …) — one facet per segment
 ```
 
 Examples:
 
 ```text
 /animation
-  /waapi
-  /motion
-  /springs
-  /layout-transitions
-  /lottie
-  /rive
-  /gsap
+  /native
+    /Web-Animations-API
+    /Reduced-Motion
+    /View-Transitions
+  /Motion
+    /Overview
+    /Springs
+    /Layout-Transitions
+    /Shared-Element
+    /Gestures          (scaffold)
+    …
+  /Lottie/Playback
+  /Rive/Interactive-Graphics
+  /GSAP/Timelines
+  /tsParticles/Ambient-Field
 /physics
-  /rapier
+  /rapier2d
   /matter
-  /planck
-  /constraints
-/camera
-/computer-vision
-/audio
-/charts
-/maps
-/whiteboards
-/ocr
-/offline-storage
-/pwa-runtime
+  …
 ```
 
-Each **top-level route** is a capability area. Each **subroute** explores **one** facet
-or **one** OSS implementation. Nothing is throwaway: every sub-ticket leaves a route
-and updates the area summary.
+Animation (and future nested areas) use **official OSS names** as the stack
+segment and **Title-Case** offering segments. Platform APIs live under `native`.
+Legacy flat `/animation/*` URLs redirect to the nested paths.
+
+Each **top-level route** is a capability area. Each **leaf subroute** explores
+**one** facet or **one** OSS offering. Nothing is throwaway: every sub-ticket
+leaves a route and updates the area summary.
 
 ## Artefact contract (every exploration subroute)
 
