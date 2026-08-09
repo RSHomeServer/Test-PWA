@@ -1,14 +1,36 @@
-import { useId, useState } from 'react'
-import LottieReact from 'lottie-react'
+import { useId, useState, type ComponentType } from 'react'
+import lottieReact from 'lottie-react'
+import type { LottieComponentProps } from 'lottie-react'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
 import pulseAnimation from '../lottie-pulse.json'
 
-/** Vite ESM interop: default export is sometimes the module namespace, not the component. */
-const Lottie =
-  typeof LottieReact === 'function'
-    ? LottieReact
-    : ((LottieReact as { default?: unknown }).default as typeof LottieReact)
+/**
+ * lottie-react ships CJS; Vite's ESM interop may wrap the component as
+ * `{ default: Component }` or even `{ default: { default: Component } }`.
+ * Walk until we get a renderable function.
+ */
+function resolveLottieComponent(mod: unknown): ComponentType<LottieComponentProps> {
+  let current: unknown = mod
+  for (let i = 0; i < 4; i++) {
+    if (typeof current === 'function') {
+      return current as ComponentType<LottieComponentProps>
+    }
+    if (
+      current &&
+      typeof current === 'object' &&
+      'default' in current &&
+      (current as { default: unknown }).default !== current
+    ) {
+      current = (current as { default: unknown }).default
+      continue
+    }
+    break
+  }
+  throw new Error('lottie-react did not resolve to a React component under Vite ESM')
+}
+
+const Lottie = resolveLottieComponent(lottieReact)
 
 /**
  * Exploration: Lottie / After Effects JSON playback via lottie-react.
