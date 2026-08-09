@@ -10,15 +10,23 @@ export default defineConfig({
 
   // file:../PWA-Base can nest its own React; force a single copy for production builds.
   // Charts still import workspace name @platform/animation — map via thin shim for sibling installs.
-  // Preview peers (`motion`, `dexie`) install in the consumer; map so source exports resolve outside the monorepo.
+  // Preview peers (`motion`, `dexie`, `lottie-react`) install in the consumer; map so source exports resolve outside the monorepo.
   resolve: {
-    dedupe: ['react', 'react-dom', 'react-router-dom', 'motion', 'dexie'],
+    dedupe: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'motion',
+      'dexie',
+      'lottie-react',
+    ],
     alias: {
       react: resolve(rootDir, 'node_modules/react'),
       'react-dom': resolve(rootDir, 'node_modules/react-dom'),
       'react-router-dom': resolve(rootDir, 'node_modules/react-router-dom'),
       motion: resolve(rootDir, 'node_modules/motion'),
       dexie: resolve(rootDir, 'node_modules/dexie'),
+      'lottie-react': resolve(rootDir, 'node_modules/lottie-react'),
       '@platform/animation': resolve(rootDir, 'src/shims/platform-animation.ts'),
     },
   },

@@ -41,7 +41,12 @@ Nested IA: `/animation/{Stack}/{Offering}` — official OSS names (or `native`);
 | `/animation/Motion/Variants` | Variants / stagger | Ready |
 | `/animation/Motion/SVG` | SVG path animation | Ready |
 | `/animation/Motion/Motion-Values` | Motion values | Ready |
-| `/animation/Lottie/Playback` | Lottie playback | Ready |
+| `/animation/Lottie` | Lottie hub | Hub |
+| `/animation/Lottie/Overview` | SongaraLottie Preview consume | Ready |
+| `/animation/Lottie/Playback` | resolveLottiePlayback + Simulate | Ready |
+| `/animation/Lottie/Controls` | Imperative ref transport | Ready |
+| `/animation/Lottie/Segments` | playSegments / initialSegment | Ready |
+| `/animation/Lottie/Interactivity` | useLottieInteractivity cursor seek | Ready |
 | `/animation/Rive/Interactive-Graphics` | Rive interactive graphics | Experimental |
 | `/animation/GSAP/Timelines` | GSAP timelines (licence diligence) | Experimental |
 | `/animation/tsParticles/Ambient-Field` | Ambient particles | Experimental |

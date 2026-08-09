@@ -452,6 +452,59 @@
   place-items: center;
 }
 
+.cat__lottie-host--wide {
+  width: 12rem;
+  height: 12rem;
+}
+
+.cat__lottie-stage {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  background: color-mix(in srgb, currentColor 4%, transparent);
+  min-height: 8rem;
+  display: grid;
+  place-items: center;
+}
+
+.cat__lottie-stage--interactive {
+  min-height: 12rem;
+  cursor: crosshair;
+}
+
+.cat__lottie-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cat__lottie-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cat__lottie-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cat__lottie-btn[data-active='true'] {
+  outline: 2px solid color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.cat__lottie-speed {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
 .cat__shared-stage {
   display: flex;
   gap: 1rem;

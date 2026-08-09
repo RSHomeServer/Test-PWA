@@ -59,7 +59,12 @@ Examples:
     /Shared-Element
     /Gestures          (scaffold)
     …
-  /Lottie/Playback
+  /Lottie
+    /Overview
+    /Playback
+    /Controls
+    /Segments
+    /Interactivity
   /Rive/Interactive-Graphics
   /GSAP/Timelines
   /tsParticles/Ambient-Field

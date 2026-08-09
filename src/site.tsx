@@ -91,9 +91,29 @@ const explorationPages: Record<string, ComponentType> = {
       default: m.AnimationMotionValuesPage,
     })),
   ),
+  'animation/Lottie/Overview': lazyPage(() =>
+    import('./explorations/animation/Lottie/Overview').then((m) => ({
+      default: m.AnimationLottieOverviewPage,
+    })),
+  ),
   'animation/Lottie/Playback': lazyPage(() =>
     import('./explorations/animation/Lottie/Playback').then((m) => ({
-      default: m.AnimationLottiePage,
+      default: m.AnimationLottiePlaybackPage,
+    })),
+  ),
+  'animation/Lottie/Controls': lazyPage(() =>
+    import('./explorations/animation/Lottie/Controls').then((m) => ({
+      default: m.AnimationLottieControlsPage,
+    })),
+  ),
+  'animation/Lottie/Segments': lazyPage(() =>
+    import('./explorations/animation/Lottie/Segments').then((m) => ({
+      default: m.AnimationLottieSegmentsPage,
+    })),
+  ),
+  'animation/Lottie/Interactivity': lazyPage(() =>
+    import('./explorations/animation/Lottie/Interactivity').then((m) => ({
+      default: m.AnimationLottieInteractivityPage,
     })),
   ),
   'animation/Rive/Interactive-Graphics': lazyPage(() =>
