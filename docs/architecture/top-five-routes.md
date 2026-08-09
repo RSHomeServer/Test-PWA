@@ -22,20 +22,33 @@ Later waves (not in this five): computer-vision, ocr, charts, maps, whiteboards,
 
 **Question:** Which motion stacks should Songara prefer for UI, layout, and timeline animation?
 
-| Subroute | Focus | OSS / API | Priority |
-| --- | --- | --- | --- |
-| `/animation/waapi` | Platform baseline | Web Animations API / CSS | **Done (scaffold)** |
-| `/animation/motion` | React motion library (ex-Framer Motion) | [`motion`](https://github.com/motiondivision/motion) | P0 |
-| `/animation/springs` | Spring physics UX patterns | Motion springs / WAAPI compare | P0 |
-| `/animation/layout-transitions` | Shared layout / FLIP-style | Motion layout / WAAPI | P1 |
-| `/animation/shared-element` | Cross-route continuity | Motion / View Transitions API | P1 |
-| `/animation/particles` | Ambient particle fields | tsparticles / canvas | P2 |
-| `/animation/lottie` | After Effects JSON playback | lottie-web / dotLottie | P1 |
-| `/animation/rive` | Interactive state-machine graphics | `@rive-app/react-canvas` | P1 |
-| `/animation/gsap` | Timeline industry tool | GSAP (**licence diligence**) | P2 |
-| `/animation/reduced-motion` | A11y motion policy patterns | Platform + kit hooks | P0 |
+Nested IA: `/animation/{Stack}/{Offering}` — official OSS names (or `native`); Title-Case offerings.
 
-**Executor outcome:** Fill each subroute’s artefact contract; promote status from
+| Route | Focus | Status |
+| --- | --- | --- |
+| `/animation/native` | Platform hub | Hub |
+| `/animation/native/Web-Animations-API` | WAAPI / CSS baseline | Ready |
+| `/animation/native/Reduced-Motion` | A11y motion policy | Ready |
+| `/animation/native/View-Transitions` | Document View Transitions API | Experimental |
+| `/animation/Motion` | Motion (motion.dev) hub | Hub |
+| `/animation/Motion/Overview` | Declarative React motion (Preview) | Ready |
+| `/animation/Motion/Springs` | Spring physics | Ready |
+| `/animation/Motion/Layout-Transitions` | Layout / FLIP | Ready |
+| `/animation/Motion/Shared-Element` | layoutId morphs | Experimental |
+| `/animation/Motion/Gestures` | Hover / tap / drag | Ready |
+| `/animation/Motion/Scroll` | Scroll-triggered whileInView | Ready |
+| `/animation/Motion/Exit-Animations` | AnimatePresence | Ready |
+| `/animation/Motion/Variants` | Variants / stagger | Ready |
+| `/animation/Motion/SVG` | SVG path animation | Ready |
+| `/animation/Motion/Motion-Values` | Motion values | Ready |
+| `/animation/Lottie/Playback` | Lottie playback | Ready |
+| `/animation/Rive/Interactive-Graphics` | Rive interactive graphics | Experimental |
+| `/animation/GSAP/Timelines` | GSAP timelines (licence diligence) | Experimental |
+| `/animation/tsParticles/Ambient-Field` | Ambient particles | Experimental |
+
+Legacy flat paths (`/animation/motion`, `/animation/waapi`, …) redirect to the nested routes.
+
+**Executor outcome:** Fill each leaf’s artefact contract; promote status from
 `Needs investigation` → `Ready` / `Experimental` / `Rejected`; keep summary table honest.
 
 ---

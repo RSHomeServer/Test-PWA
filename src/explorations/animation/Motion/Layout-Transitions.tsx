@@ -5,8 +5,8 @@ import {
   resolveTransition,
   useSongaraMotion,
 } from '@songara/pwa-base/preview/motion'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
 
 const ITEMS = ['A', 'B', 'C', 'D'] as const
 const SPRING = { type: 'spring', stiffness: 320, damping: 28 } as const
@@ -15,7 +15,7 @@ const SPRING = { type: 'spring', stiffness: 320, damping: 28 } as const
  * Exploration: shared layout / FLIP-style transitions via Preview Motion layout.
  */
 export function AnimationLayoutTransitionsPage() {
-  const record = getExploration('animation', 'layout-transitions')
+  const record = getExploration('animation', 'Motion/Layout-Transitions')
   const { reducedMotion: systemReduce } = useSongaraMotion(SPRING)
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(false)
@@ -28,7 +28,7 @@ export function AnimationLayoutTransitionsPage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="layout-transitions"
+      relativePath="Motion/Layout-Transitions"
       record={record}
       lead="Layout transitions (FLIP-style) when boxes resize or reorder — via `@songara/pwa-base/preview/motion` layout props vs manual WAAPI FLIP."
       visualNote="Visual validation: click tiles — expanded tile should morph size/position when motion is allowed."

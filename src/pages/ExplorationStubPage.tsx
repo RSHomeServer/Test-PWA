@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { getExploration } from '../catalogue/registry'
+import { getArea, getExploration } from '../catalogue/registry'
 import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
@@ -11,8 +11,10 @@ export function ExplorationStubPage() {
   const { pathname } = useLocation()
   const parts = pathname.replace(/^\//, '').split('/').filter(Boolean)
   const areaId = parts[0] ?? ''
-  const explorationId = parts[1] ?? ''
-  const record = getExploration(areaId, explorationId)
+  const area = getArea(areaId)
+  const relativePath = parts.slice(1).join('/')
+  const groupId = area?.groups?.length ? parts[1] : undefined
+  const record = getExploration(areaId, relativePath)
 
   if (!record) {
     return (
@@ -26,14 +28,33 @@ export function ExplorationStubPage() {
 
   return (
     <main className="cat">
-      <CatalogueBrowseNav areaId={areaId} explorationId={explorationId} />
+      <CatalogueBrowseNav
+        areaId={areaId}
+        groupId={groupId}
+        relativePath={relativePath}
+      />
 
       <nav className="cat__crumb">
         <Link to="/">Catalogue</Link>
         <span aria-hidden="true"> / </span>
         <Link to={`/${areaId}`}>{areaId}</Link>
-        <span aria-hidden="true"> / </span>
-        <span>{explorationId}</span>
+        {groupId ? (
+          <>
+            <span aria-hidden="true"> / </span>
+            <Link to={`/${areaId}/${groupId}`}>{groupId}</Link>
+            {parts[2] ? (
+              <>
+                <span aria-hidden="true"> / </span>
+                <span>{parts.slice(2).join('/')}</span>
+              </>
+            ) : null}
+          </>
+        ) : relativePath ? (
+          <>
+            <span aria-hidden="true"> / </span>
+            <span>{relativePath}</span>
+          </>
+        ) : null}
       </nav>
 
       <header className="cat__header">

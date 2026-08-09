@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { capabilityAreas } from '../catalogue/registry'
+import { capabilityAreas, explorationCount } from '../catalogue/registry'
 import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
@@ -24,8 +24,11 @@ export function CatalogueHomePage() {
             <Link className="cat__area-link" to={`/${area.id}`}>
               <span className="cat__area-name">/{area.id}</span>
               <span className="cat__area-meta">
-                {area.explorations.length} exploration
-                {area.explorations.length === 1 ? '' : 's'}
+                {explorationCount(area)} exploration
+                {explorationCount(area) === 1 ? '' : 's'}
+                {area.groups?.length
+                  ? ` · ${area.groups.length} stack${area.groups.length === 1 ? '' : 's'}`
+                  : ''}
                 {area.planned?.length
                   ? ` · ${area.planned.length} planned`
                   : ''}

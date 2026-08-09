@@ -1,14 +1,14 @@
 import { useId, useState } from 'react'
 import Lottie from 'lottie-react'
-import { getExploration } from '../../catalogue/registry'
-import { ExplorationShell } from '../ExplorationShell'
-import pulseAnimation from './lottie-pulse.json'
+import { getExploration } from '../../../catalogue/registry'
+import { ExplorationShell } from '../../ExplorationShell'
+import pulseAnimation from '../lottie-pulse.json'
 
 /**
  * Exploration: Lottie / After Effects JSON playback via lottie-react.
  */
 export function AnimationLottiePage() {
-  const record = getExploration('animation', 'lottie')
+  const record = getExploration('animation', 'Lottie/Playback')
   const reduceId = useId()
   const [forceReduce, setForceReduce] = useState(() =>
     typeof window !== 'undefined'
@@ -21,7 +21,7 @@ export function AnimationLottiePage() {
   return (
     <ExplorationShell
       areaId="animation"
-      explorationId="lottie"
+      relativePath="Lottie/Playback"
       record={record}
       lead="After Effects JSON playback for designer-authored motion. lottie-react (and later dotLottie) vs hand-coded WAAPI."
       visualNote="Visual validation: square should pulse via Lottie when motion is allowed; freeze on frame 0 when reduced."
