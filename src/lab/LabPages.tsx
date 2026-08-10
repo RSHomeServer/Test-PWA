@@ -1,30 +1,16 @@
 import type { ReactNode } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
+import { getAdjacentStacks, getArea, getGroup } from '../catalogue/registry'
 import {
-  getAdjacentLabSections,
-  getArea,
-  getGroup,
-  LAB_SECTIONS,
-} from '../catalogue/registry'
-import type { ExplorationStatus, LabSectionId } from '../catalogue/types'
+  labMaturityClass,
+  labMaturityFor,
+  labMaturityLabel,
+} from '../catalogue/labMaturity'
+import type { LabSectionId } from '../catalogue/types'
 import { LAB_SECTION_IDS } from '../catalogue/types'
 import { CatalogueBrowseNav } from '../pages/CatalogueBrowseNav'
 import '../pages/catalogue.css'
-
-function statusClass(status: ExplorationStatus): string {
-  switch (status) {
-    case 'Ready':
-      return 'cat-nav__badge--ready'
-    case 'Experimental':
-      return 'cat-nav__badge--experimental'
-    case 'Rejected':
-      return 'cat-nav__badge--rejected'
-    case 'Needs investigation':
-      return 'cat-nav__badge--investigate'
-    default:
-      return ''
-  }
-}
+import { PreviewValidationPanel } from './PreviewValidationPanel'
 
 function parseLabLocation(pathname: string): {
   areaId: string
@@ -54,13 +40,11 @@ function LabChrome({
   children: ReactNode
 }) {
   const group = getGroup(areaId, groupId)
-  const adjacent =
-    sectionId != null
-      ? getAdjacentLabSections(areaId, groupId, sectionId)
-      : null
+  const adjacent = getAdjacentStacks(areaId, groupId)
+  const maturity = group ? labMaturityFor(group) : null
 
   return (
-    <main className="cat">
+    <main className={`cat${maturity ? ` ${labMaturityClass(maturity)}` : ''}`}>
       <CatalogueBrowseNav
         areaId={areaId}
         groupId={groupId}
@@ -71,8 +55,8 @@ function LabChrome({
         <span aria-hidden="true"> / </span>
         <Link to={`/${areaId}`}>{areaId}</Link>
         <span aria-hidden="true"> / </span>
-        <Link to={`/${areaId}/${groupId}`}>{groupId}</Link>
-        {sectionId ? (
+        <Link to={`/${areaId}/${groupId}/Overview`}>{groupId}</Link>
+        {sectionId && sectionId !== 'Overview' ? (
           <>
             <span aria-hidden="true"> / </span>
             <span>{sectionId}</span>
@@ -81,11 +65,11 @@ function LabChrome({
       </nav>
       {children}
       {adjacent && (adjacent.prev || adjacent.next) ? (
-        <div className="cat-nav__pager" style={{ marginTop: '2rem' }}>
+        <div className="cat-nav__pager cat-nav__pager--footer">
           {adjacent.prev ? (
             <Link
               className="cat-nav__pager-link"
-              to={`/${areaId}/${adjacent.prev.relativePath}`}
+              to={`/${areaId}/${adjacent.prev.groupId}/Overview`}
               rel="prev"
             >
               ← {adjacent.prev.title}
@@ -96,7 +80,7 @@ function LabChrome({
           {adjacent.next ? (
             <Link
               className="cat-nav__pager-link cat-nav__pager-link--next"
-              to={`/${areaId}/${adjacent.next.relativePath}`}
+              to={`/${areaId}/${adjacent.next.groupId}/Overview`}
               rel="next"
             >
               {adjacent.next.title} →
@@ -111,7 +95,7 @@ function LabChrome({
   )
 }
 
-/** Slim stack hub — orientation + links to lab sections. */
+/** Stack path without section → Overview (default land). */
 export function StackHubPage() {
   const { pathname } = useLocation()
   const { areaId, groupId } = parseLabLocation(pathname)
@@ -128,61 +112,12 @@ export function StackHubPage() {
     )
   }
 
-  // Canonicalise casing (React Router may match Title-Case hubs case-insensitively).
-  if (area.id !== areaId || group.id !== groupId) {
-    return <Navigate to={`/${area.id}/${group.id}`} replace />
-  }
-
-  return (
-    <LabChrome areaId={areaId} groupId={groupId}>
-      <header className="cat__header">
-        <p className="cat__eyebrow">
-          {group.ossUrl ? (
-            <a href={group.ossUrl} target="_blank" rel="noreferrer">
-              {group.oss}
-            </a>
-          ) : (
-            group.oss
-          )}
-        </p>
-        <h1 className="cat__title">{group.title}</h1>
-        <p className="cat__lead">{group.description}</p>
-        <p>
-          <strong>Status:</strong>{' '}
-          <span className={`cat-nav__badge ${statusClass(group.status)}`}>
-            {group.status}
-          </span>
-          {group.recommended ? ' · Recommended' : null}
-          {' · '}
-          <strong>Preview:</strong>{' '}
-          {group.preview.packageId ? (
-            <code>{group.preview.packageId}</code>
-          ) : (
-            'not Preview-backed yet'
-          )}
-        </p>
-      </header>
-
-      <ul className="cat__offering-list" aria-label="Lab sections">
-        {LAB_SECTIONS.map((section) => (
-          <li key={section.id}>
-            <Link
-              className="cat__offering-link"
-              to={`/${areaId}/${groupId}/${section.id}`}
-            >
-              <span className="cat__offering-name">{section.title}</span>
-              <span className="cat__offering-impl">{section.blurb}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </LabChrome>
-  )
+  return <Navigate to={`/${area.id}/${group.id}/Overview`} replace />
 }
 
-/** Concise stack Overview (Wave A — not an API facet index). */
+/** Concise stack Overview — includes collapsible Preview Validation. */
 export function StackOverviewPage() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const { areaId, groupId, sectionId } = parseLabLocation(pathname)
   const group = getGroup(areaId, groupId)
 
@@ -197,20 +132,50 @@ export function StackOverviewPage() {
 
   const area = getArea(areaId)
   if (area && (area.id !== areaId || group.id !== groupId)) {
-    return <Navigate to={`/${area.id}/${group.id}/Overview`} replace />
+    return (
+      <Navigate
+        to={`/${area.id}/${group.id}/Overview${hash || ''}`}
+        replace
+      />
+    )
   }
 
+  const maturity = labMaturityFor(group)
+  const openPreview = hash === '#preview-validation'
+
   return (
-    <LabChrome areaId={area?.id ?? areaId} groupId={group.id} sectionId="Overview">
+    <LabChrome
+      areaId={area?.id ?? areaId}
+      groupId={group.id}
+      sectionId="Overview"
+    >
       <header className="cat__header">
-        <p className="cat__eyebrow">Overview</p>
+        <p className="cat__eyebrow">
+          {group.ossUrl ? (
+            <a href={group.ossUrl} target="_blank" rel="noreferrer">
+              {group.oss}
+            </a>
+          ) : (
+            group.oss
+          )}
+        </p>
         <h1 className="cat__title">{group.title}</h1>
         <p className="cat__lead">{group.description}</p>
-        <p>
-          <strong>Status:</strong> {group.status}
-          {group.recommended ? ' · Recommended for Songara' : null}
+        <p className="cat__status-row">
+          <span
+            className={`lab-status-pill ${labMaturityClass(maturity)}`}
+          >
+            <span className="lab-tone-dot" aria-hidden="true" />
+            {labMaturityLabel(maturity)}
+          </span>
+          <span className="cat__muted"> · {group.status}</span>
+          {group.recommended ? (
+            <span className="cat__muted"> · Recommended for Songara</span>
+          ) : null}
         </p>
       </header>
+
+      <PreviewValidationPanel group={group} defaultOpen={openPreview} />
 
       <section className="cat__panel" aria-labelledby="what-heading">
         <h2 id="what-heading">What it does</h2>
@@ -223,8 +188,8 @@ export function StackOverviewPage() {
       </section>
 
       {group.preview.packageId ? (
-        <section className="cat__panel" aria-labelledby="preview-heading">
-          <h2 id="preview-heading">Preview package</h2>
+        <section className="cat__panel" aria-labelledby="preview-pkg-heading">
+          <h2 id="preview-pkg-heading">Preview package</h2>
           <p>
             <code>{group.preview.packageId}</code>
             {group.preview.peers?.length ? (
@@ -232,26 +197,13 @@ export function StackOverviewPage() {
                 {' '}
                 · peers:{' '}
                 {group.preview.peers.map((p) => (
-                  <code key={p}>{p}</code>
+                  <code key={p}> {p}</code>
                 ))}
               </>
             ) : null}
           </p>
-          <p>
-            <Link to={`/${areaId}/${groupId}/Preview-Validation`}>
-              Run Preview Validation →
-            </Link>
-          </p>
         </section>
-      ) : (
-        <section className="cat__panel" aria-labelledby="preview-heading">
-          <h2 id="preview-heading">Preview package</h2>
-          <p>
-            Not Preview-backed yet. Validation will report that honestly — this is
-            not a failing demo.
-          </p>
-        </section>
-      )}
+      ) : null}
 
       {group.songaraBehaviour ? (
         <section className="cat__panel" aria-labelledby="behaviour-heading">
@@ -292,8 +244,23 @@ export function StackOverviewPage() {
       </section>
 
       <p className="cat__muted">
-        Examples experiences land in Wave B —{' '}
-        <Link to={`/${areaId}/${groupId}/Examples`}>Examples placeholder</Link>.
+        {group.hasExamples ? (
+          <>
+            Examples are ready —{' '}
+            <Link to={`/${area?.id ?? areaId}/${group.id}/Examples`}>
+              open Examples
+            </Link>
+            .
+          </>
+        ) : (
+          <>
+            Examples wave later —{' '}
+            <Link to={`/${area?.id ?? areaId}/${group.id}/Examples`}>
+              placeholder
+            </Link>
+            .
+          </>
+        )}
       </p>
     </LabChrome>
   )
@@ -320,20 +287,27 @@ export function ExamplesPlaceholderPage() {
   }
 
   return (
-    <LabChrome areaId={area?.id ?? areaId} groupId={group.id} sectionId="Examples">
+    <LabChrome
+      areaId={area?.id ?? areaId}
+      groupId={group.id}
+      sectionId="Examples"
+    >
       <header className="cat__header">
         <p className="cat__eyebrow">Examples</p>
         <h1 className="cat__title">{group.title} examples</h1>
         <p className="cat__lead">
-          Examples wave later. Wave A ships this placeholder only — prior facet
-          demos are retained in source for Wave B folding, not as primary nav.
+          {group.hasExamples
+            ? 'Experience demos for this stack.'
+            : 'Examples wave later. Wave A ships this placeholder only — prior facet demos are retained in source for Wave B folding.'}
         </p>
       </header>
       <section className="cat__panel">
         <p>
-          No experience children in Wave A. Return to the{' '}
-          <Link to={`/${areaId}/${groupId}`}>stack hub</Link> or read the{' '}
-          <Link to={`/${areaId}/${groupId}/Overview`}>Overview</Link>.
+          Return to the{' '}
+          <Link to={`/${area?.id ?? areaId}/${group.id}/Overview`}>
+            Overview
+          </Link>
+          .
         </p>
       </section>
     </LabChrome>

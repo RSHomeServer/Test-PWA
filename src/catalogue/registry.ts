@@ -424,6 +424,27 @@ export function getAdjacentLabSections(
   }
 }
 
+/** Adjacent stacks within an area (Overview-first pager). */
+export function getAdjacentStacks(
+  areaId: string,
+  groupId: string,
+): {
+  prev: { groupId: string; title: string } | null
+  next: { groupId: string; title: string } | null
+} {
+  const area = getArea(areaId)
+  if (!area) return { prev: null, next: null }
+  const index = area.groups.findIndex(
+    (g) => g.id === groupId || g.id.toLowerCase() === groupId.toLowerCase(),
+  )
+  if (index < 0) return { prev: null, next: null }
+  const toNav = (g: CatalogueGroup) => ({ groupId: g.id, title: g.title })
+  return {
+    prev: index > 0 ? toNav(area.groups[index - 1]!) : null,
+    next: index < area.groups.length - 1 ? toNav(area.groups[index + 1]!) : null,
+  }
+}
+
 export type CatalogueRouteKind = 'area' | 'group' | 'lab-section'
 
 export type CatalogueSiteRoute = {

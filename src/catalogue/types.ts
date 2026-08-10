@@ -64,6 +64,11 @@ export interface CatalogueGroup {
   description: string
   status: ExplorationStatus
   recommended: boolean
+  /**
+   * True when rich Examples experiences exist under this stack (Wave B+).
+   * Wave A leaves this false — placeholder only.
+   */
+  hasExamples?: boolean
   preview: PreviewBacking
   /** Why Songara selected it, or current evaluation posture */
   whySongara: string
