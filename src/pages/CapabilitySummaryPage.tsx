@@ -62,7 +62,15 @@ export function CapabilitySummaryPage() {
                     <span className={`lab-status-pill ${labMaturityClass(maturity)}`}>
                       {labMaturityLabel(maturity)}
                     </span>
-                    {g.preview.packageId ? ' · Preview' : ' · no Preview'}
+                    {g.preview.packageId
+                      ? ' · Preview'
+                      : g.preview.absence === 'stable-kit'
+                        ? ' · Stable kit'
+                        : g.preview.absence === 'runtime'
+                          ? ' · Runtime'
+                          : g.preview.absence === 'platform'
+                            ? ' · Platform'
+                            : ' · no Preview'}
                     {g.recommended ? ' · recommended' : ''}
                   </span>
                   <span className="cat__group-card-desc">{g.description}</span>

@@ -44,6 +44,12 @@ export const LAB_SECTIONS: LabSectionMeta[] = [
   },
 ]
 
+/**
+ * Why a stack has no Preview package — honest Validation labels
+ * (not a failed check / vague “gap”).
+ */
+export type PreviewAbsenceKind = 'platform' | 'stable-kit' | 'runtime'
+
 /** Preview package backing for a stack (or honest absence). */
 export interface PreviewBacking {
   /** Public import, e.g. `@songara/pwa-base/preview/motion` */
@@ -52,6 +58,13 @@ export interface PreviewBacking {
   peers?: readonly string[]
   /** Named helpers / policies expected on the Preview barrel */
   helpers?: readonly string[]
+  /**
+   * When `packageId` is null: platform APIs, Stable kit, or runtime —
+   * not a missing Preview connector.
+   */
+  absence?: PreviewAbsenceKind
+  /** Optional detail (e.g. Stable subpath) shown in Validation copy */
+  absenceDetail?: string
 }
 
 /** OSS or native technology stack under a capability area. */

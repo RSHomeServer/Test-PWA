@@ -1,11 +1,37 @@
 import { useEffect, useId, useState } from 'react'
-import type { CatalogueGroup } from '../catalogue/types'
+import type { CatalogueGroup, PreviewAbsenceKind } from '../catalogue/types'
 import { runPreviewChecks, type CheckResult } from './previewChecks'
 
 export type PreviewValidationPanelProps = {
   group: CatalogueGroup
   /** Open the details when landing via #preview-validation or failed checks */
   defaultOpen?: boolean
+}
+
+const ABSENCE_SUMMARY: Record<PreviewAbsenceKind, string> = {
+  platform: 'Platform APIs — no Preview package',
+  'stable-kit': 'Stable kit — not a Preview connector',
+  runtime: 'Runtime pack store — not a Preview connector',
+}
+
+function absenceBody(group: CatalogueGroup): string {
+  const kind = group.preview.absence ?? 'platform'
+  switch (kind) {
+    case 'platform':
+      return 'This stack is browser / platform APIs. There is no `@songara/pwa-base/preview/*` package by design — Validation is not a failed connector check.'
+    case 'stable-kit':
+      return `This stack is a Stable foundation kit${
+        group.preview.absenceDetail
+          ? ` (${group.preview.absenceDetail})`
+          : ''
+      }, not a Preview connector. Product apps import the Stable surface directly.`
+    case 'runtime':
+      return `This stack is a foundation runtime detail${
+        group.preview.absenceDetail
+          ? ` (${group.preview.absenceDetail})`
+          : ''
+      }, not a Preview OSS connector. It is not an app IndexedDB substitute.`
+  }
 }
 
 /**
@@ -50,7 +76,7 @@ export function PreviewValidationPanel({
         : 'lab-preview-banner--fail'
 
   const summaryLabel = !previewBacked
-    ? 'Not Preview-backed yet'
+    ? ABSENCE_SUMMARY[group.preview.absence ?? 'platform']
     : checks == null
       ? 'Running Preview diagnostics…'
       : allOk
@@ -74,11 +100,7 @@ export function PreviewValidationPanel({
 
       <div className="lab-preview-banner__body">
         {!previewBacked ? (
-          <p>
-            This stack has no <code>@songara/pwa-base/preview/*</code> package.
-            That is an honest status — not a failed check and not a demo gap to
-            paper over.
-          </p>
+          <p>{absenceBody(group)}</p>
         ) : (
           <>
             <p className="cat__muted">
