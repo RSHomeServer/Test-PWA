@@ -1,94 +1,114 @@
 import { Link } from 'react-router-dom'
 import {
   capabilityAreas,
-  getAdjacentExplorations,
+  getAdjacentStacks,
   getArea,
   getGroup,
-  listExplorations,
 } from '../catalogue/registry'
-import type { ExplorationStatus } from '../catalogue/types'
-
-function statusClass(status: ExplorationStatus): string {
-  switch (status) {
-    case 'Ready':
-      return 'cat-nav__badge--ready'
-    case 'Experimental':
-      return 'cat-nav__badge--experimental'
-    case 'Rejected':
-      return 'cat-nav__badge--rejected'
-    case 'Needs investigation':
-      return 'cat-nav__badge--investigate'
-    default:
-      return ''
-  }
-}
+import {
+  labMaturityClass,
+  labMaturityFor,
+  labMaturityLabel,
+  LAB_MATURITY,
+} from '../catalogue/labMaturity'
+import type { LabSectionId } from '../catalogue/types'
 
 export type CatalogueBrowseNavProps = {
-  /** Active capability area id when on /{area} or deeper */
   areaId?: string
-  /** Active OSS/native group id when on /{area}/{group}/… */
   groupId?: string
-  /** Path under area for the active exploration, e.g. Motion/Layout-Transitions */
-  relativePath?: string
+  sectionId?: LabSectionId
+  /** Show the compact maturity legend under the area row */
+  showLegend?: boolean
 }
 
 /**
- * Persistent catalogue browse chrome — areas from registry; groups then
- * offerings under the active area; prev/next in registry order.
+ * Persistent lab chrome — area flyouts (hover/focus) → stacks land on Overview.
  */
 export function CatalogueBrowseNav({
   areaId,
   groupId,
-  relativePath,
+  sectionId,
+  showLegend = false,
 }: CatalogueBrowseNavProps) {
   const area = areaId ? getArea(areaId) : undefined
-  const group =
-    areaId && groupId ? getGroup(areaId, groupId) : undefined
+  const group = areaId && groupId ? getGroup(areaId, groupId) : undefined
   const adjacent =
-    areaId && relativePath
-      ? getAdjacentExplorations(areaId, relativePath)
-      : null
-  const flatEntries = area && !area.groups?.length ? listExplorations(area) : []
+    areaId && groupId ? getAdjacentStacks(areaId, groupId) : null
 
   return (
-    <nav className="cat-nav" aria-label="Catalogue browse">
+    <nav className="cat-nav" aria-label="Capability lab browse">
       <div className="cat-nav__row">
         <Link
           className={`cat-nav__home${areaId ? '' : ' cat-nav__link--current'}`}
           to="/"
           aria-current={areaId ? undefined : 'page'}
         >
-          Catalogue
+          Lab
         </Link>
         <ul className="cat-nav__areas">
           {capabilityAreas.map((a) => {
             const current = a.id === areaId
             return (
-              <li key={a.id}>
+              <li key={a.id} className="cat-nav__area-item">
                 <Link
                   className={`cat-nav__area${current ? ' cat-nav__link--current' : ''}`}
                   to={`/${a.id}`}
-                  aria-current={current && !groupId && !relativePath ? 'page' : undefined}
+                  aria-current={
+                    current && !groupId && !sectionId ? 'page' : undefined
+                  }
+                  aria-haspopup="true"
                 >
                   /{a.id}
                 </Link>
+                <ul className="cat-nav__flyout" aria-label={`${a.title} stacks`}>
+                  {a.groups.map((g) => {
+                    const maturity = labMaturityFor(g)
+                    const stackCurrent = current && g.id === groupId
+                    return (
+                      <li key={g.id}>
+                        <Link
+                          className={`cat-nav__flyout-link ${labMaturityClass(maturity)}${
+                            stackCurrent ? ' cat-nav__link--current' : ''
+                          }`}
+                          to={`/${a.id}/${g.id}/Overview`}
+                          aria-current={stackCurrent ? 'page' : undefined}
+                        >
+                          <span
+                            className="lab-tone-dot"
+                            aria-hidden="true"
+                          />
+                          <span className="cat-nav__flyout-title">{g.title}</span>
+                          <span className="cat-nav__flyout-meta">
+                            {labMaturityLabel(maturity)}
+                            {g.preview.packageId ? ' · Preview' : ''}
+                          </span>
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
               </li>
             )
           })}
         </ul>
       </div>
 
-      {area?.groups?.length ? (
-        <ul className="cat-nav__groups">
+      {area?.groups.length && groupId ? (
+        <ul className="cat-nav__stack-rail" aria-label={`${area.title} stacks`}>
           {area.groups.map((g) => {
+            const maturity = labMaturityFor(g)
             const current = g.id === groupId
             return (
               <li key={g.id}>
                 <Link
-                  className={`cat-nav__group${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${area.id}/${g.id}`}
-                  aria-current={current && !relativePath ? 'page' : undefined}
+                  className={`cat-nav__stack-chip ${labMaturityClass(maturity)}${
+                    current ? ' cat-nav__link--current' : ''
+                  }`}
+                  to={`/${area.id}/${g.id}/Overview`}
+                  aria-current={current ? 'page' : undefined}
+                  title={`${g.title} — ${labMaturityLabel(maturity)}`}
                 >
+                  <span className="lab-tone-dot" aria-hidden="true" />
                   {g.title}
                 </Link>
               </li>
@@ -98,79 +118,58 @@ export function CatalogueBrowseNav({
       ) : null}
 
       {group ? (
-        <ul className="cat-nav__explorations">
-          {group.explorations.map((ex) => {
-            const path = `${group.id}/${ex.id}`
-            const current = path === relativePath
-            return (
-              <li key={ex.id}>
+        <div className="cat-nav__stack-tools">
+          <Link
+            className={`cat-nav__quiet-link${
+              sectionId === 'Examples' ? ' cat-nav__link--current' : ''
+            }`}
+            to={`/${areaId}/${group.id}/Examples`}
+            aria-current={sectionId === 'Examples' ? 'page' : undefined}
+          >
+            Examples
+            {group.hasExamples ? ' · ready' : ' · later'}
+          </Link>
+          {adjacent && (adjacent.prev || adjacent.next) ? (
+            <div className="cat-nav__pager">
+              {adjacent.prev ? (
                 <Link
-                  className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${areaId}/${path}`}
-                  aria-current={current ? 'page' : undefined}
+                  className="cat-nav__pager-link"
+                  to={`/${areaId}/${adjacent.prev.groupId}/Overview`}
+                  rel="prev"
                 >
-                  <span className="cat-nav__ex-name">{ex.capability}</span>
-                  <span className={`cat-nav__badge ${statusClass(ex.status)}`}>
-                    {ex.status}
-                  </span>
+                  ← {adjacent.prev.title}
                 </Link>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-
-      {flatEntries.length > 0 ? (
-        <ul className="cat-nav__explorations">
-          {flatEntries.map((entry) => {
-            const current = entry.relativePath === relativePath
-            return (
-              <li key={entry.relativePath}>
+              ) : (
+                <span className="cat-nav__pager-gap" />
+              )}
+              {adjacent.next ? (
                 <Link
-                  className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${areaId}/${entry.relativePath}`}
-                  aria-current={current ? 'page' : undefined}
+                  className="cat-nav__pager-link cat-nav__pager-link--next"
+                  to={`/${areaId}/${adjacent.next.groupId}/Overview`}
+                  rel="next"
                 >
-                  <span className="cat-nav__ex-name">
-                    {entry.record.capability}
-                  </span>
-                  <span
-                    className={`cat-nav__badge ${statusClass(entry.record.status)}`}
-                  >
-                    {entry.record.status}
-                  </span>
+                  {adjacent.next.title} →
                 </Link>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-
-      {adjacent && (adjacent.prev || adjacent.next) ? (
-        <div className="cat-nav__pager">
-          {adjacent.prev ? (
-            <Link
-              className="cat-nav__pager-link"
-              to={`/${areaId}/${adjacent.prev.relativePath}`}
-              rel="prev"
-            >
-              ← {adjacent.prev.capability}
-            </Link>
-          ) : (
-            <span className="cat-nav__pager-gap" />
-          )}
-          {adjacent.next ? (
-            <Link
-              className="cat-nav__pager-link cat-nav__pager-link--next"
-              to={`/${areaId}/${adjacent.next.relativePath}`}
-              rel="next"
-            >
-              {adjacent.next.capability} →
-            </Link>
-          ) : (
-            <span className="cat-nav__pager-gap" />
-          )}
+              ) : (
+                <span className="cat-nav__pager-gap" />
+              )}
+            </div>
+          ) : null}
         </div>
+      ) : null}
+
+      {showLegend ? (
+        <ul className="lab-legend" aria-label="Stack status legend">
+          {LAB_MATURITY.map((m) => (
+            <li key={m.id} className={`lab-legend__item ${labMaturityClass(m.id)}`}>
+              <span className="lab-tone-dot" aria-hidden="true" />
+              <span>
+                <strong>{m.label}</strong>
+                <span className="cat__muted"> — {m.legend}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
       ) : null}
     </nav>
   )

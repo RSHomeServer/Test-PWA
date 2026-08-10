@@ -45,14 +45,10 @@ export function ExplorationShell({
 
   return (
     <main className="cat">
-      <CatalogueBrowseNav
-        areaId={areaId}
-        groupId={groupId}
-        relativePath={relativePath}
-      />
+      <CatalogueBrowseNav areaId={areaId} groupId={groupId} />
 
       <nav className="cat__crumb">
-        <Link to="/">Catalogue</Link>
+        <Link to="/">Lab</Link>
         <span aria-hidden="true"> / </span>
         <Link to={`/${areaId}`}>{areaId}</Link>
         {groupId ? (
@@ -62,7 +58,7 @@ export function ExplorationShell({
           </>
         ) : null}
         <span aria-hidden="true"> / </span>
-        <span>{offeringId}</span>
+        <span>{offeringId} (Wave B demo)</span>
       </nav>
 
       <header className="cat__header">

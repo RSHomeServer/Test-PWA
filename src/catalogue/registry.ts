@@ -1,17 +1,57 @@
-import type {
-  CapabilityArea,
-  CatalogueGroup,
-  ExplorationEntry,
-  ExplorationRecord,
-} from './types'
-import { investigationStub } from './stubs'
+import type { CapabilityArea, CatalogueGroup, ExplorationRecord, LabSectionId } from './types'
+import { LAB_SECTION_IDS, LAB_SECTIONS } from './types'
+import { getWaveBFacet } from './waveBFacetArchive'
+
+function stack(
+  partial: Omit<CatalogueGroup, 'recommended'> & { recommended?: boolean },
+): CatalogueGroup {
+  return {
+    recommended: false,
+    ...partial,
+  }
+}
+
+const PREVIEW_MOTION = {
+  packageId: '@songara/pwa-base/preview/motion',
+  peers: ['motion'],
+  helpers: [
+    'motion',
+    'resolveTransition',
+    'useSongaraMotion',
+    'useReducedMotion',
+    'AnimatePresence',
+  ],
+} as const
+
+const PREVIEW_DEXIE = {
+  packageId: '@songara/pwa-base/preview/dexie',
+  peers: ['dexie'],
+  helpers: [
+    'Dexie',
+    'createSongaraDb',
+    'songaraDbName',
+    'sortSchemaVersions',
+    'applySchemaVersions',
+  ],
+} as const
+
+const PREVIEW_LOTTIE = {
+  packageId: '@songara/pwa-base/preview/lottie',
+  peers: ['lottie-react'],
+  helpers: [
+    'Lottie',
+    'SongaraLottie',
+    'resolveLottiePlayback',
+    'useSongaraLottiePlayback',
+    'useReducedMotion',
+  ],
+} as const
+
+const NO_PREVIEW = { packageId: null } as const
 
 /**
- * Living registry — capability summaries aggregate from this list.
- * Top five areas: animation, physics, camera, audio, offline-storage.
- * See docs/architecture/top-five-routes.md
- *
- * Animation uses nested groups: /animation/{OSS|native}/{Offering}
+ * Living registry — Capability Lab stacks (Wave A four-section IA).
+ * Hard rule: do not add new facet leaves to primary nav.
  */
 export const capabilityAreas: CapabilityArea[] = [
   {
@@ -20,420 +60,107 @@ export const capabilityAreas: CapabilityArea[] = [
     description:
       'Native platform motion and OSS stacks (Motion, Lottie, Rive, GSAP, tsParticles) for Songara PWAs.',
     groups: [
-      {
+      stack({
         id: 'native',
         title: 'Native',
         oss: 'Platform APIs',
         ossUrl:
           'https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API',
-        description:
-          'Browser platform motion APIs and accessibility policy — baseline before adopting OSS.',
-        explorations: [
-          {
-            id: 'Web-Animations-API',
-            capability: 'Web Animations API',
-            implementation: 'CSS + WAAPI spring-like pulse / reduced-motion gate',
-            status: 'Ready',
-            oss: 'Platform API (Web Animations / CSS)',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API',
-            maturity: 5,
-            performance: 5,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 3,
-            visualQuality: 3,
-            accessibility: 4,
-            complexity: 2,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Baseline before adopting Motion/GSAP. Prefer for simple UI motion; pair with prefers-reduced-motion.',
-          },
-          {
-            id: 'Reduced-Motion',
-            capability: 'Reduced Motion',
-            implementation:
-              'useReducedMotion from @songara/pwa-base/animation + QA overrides',
-            status: 'Ready',
-            oss: 'Platform + @songara/pwa-base/animation',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion',
-            maturity: 5,
-            performance: 5,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 3,
-            accessibility: 5,
-            complexity: 2,
-            recommended: true,
-            overallScore: 9,
-            notes:
-              'Mandatory policy for all motion stacks. Use foundation hook; provide force overrides for QA.',
-          },
-          {
-            id: 'View-Transitions',
-            capability: 'View Transitions',
-            implementation:
-              'document.startViewTransition support detection + reduced-motion gate (scaffold demo)',
-            status: 'Experimental',
-            oss: 'View Transitions API',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API',
-            maturity: 3,
-            performance: 3,
-            browserSupport: 3,
-            offline: 5,
-            developerExperience: 3,
-            visualQuality: 3,
-            accessibility: 3,
-            complexity: 4,
-            recommended: false,
-            overallScore: 5,
-            notes:
-              'Cross-document / same-document navigations. Chromium solid; Safari improving; Firefox partial. Always keep instant fallback.',
-          },
-        ],
-      },
-      {
+        description: 'Browser motion APIs and reduced-motion policy.',
+        status: 'Ready',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Covers the Web Animations API, CSS transitions/animations, View Transitions, and prefers-reduced-motion. Typical uses: simple UI pulses, page transitions, and accessibility gating before any OSS motion kit is introduced.',
+        whyWeUseIt:
+          'It is the free, zero-bundle baseline every browser already ships. We evaluate platform APIs first so OSS like Motion or GSAP is only adopted when the built-in surface is too thin.',
+        a11yNotes:
+          'Always honour prefers-reduced-motion; View Transitions need an instant fallback.',
+        performanceNotes:
+          'WAAPI/CSS are cheap for simple pulses; avoid layout thrash.',
+        alternatives: 'Motion for React UI kits; Lottie/Rive for authored graphics.',
+      }),
+      stack({
         id: 'Motion',
         title: 'Motion',
         oss: 'Motion',
         ossUrl: 'https://motion.dev',
-        description:
-          'Motion for React (npm motion) via @songara/pwa-base/preview/motion — Wave 1 Preview consume.',
-        explorations: [
-          {
-            id: 'Overview',
-            capability: 'Overview',
-            implementation:
-              '@songara/pwa-base/preview/motion spring toggle + resolveTransition',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 9,
-            notes:
-              'Consumes Preview Motion (Wave 1) — same import products use. Default React UI motion kit when WAAPI becomes verbose; watch bundle size.',
-          },
-          {
-            id: 'Springs',
-            capability: 'Springs',
-            implementation:
-              '@songara/pwa-base/preview/motion spring ball + resolveTransition',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-transitions',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview consume. Use 2–3 shared spring presets. WAAPI lacks first-class springs — Motion wins for tactile UX.',
-          },
-          {
-            id: 'Layout-Transitions',
-            capability: 'Layout Transitions',
-            implementation:
-              '@songara/pwa-base/preview/motion layout expand/collapse tile grid',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-layout-animations',
-            maturity: 4,
-            performance: 3,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 4,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview consume. Great for small groups; avoid animating large lists. Disable under reduced motion.',
-          },
-          {
-            id: 'Shared-Element',
-            capability: 'Shared Element',
-            implementation:
-              '@songara/pwa-base/preview/motion layoutId highlight morph',
-            status: 'Experimental',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-layout-animations',
-            maturity: 3,
-            performance: 3,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 3,
-            visualQuality: 4,
-            accessibility: 3,
-            complexity: 4,
-            recommended: false,
-            overallScore: 6,
-            notes:
-              'Preview consume. layoutId solid in-route. For document navigations see /animation/native/View-Transitions.',
-          },
-          {
-            id: 'Gestures',
-            capability: 'Gestures',
-            implementation:
-              '@songara/pwa-base/preview/motion whileHover / whileTap / drag',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-gestures',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview consume. Gate gestures under reduced motion; constrain drag in products.',
-          },
-          {
-            id: 'Scroll',
-            capability: 'Scroll',
-            implementation:
-              '@songara/pwa-base/preview/motion whileInView scroll reveals',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-scroll-animations',
-            maturity: 4,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 4,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 7,
-            notes:
-              'whileInView covered. Scroll-linked useScroll not on Preview barrel yet — note in exploration.',
-          },
-          {
-            id: 'Exit-Animations',
-            capability: 'Exit Animations',
-            implementation:
-              '@songara/pwa-base/preview/motion AnimatePresence list exits',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-animate-presence',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview re-exports AnimatePresence. Snap exits under reduced motion.',
-          },
-          {
-            id: 'Variants',
-            capability: 'Variants',
-            implementation:
-              '@songara/pwa-base/preview/motion parent/child stagger variants',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-animation',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Shared variant packs for onboarding/menus; instant variants when reduced.',
-          },
-          {
-            id: 'SVG',
-            capability: 'SVG',
-            implementation:
-              '@songara/pwa-base/preview/motion pathLength circle + check path',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-svg-animation',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Icon-scale draws. Prefer Lottie/Rive for heavy illustration.',
-          },
-          {
-            id: 'Motion-Values',
-            capability: 'Motion Values',
-            implementation:
-              '@songara/pwa-base/preview/motion useMotionValue / useSpring / useTransform',
-            status: 'Ready',
-            oss: 'Motion',
-            ossUrl: 'https://motion.dev/docs/react-motion-value',
-            maturity: 5,
-            performance: 5,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 4,
-            complexity: 4,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview re-exports value hooks. Jump springs to rest under reduced motion.',
-          },
-        ],
-      },
-      {
+        description: 'Declarative React UI motion — springs, layout, gestures, presence.',
+        status: 'Ready',
+        recommended: true,
+        preview: PREVIEW_MOTION,
+        whatItDoes:
+          'Motion (formerly Framer Motion) animates React UI: enter/exit presence, spring physics, layout morphs, gestures (hover/tap/drag), scroll-triggered reveals, and SVG path draws. Typical product uses are sheets, list reorders, micro-interactions, and onboarding sequences.',
+        whyWeUseIt:
+          'It is the most productive React-first kit when WAAPI becomes verbose — springs, gestures, layout, and AnimatePresence in one API. That combination is the default Songara choice for interactive chrome after platform APIs.',
+        a11yNotes:
+          'Gate gestures and layout under reduced motion; snap exits with AnimatePresence.',
+        performanceNotes:
+          'Excellent for UI-scale motion; layout animations can thrash on large lists.',
+        alternatives: 'WAAPI/CSS for one-offs; Lottie/Rive for illustration; GSAP only with licence diligence.',
+      }),
+      stack({
         id: 'Lottie',
         title: 'Lottie',
         oss: 'Lottie',
         ossUrl: 'https://github.com/airbnb/lottie-web',
-        description: 'Designer-authored JSON / dotLottie motion graphics playback.',
-        explorations: [
-          {
-            id: 'Playback',
-            capability: 'Playback',
-            implementation: 'lottie-react with inlined pulse JSON asset',
-            status: 'Ready',
-            oss: 'Lottie (lottie-web / lottie-react)',
-            ossUrl: 'https://github.com/airbnb/lottie-web',
-            maturity: 5,
-            performance: 3,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 3,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Best for designer-authored icon/empty-state motion. Keep assets small; freeze when reduced.',
-          },
-        ],
-      },
-      {
+        description: 'Playback for designer-authored vector motion graphics.',
+        status: 'Ready',
+        recommended: true,
+        preview: PREVIEW_LOTTIE,
+        whatItDoes:
+          'Plays JSON / dotLottie animations exported from After Effects (and similar tools). Typical uses are icon flourishes, empty states, loaders, and marketing moments where a designer owns the motion — not hand-coded DOM animation.',
+        whyWeUseIt:
+          'It is the standard pipeline from design tools to the web for authored graphics. We picked it so product teams can ship designer motion without rebuilding every path in Motion or SVG.',
+        a11yNotes: 'Freeze or swap to static under reduced motion; keep assets small.',
+        performanceNotes: 'JSON size and complexity dominate cost; prefer icon-scale assets.',
+        alternatives: 'Rive for interactive state machines; Motion/SVG for simple draws.',
+      }),
+      stack({
         id: 'Rive',
         title: 'Rive',
         oss: 'Rive',
         ossUrl: 'https://rive.app',
         description: 'Interactive state-machine graphics.',
-        explorations: [
-          {
-            id: 'Interactive-Graphics',
-            capability: 'Interactive Graphics',
-            implementation:
-              '@rive-app/react-canvas with CDN sample + pause on reduced motion',
-            status: 'Experimental',
-            oss: 'Rive (@rive-app/react-canvas)',
-            ossUrl: 'https://github.com/rive-app/rive-react',
-            maturity: 4,
-            performance: 4,
-            browserSupport: 4,
-            offline: 2,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 3,
-            complexity: 4,
-            recommended: false,
-            overallScore: 6,
-            notes:
-              'Reserve for interactive illustrations. Ship .riv offline via content packs — CDN sample is catalogue-only.',
-          },
-        ],
-      },
-      {
+        status: 'Experimental',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Runs .riv files with state machines so illustrations react to input (hover, progress, game-like states). Typical uses are interactive heroes, character UI, and complex illustration that Lottie cannot branch cleanly.',
+        whyWeUseIt:
+          'We are evaluating it where Lottie’s linear playback is not enough. It stays Experimental until we see a clear product need that outweighs shipping and tooling cost.',
+        a11yNotes: 'Pause state machines under reduced motion.',
+        performanceNotes: 'Ship `.riv` offline via content packs — CDN samples are catalogue-only.',
+        alternatives: 'Lottie for linear playback; Motion for UI chrome.',
+      }),
+      stack({
         id: 'GSAP',
         title: 'GSAP',
         oss: 'GSAP',
         ossUrl: 'https://gsap.com',
-        description: 'Timeline-oriented animation toolkit (licence diligence required).',
-        explorations: [
-          {
-            id: 'Timelines',
-            capability: 'Timelines',
-            implementation: 'gsap timeline box+bar demo; licence diligence flagged',
-            status: 'Experimental',
-            oss: 'GSAP (licence diligence required)',
-            ossUrl: 'https://github.com/greensock/GSAP',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 4,
-            visualQuality: 5,
-            accessibility: 3,
-            complexity: 4,
-            recommended: false,
-            overallScore: 5,
-            notes:
-              'Not recommended as default UI kit. Licence review required before product use; prefer Motion/WAAPI for chrome.',
-          },
-        ],
-      },
-      {
+        description: 'Timeline-oriented animation for complex sequenced motion.',
+        status: 'Experimental',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Builds precise, timeline-driven animations across DOM/SVG/canvas. Typical uses are long marketing sequences, scrubbed scroll stories, and choreography that needs fine control beyond component springs.',
+        whyWeUseIt:
+          'Kept as a comparison for deep timeline work only. Licence diligence is required, so it is not a Songara default UI kit — Motion/WAAPI cover chrome first.',
+        alternatives: 'Prefer Motion/WAAPI for chrome; GSAP only when timeline depth is essential.',
+      }),
+      stack({
         id: 'tsParticles',
         title: 'tsParticles',
         oss: 'tsParticles',
         ossUrl: 'https://github.com/tsparticles/tsparticles',
-        description: 'Particle systems for ambient atmosphere.',
-        explorations: [
-          {
-            id: 'Ambient-Field',
-            capability: 'Ambient Field',
-            implementation:
-              'tsparticles slim ambient field with reduced-motion pause',
-            status: 'Experimental',
-            oss: 'tsParticles',
-            ossUrl: 'https://github.com/tsparticles/tsparticles',
-            maturity: 4,
-            performance: 3,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 3,
-            visualQuality: 4,
-            accessibility: 3,
-            complexity: 3,
-            recommended: false,
-            overallScore: 6,
-            notes:
-              'Atmosphere only. Prefer @songara/pwa-base ParticleField for branded glyphs; always gate motion.',
-          },
-        ],
-      },
+        description: 'Particle fields for ambient visual atmosphere.',
+        status: 'Experimental',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Renders configurable particle systems (stars, dust, networks) as background atmosphere. Typical uses are decorative hero fields — not functional UI motion.',
+        whyWeUseIt:
+          'Useful as an atmosphere comparison. Branded glyph fields should prefer foundation ParticleField when available; tsParticles stays optional and motion-gated.',
+        a11yNotes: 'Always gate / pause under reduced motion.',
+        alternatives: 'CSS/canvas accents; foundation ParticleField.',
+      }),
     ],
   },
   {
@@ -442,109 +169,60 @@ export const capabilityAreas: CapabilityArea[] = [
     description:
       '2D/3D rigid-body and constraint simulation for interactive Songara experiences.',
     groups: [
-      {
+      stack({
         id: 'Rapier',
         title: 'Rapier',
         oss: 'Rapier',
         ossUrl: 'https://rapier.rs',
-        description:
-          'Modern WASM physics (2D/3D). Songara default engine candidate; Preview held for Wave 1b + product commit.',
-        explorations: [
-          investigationStub({
-            id: 'Overview-2D',
-            capability: 'Overview 2D',
-            oss: 'Rapier (@dimforge/rapier2d-compat)',
-            ossUrl: 'https://github.com/dimforge/rapier',
-          }),
-          investigationStub({
-            id: 'Overview-3D',
-            capability: 'Overview 3D',
-            oss: 'Rapier (@dimforge/rapier3d-compat)',
-            ossUrl: 'https://github.com/dimforge/rapier',
-          }),
-          investigationStub({
-            id: 'Joints',
-            capability: 'Joints',
-            oss: 'Rapier',
-            ossUrl: 'https://rapier.rs/docs/user_guides/javascript/joints',
-          }),
-          investigationStub({
-            id: 'Soft-Bodies',
-            capability: 'Soft Bodies',
-            oss: 'Rapier',
-            ossUrl: 'https://rapier.rs',
-          }),
-          investigationStub({
-            id: 'Rope',
-            capability: 'Rope',
-            oss: 'Rapier',
-            ossUrl: 'https://rapier.rs',
-          }),
-          investigationStub({
-            id: 'Cloth',
-            capability: 'Cloth',
-            oss: 'Rapier',
-            ossUrl: 'https://rapier.rs',
-          }),
-          investigationStub({
-            id: 'Vehicles',
-            capability: 'Vehicles',
-            oss: 'Rapier',
-            ossUrl: 'https://rapier.rs',
-          }),
-        ],
-      },
-      {
+        description: 'Modern WASM rigid-body physics (2D and 3D).',
+        status: 'Needs investigation',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Simulates rigid bodies, joints, and collisions in 2D/3D via WebAssembly. Typical uses are interactive toys, puzzles, vehicle/cloth experiments, and any UI that needs believable physical response.',
+        whyWeUseIt:
+          'Leading modern WASM engine and Songara’s default candidate. We hold a Preview package until a product commit justifies the integration cost.',
+        alternatives: 'Matter.js for approachable 2D; cannon-es for classic 3D.',
+      }),
+      stack({
         id: 'Matter.js',
         title: 'Matter.js',
         oss: 'Matter.js',
         ossUrl: 'https://brm.io/matter-js/',
-        description: 'Approachable 2D rigid-body engine for the web.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'Matter.js',
-            ossUrl: 'https://github.com/liabru/matter-js',
-          }),
-          investigationStub({
-            id: 'Constraints',
-            capability: 'Constraints',
-            oss: 'Matter.js',
-            ossUrl: 'https://brm.io/matter-js/docs/classes/Constraint.html',
-          }),
-        ],
-      },
-      {
+        description: 'Approachable 2D rigid-body physics for the web.',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          '2D rigid-body engine with constraints, composites, and a gentle learning curve. Typical uses are prototypes, educational demos, and lightweight interactive scenes.',
+        whyWeUseIt:
+          'Comparison stack against Rapier for DX and constraint modelling — not the intended long-term default.',
+      }),
+      stack({
         id: 'Planck.js',
         title: 'Planck.js',
         oss: 'Planck.js',
         ossUrl: 'https://piqnt.com/planck.js/',
         description: 'Box2D-style 2D physics for JavaScript.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'Planck.js',
-            ossUrl: 'https://github.com/piqnt/planck.js',
-          }),
-        ],
-      },
-      {
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Ports Box2D concepts to JavaScript for 2D worlds with fixtures, joints, and contacts. Typical uses are games and simulations that expect a Box2D mental model.',
+        whyWeUseIt:
+          'Evaluation-only comparison for teams already fluent in Box2D — not a Songara default pick.',
+      }),
+      stack({
         id: 'cannon-es',
         title: 'cannon-es',
         oss: 'cannon-es',
         ossUrl: 'https://github.com/pmndrs/cannon-es',
-        description: 'Classic 3D rigid-body engine (ES module fork of cannon.js).',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'cannon-es',
-            ossUrl: 'https://github.com/pmndrs/cannon-es',
-          }),
-        ],
-      },
+        description: 'Classic 3D rigid-body physics (ES module fork of cannon.js).',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          '3D rigid-body simulation familiar from the cannon.js ecosystem. Typical uses are Three.js scenes needing bodies, contacts, and simple vehicles.',
+        whyWeUseIt:
+          '3D comparison against Rapier — kept to understand trade-offs, not as the preferred engine.',
+      }),
     ],
   },
   {
@@ -553,72 +231,34 @@ export const capabilityAreas: CapabilityArea[] = [
     description:
       'Camera access, device selection, still capture, and permission UX for Songara PWAs.',
     groups: [
-      {
+      stack({
         id: 'native',
         title: 'Native',
         oss: 'Platform MediaDevices',
-        ossUrl:
-          'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices',
-        description:
-          'Browser platform camera APIs and permission patterns — baseline before wrappers.',
-        explorations: [
-          investigationStub({
-            id: 'GetUserMedia',
-            capability: 'GetUserMedia',
-            oss: 'MediaDevices API',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia',
-          }),
-          investigationStub({
-            id: 'Device-Selection',
-            capability: 'Device Selection',
-            oss: 'MediaDevices.enumerateDevices',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices',
-          }),
-          investigationStub({
-            id: 'Still-Capture',
-            capability: 'Still Capture',
-            oss: 'Platform canvas / ImageCapture',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/ImageCapture',
-          }),
-          investigationStub({
-            id: 'Track-Constraints',
-            capability: 'Track Constraints',
-            oss: 'MediaTrackConstraints',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints',
-          }),
-          investigationStub({
-            id: 'Permissions-UX',
-            capability: 'Permissions UX',
-            oss: 'Platform patterns',
-          }),
-          investigationStub({
-            id: 'Secure-Context',
-            capability: 'Secure Context',
-            oss: 'Platform',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts',
-          }),
-        ],
-      },
-      {
+        ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices',
+        description: 'getUserMedia, devices, capture, and secure-context rules.',
+        status: 'Needs investigation',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Browser MediaDevices APIs for live camera streams, device enumeration, still capture, track constraints, and permission flows. Typical uses are photo capture, QR/scan prep, and any feature that needs a live preview.',
+        whyWeUseIt:
+          'Platform baseline before wrappers. Understanding secure-context and permission UX here prevents fragile React glue later.',
+        a11yNotes: 'Clear permission denial UX; never assume camera availability.',
+      }),
+      stack({
         id: 'react-webcam',
         title: 'react-webcam',
         oss: 'react-webcam',
         ossUrl: 'https://github.com/mozmorris/react-webcam',
-        description: 'Thin React glue around getUserMedia.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'react-webcam',
-            ossUrl: 'https://github.com/mozmorris/react-webcam',
-          }),
-        ],
-      },
+        description: 'Thin React component over getUserMedia.',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Wraps getUserMedia in a React component for quick webcam previews and screenshots. Typical uses are prototypes and simple capture UIs.',
+        whyWeUseIt:
+          'Evaluate whether thin React glue beats calling MediaDevices directly in Songara apps — kept as a comparison, not assumed default.',
+      }),
     ],
   },
   {
@@ -627,111 +267,60 @@ export const capabilityAreas: CapabilityArea[] = [
     description:
       'Playback, SFX, musical graphs, and comparison with the Songara audio kit.',
     groups: [
-      {
+      stack({
         id: 'native',
         title: 'Native',
         oss: 'Platform audio APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
-        description: 'Web Audio, media element, worklets, and recording baselines.',
-        explorations: [
-          investigationStub({
-            id: 'Web-Audio-API',
-            capability: 'Web Audio API',
-            oss: 'Platform AudioContext',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
-          }),
-          investigationStub({
-            id: 'HTMLAudioElement',
-            capability: 'HTMLAudioElement',
-            oss: 'Platform',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement',
-          }),
-          investigationStub({
-            id: 'AudioWorklet',
-            capability: 'AudioWorklet',
-            oss: 'Platform AudioWorklet',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet',
-          }),
-          investigationStub({
-            id: 'MediaRecorder',
-            capability: 'MediaRecorder',
-            oss: 'MediaRecorder',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder',
-          }),
-        ],
-      },
-      {
+        description: 'Web Audio, media elements, worklets, and recording.',
+        status: 'Needs investigation',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Platform audio: HTMLAudioElement, AudioContext graphs, AudioWorklet, and MediaRecorder. Typical uses are SFX, voice notes, metering, and custom processing without an OSS kit.',
+        whyWeUseIt:
+          'Baseline before Tone, Howler, or the foundation kit — so we know what the browser already covers.',
+      }),
+      stack({
         id: 'Tone.js',
         title: 'Tone.js',
         oss: 'Tone.js',
         ossUrl: 'https://tonejs.github.io/',
         description: 'Musical timing, synthesis, and transport for the web.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'Tone.js',
-            ossUrl: 'https://github.com/Tonejs/Tone.js',
-          }),
-          investigationStub({
-            id: 'Synthesis',
-            capability: 'Synthesis',
-            oss: 'Tone.js',
-            ossUrl: 'https://tonejs.github.io/',
-          }),
-          investigationStub({
-            id: 'Transport',
-            capability: 'Transport',
-            oss: 'Tone.js',
-            ossUrl: 'https://tonejs.github.io/docs/15.0.4/classes/Transport.html',
-          }),
-        ],
-      },
-      {
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'High-level Web Audio for synths, samples, scheduling, and transport clocks. Typical uses are generative music, sequencers, and musical UX that needs sample-accurate timing.',
+        whyWeUseIt:
+          'Strong candidate when products need musical graphs — evaluated against the Songara audio kit for overlap and weight.',
+      }),
+      stack({
         id: 'Howler.js',
         title: 'Howler.js',
         oss: 'Howler.js',
         ossUrl: 'https://howlerjs.com/',
-        description: 'Simple multi-format SFX playback.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'Howler.js',
-            ossUrl: 'https://github.com/goldfire/howler.js',
-          }),
-          investigationStub({
-            id: 'Sprites',
-            capability: 'Sprites',
-            oss: 'Howler.js',
-            ossUrl: 'https://github.com/goldfire/howler.js#documentation',
-          }),
-        ],
-      },
-      {
+        description: 'Simple multi-format sound-effect playback.',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Plays and pools short sounds across formats with sprites and spatial helpers. Typical uses are UI SFX, game one-shots, and sprite sheets of clicks/alerts.',
+        whyWeUseIt:
+          'SFX-oriented comparison. A Howler Preview package is out of Wave A scope; evaluation continues against native and foundation kit playback.',
+      }),
+      stack({
         id: 'Songara-Audio-Kit',
         title: 'Songara Audio Kit',
         oss: '@songara/pwa-base/audio',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
-        description:
-          'Foundation Stable audio kit — compare against Tone/Howler/platform for Songara PWAs.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: '@songara/pwa-base/audio',
-          }),
-          investigationStub({
-            id: 'Playback-Loop',
-            capability: 'Playback Loop',
-            oss: '@songara/pwa-base/audio + MediaRecorder patterns',
-          }),
-        ],
-      },
+        description: 'Foundation Stable audio helpers for Songara PWAs.',
+        status: 'Needs investigation',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Songara’s Stable audio surface for product apps — playback patterns and shared helpers rather than a full DAW. Typical uses are consistent SFX/voice loops across PWAs.',
+        whyWeUseIt:
+          'It is our owned Stable kit. The lab compares it with Tone/Howler/platform so products do not invent parallel helpers.',
+      }),
     ],
   },
   {
@@ -740,307 +329,302 @@ export const capabilityAreas: CapabilityArea[] = [
     description:
       'Durable client-side data: IndexedDB ergonomics, migrations, OPFS — no sync product yet.',
     groups: [
-      {
+      stack({
         id: 'native',
         title: 'Native',
         oss: 'Platform storage APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
-        description: 'Raw IndexedDB and Origin Private File System baselines.',
-        explorations: [
-          investigationStub({
-            id: 'IndexedDB',
-            capability: 'IndexedDB',
-            oss: 'Platform IndexedDB',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
-          }),
-          investigationStub({
-            id: 'OPFS',
-            capability: 'OPFS',
-            oss: 'Platform OPFS',
-            ossUrl:
-              'https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system',
-          }),
-        ],
-      },
-      {
+        description: 'Raw IndexedDB and Origin Private File System.',
+        status: 'Needs investigation',
+        recommended: true,
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Browser-native durable storage: IndexedDB for structured data and OPFS for file-like blobs. Typical uses are offline caches, large assets, and understanding platform limits before wrappers.',
+        whyWeUseIt:
+          'We learn ceilings and failure modes here first, then judge whether Dexie or idb is worth the abstraction.',
+      }),
+      stack({
         id: 'idb',
         title: 'idb',
         oss: 'idb',
         ossUrl: 'https://github.com/jakearchibald/idb',
         description: 'Tiny promise wrapper around IndexedDB.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'idb',
-            ossUrl: 'https://github.com/jakearchibald/idb',
-          }),
-        ],
-      },
-      {
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Promisifies IndexedDB with a minimal API. Typical uses are small stores where a full ODM would be overkill.',
+        whyWeUseIt:
+          'Minimal-wrapper comparison against Dexie ergonomics — kept to see when “tiny” is enough.',
+      }),
+      stack({
         id: 'Dexie.js',
         title: 'Dexie.js',
         oss: 'Dexie.js',
         ossUrl: 'https://dexie.org/',
-        description:
-          'Ergonomic IndexedDB via `@songara/pwa-base/preview/dexie` (Wave 1 Preview).',
-        explorations: [
-          {
-            id: 'Overview',
-            capability: 'Overview',
-            implementation:
-              '@songara/pwa-base/preview/dexie createSongaraDb + songaraDbName notes CRUD',
-            status: 'Ready',
-            oss: 'Dexie.js',
-            ossUrl: 'https://github.com/dexie/Dexie.js',
-            maturity: 5,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 3,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 9,
-            notes:
-              'Consumes Preview Dexie (Wave 1) — same import products use. App-owned schema; no Dexie Cloud. Peer `dexie` required in the consumer.',
-          },
-          {
-            id: 'Migrations',
-            capability: 'Migrations',
-            implementation:
-              '@songara/pwa-base/preview/dexie sortSchemaVersions + upgrade hooks (v1→v2)',
-            status: 'Ready',
-            oss: 'Dexie.js',
-            ossUrl: 'https://github.com/dexie/Dexie.js',
-            maturity: 4,
-            performance: 4,
-            browserSupport: 5,
-            offline: 5,
-            developerExperience: 5,
-            visualQuality: 3,
-            accessibility: 4,
-            complexity: 3,
-            recommended: true,
-            overallScore: 8,
-            notes:
-              'Preview consume. Demonstrates SongaraSchemaVersion upgrade hooks; keep product migrations forward-only.',
-          },
-          investigationStub({
-            id: 'Live-Queries',
-            capability: 'Live Queries',
-            oss: 'Dexie.js',
-            ossUrl: 'https://dexie.org/docs/liveQuery()',
-          }),
-        ],
-      },
-      {
+        description: 'Ergonomic IndexedDB with schemas and migrations.',
+        status: 'Ready',
+        recommended: true,
+        preview: PREVIEW_DEXIE,
+        whatItDoes:
+          'Friendly IndexedDB API with typed tables, queries, live queries, and versioned schema upgrades. Typical uses are offline app state, notes/collections, and forward-only migrations without a server sync product.',
+        whyWeUseIt:
+          'Best IndexedDB DX for Songara apps so far — app-owned schema, no Dexie Cloud. Preferred over raw IDB and heavier legacy wrappers.',
+        a11yNotes: 'Storage UX is mostly non-visual; surface migration failures clearly.',
+        performanceNotes: 'Keep migrations forward-only; index thoughtfully.',
+        alternatives: 'idb for minimal wrap; raw IndexedDB for learning ceilings.',
+      }),
+      stack({
         id: 'localForage',
         title: 'localForage',
         oss: 'localForage',
         ossUrl: 'https://localforage.github.io/localForage/',
-        description: 'Legacy async storage wrapper — compare only.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: 'localForage',
-            ossUrl: 'https://github.com/localForage/localForage',
-          }),
-        ],
-      },
-      {
+        description: 'Legacy async key-value storage wrapper.',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Async get/set storage that falls back across IndexedDB/WebSQL/localStorage. Typical uses are simple key-value persistence in older codebases.',
+        whyWeUseIt:
+          'Legacy comparison only — not a Songara default when Dexie or idb fits.',
+      }),
+      stack({
         id: 'Songara-Pack-Store',
         title: 'Songara Pack Store',
         oss: '@songara/pwa-base runtime storage',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
-        description: 'Foundation packStore contrast for content packs vs app IDB.',
-        explorations: [
-          investigationStub({
-            id: 'Overview',
-            capability: 'Overview',
-            oss: '@songara/pwa-base runtime storage',
-          }),
-        ],
-      },
+        description: 'Foundation packStore for content packs vs app IDB.',
+        status: 'Needs investigation',
+        preview: NO_PREVIEW,
+        whatItDoes:
+          'Runtime storage for Songara content packs (cache/IDB details owned by the foundation). Typical uses are shipping offline content bundles — not general app databases.',
+        whyWeUseIt:
+          'Contrast with app IndexedDB (Dexie). PackStore is not a Dexie substitute; the lab documents the boundary.',
+      }),
     ],
   },
 ]
 
 export function getArea(areaId: string): CapabilityArea | undefined {
-  return capabilityAreas.find((a) => a.id === areaId)
+  const needle = areaId.toLowerCase()
+  return capabilityAreas.find((a) => a.id === areaId || a.id.toLowerCase() === needle)
 }
 
 export function getGroup(
   areaId: string,
   groupId: string,
 ): CatalogueGroup | undefined {
-  return getArea(areaId)?.groups?.find((g) => g.id === groupId)
-}
-
-/** Flatten offerings for an area (grouped or flat). */
-export function listExplorations(area: CapabilityArea): ExplorationEntry[] {
-  if (area.groups?.length) {
-    return area.groups.flatMap((group) =>
-      group.explorations.map((record) => ({
-        relativePath: `${group.id}/${record.id}`,
-        group,
-        record,
-      })),
-    )
-  }
-  return (area.explorations ?? []).map((record) => ({
-    relativePath: record.id,
-    record,
-  }))
-}
-
-export function explorationCount(area: CapabilityArea): number {
-  return listExplorations(area).length
-}
-
-/**
- * Resolve an exploration by path under the area.
- * Grouped: "Motion/Layout-Transitions". Flat: "rapier2d".
- */
-export function getExploration(
-  areaId: string,
-  relativePath: string,
-): ExplorationRecord | undefined {
   const area = getArea(areaId)
   if (!area) return undefined
-  return listExplorations(area).find((e) => e.relativePath === relativePath)
-    ?.record
+  const needle = groupId.toLowerCase()
+  return area.groups.find((g) => g.id === groupId || g.id.toLowerCase() === needle)
 }
 
-export function getExplorationEntry(
-  areaId: string,
-  relativePath: string,
-): ExplorationEntry | undefined {
-  const area = getArea(areaId)
-  if (!area) return undefined
-  return listExplorations(area).find((e) => e.relativePath === relativePath)
+export function stackCount(area: CapabilityArea): number {
+  return area.groups.length
 }
 
-/** Adjacent explorations in registry order within an area (for prev/next chrome). */
-export function getAdjacentExplorations(
+export function listStacks(area: CapabilityArea): CatalogueGroup[] {
+  return area.groups
+}
+
+/** Lab section path under an area: `Motion/Overview`. */
+export function labSectionPath(groupId: string, section: LabSectionId): string {
+  return `${groupId}/${section}`
+}
+
+export function getAdjacentLabSections(
   areaId: string,
-  relativePath: string,
+  groupId: string,
+  sectionId: LabSectionId,
 ): {
-  prev: { relativePath: string; capability: string } | null
-  next: { relativePath: string; capability: string } | null
+  prev: { relativePath: string; title: string } | null
+  next: { relativePath: string; title: string } | null
+} {
+  const group = getGroup(areaId, groupId)
+  if (!group) return { prev: null, next: null }
+  const index = LAB_SECTION_IDS.indexOf(sectionId)
+  if (index < 0) return { prev: null, next: null }
+  const toNav = (id: LabSectionId) => {
+    const meta = LAB_SECTIONS.find((s) => s.id === id)!
+    return {
+      relativePath: labSectionPath(groupId, id),
+      title: meta.title,
+    }
+  }
+  return {
+    prev: index > 0 ? toNav(LAB_SECTION_IDS[index - 1]!) : null,
+    next:
+      index < LAB_SECTION_IDS.length - 1
+        ? toNav(LAB_SECTION_IDS[index + 1]!)
+        : null,
+  }
+}
+
+/** Adjacent stacks within an area (Overview-first pager). */
+export function getAdjacentStacks(
+  areaId: string,
+  groupId: string,
+): {
+  prev: { groupId: string; title: string } | null
+  next: { groupId: string; title: string } | null
 } {
   const area = getArea(areaId)
   if (!area) return { prev: null, next: null }
-  const entries = listExplorations(area)
-  const index = entries.findIndex((e) => e.relativePath === relativePath)
+  const index = area.groups.findIndex(
+    (g) => g.id === groupId || g.id.toLowerCase() === groupId.toLowerCase(),
+  )
   if (index < 0) return { prev: null, next: null }
-  const toNav = (e: ExplorationEntry) => ({
-    relativePath: e.relativePath,
-    capability: e.record.capability,
-  })
+  const toNav = (g: CatalogueGroup) => ({ groupId: g.id, title: g.title })
   return {
-    prev: index > 0 ? toNav(entries[index - 1]!) : null,
-    next: index < entries.length - 1 ? toNav(entries[index + 1]!) : null,
+    prev: index > 0 ? toNav(area.groups[index - 1]!) : null,
+    next: index < area.groups.length - 1 ? toNav(area.groups[index + 1]!) : null,
   }
 }
 
-export type CatalogueRouteKind = 'area' | 'group' | 'exploration'
+export type CatalogueRouteKind = 'area' | 'group' | 'lab-section'
 
 export type CatalogueSiteRoute = {
   path: string
   kind: CatalogueRouteKind
   areaId: string
   groupId?: string
-  /** Path under area for explorations */
+  sectionId?: LabSectionId
   relativePath?: string
 }
 
-/** Legacy flat catalogue URLs → nested OSS/native paths. */
+/**
+ * Former facet / flat URLs → Wave A lab targets (Overview or stack hub).
+ * Demo implementation files remain in `src/explorations/**` for Wave B.
+ */
 export const catalogueLegacyRedirects: Record<string, string> = {
-  'animation/waapi': 'animation/native/Web-Animations-API',
-  'animation/reduced-motion': 'animation/native/Reduced-Motion',
+  // Legacy flat animation
+  'animation/waapi': 'animation/native/Overview',
+  'animation/reduced-motion': 'animation/native/Overview',
   'animation/motion': 'animation/Motion/Overview',
-  'animation/springs': 'animation/Motion/Springs',
-  'animation/layout-transitions': 'animation/Motion/Layout-Transitions',
-  'animation/shared-element': 'animation/Motion/Shared-Element',
-  'animation/lottie': 'animation/Lottie/Playback',
-  'animation/rive': 'animation/Rive/Interactive-Graphics',
-  'animation/gsap': 'animation/GSAP/Timelines',
-  'animation/particles': 'animation/tsParticles/Ambient-Field',
-  'physics/rapier2d': 'physics/Rapier/Overview-2D',
-  'physics/rapier3d': 'physics/Rapier/Overview-3D',
+  'animation/springs': 'animation/Motion/Overview',
+  'animation/layout-transitions': 'animation/Motion/Overview',
+  'animation/shared-element': 'animation/Motion/Overview',
+  'animation/lottie': 'animation/Lottie/Overview',
+  'animation/rive': 'animation/Rive/Overview',
+  'animation/gsap': 'animation/GSAP/Overview',
+  'animation/particles': 'animation/tsParticles/Overview',
+  // Nested facet leaves → Overview
+  'animation/native/Web-Animations-API': 'animation/native/Overview',
+  'animation/native/Reduced-Motion': 'animation/native/Overview',
+  'animation/native/View-Transitions': 'animation/native/Overview',
+  'animation/Motion/Springs': 'animation/Motion/Overview',
+  'animation/Motion/Layout-Transitions': 'animation/Motion/Overview',
+  'animation/Motion/Shared-Element': 'animation/Motion/Overview',
+  'animation/Motion/Gestures': 'animation/Motion/Overview',
+  'animation/Motion/Scroll': 'animation/Motion/Overview',
+  'animation/Motion/Exit-Animations': 'animation/Motion/Overview',
+  'animation/Motion/Variants': 'animation/Motion/Overview',
+  'animation/Motion/SVG': 'animation/Motion/Overview',
+  'animation/Motion/Motion-Values': 'animation/Motion/Overview',
+  'animation/Lottie/Playback': 'animation/Lottie/Overview',
+  'animation/Rive/Interactive-Graphics': 'animation/Rive/Overview',
+  'animation/GSAP/Timelines': 'animation/GSAP/Overview',
+  'animation/tsParticles/Ambient-Field': 'animation/tsParticles/Overview',
+  // Physics
+  'physics/rapier2d': 'physics/Rapier/Overview',
+  'physics/rapier3d': 'physics/Rapier/Overview',
   'physics/matter': 'physics/Matter.js/Overview',
   'physics/planck': 'physics/Planck.js/Overview',
   'physics/cannon-es': 'physics/cannon-es/Overview',
-  'physics/constraints': 'physics/Rapier/Joints',
-  'physics/soft-bodies': 'physics/Rapier/Soft-Bodies',
-  'physics/rope': 'physics/Rapier/Rope',
-  'physics/cloth': 'physics/Rapier/Cloth',
-  'physics/vehicles': 'physics/Rapier/Vehicles',
-  'camera/getusermedia': 'camera/native/GetUserMedia',
-  'camera/device-selection': 'camera/native/Device-Selection',
-  'camera/still-capture': 'camera/native/Still-Capture',
-  'camera/constraints': 'camera/native/Track-Constraints',
-  'camera/permissions-ux': 'camera/native/Permissions-UX',
-  'camera/secure-context': 'camera/native/Secure-Context',
+  'physics/constraints': 'physics/Rapier/Overview',
+  'physics/soft-bodies': 'physics/Rapier/Overview',
+  'physics/rope': 'physics/Rapier/Overview',
+  'physics/cloth': 'physics/Rapier/Overview',
+  'physics/vehicles': 'physics/Rapier/Overview',
+  'physics/Rapier/Overview-2D': 'physics/Rapier/Overview',
+  'physics/Rapier/Overview-3D': 'physics/Rapier/Overview',
+  'physics/Rapier/Joints': 'physics/Rapier/Overview',
+  'physics/Rapier/Soft-Bodies': 'physics/Rapier/Overview',
+  'physics/Rapier/Rope': 'physics/Rapier/Overview',
+  'physics/Rapier/Cloth': 'physics/Rapier/Overview',
+  'physics/Rapier/Vehicles': 'physics/Rapier/Overview',
+  'physics/Matter.js/Constraints': 'physics/Matter.js/Overview',
+  // Camera
+  'camera/getusermedia': 'camera/native/Overview',
+  'camera/device-selection': 'camera/native/Overview',
+  'camera/still-capture': 'camera/native/Overview',
+  'camera/constraints': 'camera/native/Overview',
+  'camera/permissions-ux': 'camera/native/Overview',
+  'camera/secure-context': 'camera/native/Overview',
   'camera/react-webcam': 'camera/react-webcam/Overview',
-  'audio/web-audio': 'audio/native/Web-Audio-API',
-  'audio/media-element': 'audio/native/HTMLAudioElement',
-  'audio/worklet': 'audio/native/AudioWorklet',
-  'audio/recording-playback': 'audio/native/MediaRecorder',
+  'camera/native/GetUserMedia': 'camera/native/Overview',
+  'camera/native/Device-Selection': 'camera/native/Overview',
+  'camera/native/Still-Capture': 'camera/native/Overview',
+  'camera/native/Track-Constraints': 'camera/native/Overview',
+  'camera/native/Permissions-UX': 'camera/native/Overview',
+  'camera/native/Secure-Context': 'camera/native/Overview',
+  // Audio
+  'audio/web-audio': 'audio/native/Overview',
+  'audio/media-element': 'audio/native/Overview',
+  'audio/worklet': 'audio/native/Overview',
+  'audio/recording-playback': 'audio/native/Overview',
   'audio/tone': 'audio/Tone.js/Overview',
   'audio/howler': 'audio/Howler.js/Overview',
   'audio/songara-audio-kit': 'audio/Songara-Audio-Kit/Overview',
-  'offline-storage/indexeddb-raw': 'offline-storage/native/IndexedDB',
-  'offline-storage/opfs': 'offline-storage/native/OPFS',
+  'audio/native/Web-Audio-API': 'audio/native/Overview',
+  'audio/native/HTMLAudioElement': 'audio/native/Overview',
+  'audio/native/AudioWorklet': 'audio/native/Overview',
+  'audio/native/MediaRecorder': 'audio/native/Overview',
+  'audio/Tone.js/Synthesis': 'audio/Tone.js/Overview',
+  'audio/Tone.js/Transport': 'audio/Tone.js/Overview',
+  'audio/Howler.js/Sprites': 'audio/Howler.js/Overview',
+  'audio/Songara-Audio-Kit/Playback-Loop': 'audio/Songara-Audio-Kit/Overview',
+  // Offline storage
+  'offline-storage/indexeddb-raw': 'offline-storage/native/Overview',
+  'offline-storage/opfs': 'offline-storage/native/Overview',
   'offline-storage/idb': 'offline-storage/idb/Overview',
   'offline-storage/dexie': 'offline-storage/Dexie.js/Overview',
-  'offline-storage/migrations': 'offline-storage/Dexie.js/Migrations',
-  'offline-storage/live-queries': 'offline-storage/Dexie.js/Live-Queries',
+  'offline-storage/migrations': 'offline-storage/Dexie.js/Overview',
+  'offline-storage/live-queries': 'offline-storage/Dexie.js/Overview',
   'offline-storage/localforage': 'offline-storage/localForage/Overview',
   'offline-storage/pack-store': 'offline-storage/Songara-Pack-Store/Overview',
+  'offline-storage/native/IndexedDB': 'offline-storage/native/Overview',
+  'offline-storage/native/OPFS': 'offline-storage/native/Overview',
+  'offline-storage/Dexie.js/Migrations': 'offline-storage/Dexie.js/Overview',
+  'offline-storage/Dexie.js/Live-Queries': 'offline-storage/Dexie.js/Overview',
 }
 
 /** @deprecated Use catalogueLegacyRedirects */
 export const animationLegacyRedirects = catalogueLegacyRedirects
 
-/** All catalogue routes for SoloSiteApp (leaf routes before area summaries). */
+/** All catalogue routes for SoloSiteApp (lab sections before hubs before areas). */
 export function catalogueSiteRoutes(): CatalogueSiteRoute[] {
   const routes: CatalogueSiteRoute[] = []
   for (const area of capabilityAreas) {
-    if (area.groups?.length) {
-      for (const group of area.groups) {
-        for (const ex of group.explorations) {
-          const relativePath = `${group.id}/${ex.id}`
-          routes.push({
-            path: `${area.id}/${relativePath}`,
-            kind: 'exploration',
-            areaId: area.id,
-            groupId: group.id,
-            relativePath,
-          })
-        }
+    for (const group of area.groups) {
+      for (const sectionId of LAB_SECTION_IDS) {
+        const relativePath = labSectionPath(group.id, sectionId)
         routes.push({
-          path: `${area.id}/${group.id}`,
-          kind: 'group',
+          path: `${area.id}/${relativePath}`,
+          kind: 'lab-section',
           areaId: area.id,
           groupId: group.id,
+          sectionId,
+          relativePath,
         })
       }
-    } else {
-      for (const ex of area.explorations ?? []) {
-        routes.push({
-          path: `${area.id}/${ex.id}`,
-          kind: 'exploration',
-          areaId: area.id,
-          relativePath: ex.id,
-        })
-      }
+      routes.push({
+        path: `${area.id}/${group.id}`,
+        kind: 'group',
+        areaId: area.id,
+        groupId: group.id,
+      })
     }
     routes.push({ path: area.id, kind: 'area', areaId: area.id })
   }
   return routes
+}
+
+export { LAB_SECTIONS, LAB_SECTION_IDS }
+
+/** @deprecated Wave B demo lookup only — not primary lab routing. */
+export function getExploration(
+  _areaId: string,
+  relativePath: string,
+): ExplorationRecord | undefined {
+  return getWaveBFacet(relativePath)
 }

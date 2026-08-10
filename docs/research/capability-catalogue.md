@@ -1,19 +1,24 @@
-# Songara Capability Catalogue
+# Songara Capability Catalogue (research SoT)
 
-> **Authoritative engineering catalogue** for Songara. Capabilities first; libraries are
+> **Authoritative engineering research** for Songara. Capabilities first; libraries are
 > evidence. This document inspires future offline-first PWAs and informs later design —
 > it is **not** a dependency selection list and **not** a schedule for Preview packages.
 >
+> The **Test-PWA app** is the Engineering Capability Lab (four-section stack IA —
+> Overview / Preview Validation / Examples) — see
+> [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
+> It is **not** an MDN/Storybook API reference of facet leaves.
+>
 > Lifecycle: [ADR-008](https://github.com/RSHomeServer/PWA-Base/blob/main/docs/adr/008-preview-stable-capability-lifecycle.md)
-> — PWA-Base owns Preview; this catalogue consumes `@songara/pwa-base/preview/*` when
-> present. Stable still requires product usage (never catalogue-alone).
+> — PWA-Base owns Preview; this lab consumes `@songara/pwa-base/preview/*` when
+> present. Stable still requires product usage (never lab-alone).
 >
 > Prior library-oriented survey (historical companion):
 > [`oss-capability-catalogue.md`](./oss-capability-catalogue.md).
 
 | | |
 | --- | --- |
-| **Date** | 2026-08-07 (lifecycle note 2026-08-08) |
+| **Date** | 2026-08-07 (lab IA note 2026-08-10) |
 | **Status** | Living SoT — update in place on every discovery pass |
 | **Question** | Which mature browser-first capabilities should Songara know about so future PWAs maximise OSS leverage and minimise reinvention? |
 | **Placement legend** | **Application-local** · **Potential shared infra** (Preview under ADR-008; Stable after product confidence) · **Never likely shared infra** |
@@ -22,9 +27,9 @@
 
 1. Research **capabilities** first (“Offline Storage”), then survey implementations.
 2. Ask: *If we wanted to build X, what is the state of the art?*
-3. The **Test-PWA app** is the Engineering Capability Catalogue (routes + evaluations) —
+3. The **Test-PWA app** is the Engineering Capability Lab (routes + evaluations) —
    see [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
-4. Hello / catalogue demos are **not** product consumers for **Stable** graduation.
+4. Hello / lab demos are **not** product consumers for **Stable** graduation.
 5. Most capabilities stay application-local forever. **Preview** may land in PWA-Base
    when engineering confidence and standardisation intent pass ADR-008 — not from a
    single exploration alone, and not by holding every wrap until two products exist.
@@ -147,10 +152,11 @@ see [Alternating delivery philosophy](#alternating-delivery-philosophy).
 
 ## Engineering Capability Catalogue (runtime)
 
-**Test-PWA is the Engineering Capability Catalogue app** — not a product, not a demo farm.
+**Test-PWA is the Engineering Capability Lab app** — not a product, not a demo farm,
+not an MDN/Storybook facet catalogue.
 Architecture SoT: [`../architecture/capability-catalogue-app.md`](../architecture/capability-catalogue-app.md).
 
-Question every exploration answers:
+Question every stack lab answers:
 
 > If we wanted to build *X*, what is the state of the art, how capable is it, and how
 > well does it integrate into the Songara ecosystem?
@@ -158,15 +164,18 @@ Question every exploration answers:
 | Route pattern | Meaning |
 | --- | --- |
 | `/` | Index of capability areas |
-| `/{area}` | Summary comparison table (registry-driven) |
-| `/{area}/{exploration}` | One facet or one OSS implementation + full evaluation artefact |
+| `/{area}` | Stack list with light status |
+| `/{area}/{stack}` | Slim hub → Overview / Preview Validation / Examples |
+| `/{area}/{stack}/Overview` | Concise stack overview |
+| `/{area}/{stack}/Preview-Validation` | Preview diagnostics or honest not-backed |
+| `/{area}/{stack}/Examples` | Examples placeholder (Wave B) |
 
-KanDev work is organised as **capability → exploration sub-tickets**. Each sub-ticket leaves a
-permanent route and updates the area summary. Nothing throwaway.
+KanDev work is organised as **capability → stack lab tickets**. Do not add new facet
+leaves to primary nav. Nothing throwaway.
 
-Preview packages are owned by PWA-Base; catalogue explorations **consume**
+Preview packages are owned by PWA-Base; the lab **consumes**
 `@songara/pwa-base/preview/*` when available. **Stable** graduation still needs
-**product** usage (ADR-008 / preferred ADR-003 two-consumer signal) — explorations
+**product** usage (ADR-008 / preferred ADR-003 two-consumer signal) — lab pages
 here are engineering evidence, not product consumers.
 
 ### Role of high-value capabilities (catalogue areas)
