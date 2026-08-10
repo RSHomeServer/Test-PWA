@@ -47,7 +47,123 @@ const PREVIEW_LOTTIE = {
   ],
 } as const
 
-const NO_PREVIEW = { packageId: null } as const
+const PREVIEW_RIVE = {
+  packageId: '@songara/pwa-base/preview/rive',
+  peers: ['@rive-app/react-canvas'],
+  helpers: [
+    'useRive',
+    'resolveRivePlayback',
+    'useSongaraRivePlayback',
+    'useReducedMotion',
+  ],
+} as const
+
+const PREVIEW_GSAP = {
+  packageId: '@songara/pwa-base/preview/gsap',
+  peers: ['gsap'],
+  helpers: [
+    'gsap',
+    'resolveGsapPlayback',
+    'useSongaraGsapPlayback',
+    'useReducedMotion',
+  ],
+} as const
+
+const PREVIEW_TSPARTICLES = {
+  packageId: '@songara/pwa-base/preview/tsparticles',
+  peers: ['@tsparticles/react', '@tsparticles/slim'],
+  helpers: [
+    'Particles',
+    'loadSlim',
+    'resolveParticlesMotion',
+    'useSongaraParticlesMotion',
+    'useReducedMotion',
+  ],
+} as const
+
+const PREVIEW_RAPIER = {
+  packageId: '@songara/pwa-base/preview/rapier2d',
+  peers: ['@dimforge/rapier2d-compat'],
+  helpers: [
+    'RAPIER',
+    'createSongaraRapierWorld',
+    'initSongaraRapier',
+    'songaraFixedStepSeconds',
+  ],
+} as const
+
+const PREVIEW_MATTER = {
+  packageId: '@songara/pwa-base/preview/matter',
+  peers: ['matter-js'],
+  helpers: [
+    'Matter',
+    'createSongaraMatterEngine',
+    'resolveMatterRunner',
+    'songaraFixedStepSeconds',
+  ],
+} as const
+
+const PREVIEW_PLANCK = {
+  packageId: '@songara/pwa-base/preview/planck',
+  peers: ['planck'],
+  helpers: ['planck', 'createSongaraPlanckWorld', 'songaraFixedStepSeconds'],
+} as const
+
+const PREVIEW_CANNON = {
+  packageId: '@songara/pwa-base/preview/cannon',
+  peers: ['cannon-es'],
+  helpers: ['World', 'createSongaraCannonWorld', 'songaraFixedStepSeconds'],
+} as const
+
+const PREVIEW_REACT_WEBCAM = {
+  packageId: '@songara/pwa-base/preview/react-webcam',
+  peers: ['react-webcam'],
+  helpers: ['Webcam', 'songaraWebcamConstraints'],
+} as const
+
+const PREVIEW_TONE = {
+  packageId: '@songara/pwa-base/preview/tone',
+  peers: ['tone'],
+  helpers: ['Transport', 'Synth', 'resolveToneTransport'],
+} as const
+
+const PREVIEW_HOWLER = {
+  packageId: '@songara/pwa-base/preview/howler',
+  peers: ['howler'],
+  helpers: ['Howl', 'Howler', 'createSongaraSfx'],
+} as const
+
+const PREVIEW_IDB = {
+  packageId: '@songara/pwa-base/preview/idb',
+  peers: ['idb'],
+  helpers: ['openDB', 'openSongaraDb', 'songaraDbName'],
+} as const
+
+const PREVIEW_LOCALFORAGE = {
+  packageId: '@songara/pwa-base/preview/localforage',
+  peers: ['localforage'],
+  helpers: ['localforage', 'createSongaraLocalforage', 'songaraDbName'],
+} as const
+
+/** Platform APIs — not a Preview connector. */
+const PLATFORM_NO_PREVIEW = {
+  packageId: null,
+  absence: 'platform' as const,
+} as const
+
+/** Stable foundation kit — not a Preview connector. */
+const STABLE_KIT_NO_PREVIEW = {
+  packageId: null,
+  absence: 'stable-kit' as const,
+  absenceDetail: '@songara/pwa-base/audio',
+} as const
+
+/** Runtime pack store — not a Preview connector. */
+const RUNTIME_NO_PREVIEW = {
+  packageId: null,
+  absence: 'runtime' as const,
+  absenceDetail: 'packStore',
+} as const
 
 /**
  * Living registry — Capability Lab stacks (Wave A four-section IA).
@@ -69,7 +185,7 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Browser motion APIs and reduced-motion policy.',
         status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: PLATFORM_NO_PREVIEW,
         whatItDoes:
           'Covers the Web Animations API, CSS transitions/animations, View Transitions, and prefers-reduced-motion. Typical uses: simple UI pulses, page transitions, and accessibility gating before any OSS motion kit is introduced.',
         whyWeUseIt:
@@ -122,12 +238,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Rive',
         ossUrl: 'https://rive.app',
         description: 'Interactive state-machine graphics.',
-        status: 'Experimental',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_RIVE,
         whatItDoes:
           'Runs .riv files with state machines so illustrations react to input (hover, progress, game-like states). Typical uses are interactive heroes, character UI, and complex illustration that Lottie cannot branch cleanly.',
         whyWeUseIt:
-          'We are evaluating it where Lottie’s linear playback is not enough. It stays Experimental until we see a clear product need that outweighs shipping and tooling cost.',
+          'We evaluate it where Lottie’s linear playback is not enough — interactive state machines with a thin Preview connector and reduced-motion policy helpers.',
         a11yNotes: 'Pause state machines under reduced motion.',
         performanceNotes: 'Ship `.riv` offline via content packs — CDN samples are catalogue-only.',
         alternatives: 'Lottie for linear playback; Motion for UI chrome.',
@@ -138,12 +254,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'GSAP',
         ossUrl: 'https://gsap.com',
         description: 'Timeline-oriented animation for complex sequenced motion.',
-        status: 'Experimental',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_GSAP,
         whatItDoes:
           'Builds precise, timeline-driven animations across DOM/SVG/canvas. Typical uses are long marketing sequences, scrubbed scroll stories, and choreography that needs fine control beyond component springs.',
         whyWeUseIt:
-          'Kept as a comparison for deep timeline work only. Licence diligence is required, so it is not a Songara default UI kit — Motion/WAAPI cover chrome first.',
+          'Comparison for deep timeline work only. Licence diligence is required, so it is not a Songara default UI kit — Motion/WAAPI cover chrome first. Preview wires GSAP with reduced-motion playback helpers.',
         alternatives: 'Prefer Motion/WAAPI for chrome; GSAP only when timeline depth is essential.',
       }),
       stack({
@@ -152,12 +268,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'tsParticles',
         ossUrl: 'https://github.com/tsparticles/tsparticles',
         description: 'Particle fields for ambient visual atmosphere.',
-        status: 'Experimental',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_TSPARTICLES,
         whatItDoes:
           'Renders configurable particle systems (stars, dust, networks) as background atmosphere. Typical uses are decorative hero fields — not functional UI motion.',
         whyWeUseIt:
-          'Useful as an atmosphere comparison. Branded glyph fields should prefer foundation ParticleField when available; tsParticles stays optional and motion-gated.',
+          'Atmosphere comparison with a Preview connector. Branded glyph fields should prefer foundation ParticleField when available; tsParticles stays optional and motion-gated.',
         a11yNotes: 'Always gate / pause under reduced motion.',
         alternatives: 'CSS/canvas accents; foundation ParticleField.',
       }),
@@ -175,13 +291,13 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Rapier',
         ossUrl: 'https://rapier.rs',
         description: 'Modern WASM rigid-body physics (2D and 3D).',
-        status: 'Needs investigation',
+        status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: PREVIEW_RAPIER,
         whatItDoes:
           'Simulates rigid bodies, joints, and collisions in 2D/3D via WebAssembly. Typical uses are interactive toys, puzzles, vehicle/cloth experiments, and any UI that needs believable physical response.',
         whyWeUseIt:
-          'Leading modern WASM engine and Songara’s default candidate. We hold a Preview package until a product commit justifies the integration cost.',
+          'Leading modern WASM engine and Songara’s default candidate. Preview boots Rapier2D-compat with Songara world helpers and a fixed-step convention.',
         alternatives: 'Matter.js for approachable 2D; cannon-es for classic 3D.',
       }),
       stack({
@@ -190,12 +306,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Matter.js',
         ossUrl: 'https://brm.io/matter-js/',
         description: 'Approachable 2D rigid-body physics for the web.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_MATTER,
         whatItDoes:
           '2D rigid-body engine with constraints, composites, and a gentle learning curve. Typical uses are prototypes, educational demos, and lightweight interactive scenes.',
         whyWeUseIt:
-          'Comparison stack against Rapier for DX and constraint modelling — not the intended long-term default.',
+          'Comparison stack against Rapier for DX and constraint modelling — Preview-backed, not the intended long-term default.',
       }),
       stack({
         id: 'Planck.js',
@@ -203,12 +319,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Planck.js',
         ossUrl: 'https://piqnt.com/planck.js/',
         description: 'Box2D-style 2D physics for JavaScript.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_PLANCK,
         whatItDoes:
           'Ports Box2D concepts to JavaScript for 2D worlds with fixtures, joints, and contacts. Typical uses are games and simulations that expect a Box2D mental model.',
         whyWeUseIt:
-          'Evaluation-only comparison for teams already fluent in Box2D — not a Songara default pick.',
+          'Evaluation comparison for teams already fluent in Box2D — Preview-backed, not a Songara default pick.',
       }),
       stack({
         id: 'cannon-es',
@@ -216,12 +332,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'cannon-es',
         ossUrl: 'https://github.com/pmndrs/cannon-es',
         description: 'Classic 3D rigid-body physics (ES module fork of cannon.js).',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_CANNON,
         whatItDoes:
           '3D rigid-body simulation familiar from the cannon.js ecosystem. Typical uses are Three.js scenes needing bodies, contacts, and simple vehicles.',
         whyWeUseIt:
-          '3D comparison against Rapier — kept to understand trade-offs, not as the preferred engine.',
+          '3D comparison against Rapier — Preview-backed to understand trade-offs, not as the preferred engine.',
       }),
     ],
   },
@@ -237,9 +353,9 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Platform MediaDevices',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices',
         description: 'getUserMedia, devices, capture, and secure-context rules.',
-        status: 'Needs investigation',
+        status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: PLATFORM_NO_PREVIEW,
         whatItDoes:
           'Browser MediaDevices APIs for live camera streams, device enumeration, still capture, track constraints, and permission flows. Typical uses are photo capture, QR/scan prep, and any feature that needs a live preview.',
         whyWeUseIt:
@@ -252,12 +368,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'react-webcam',
         ossUrl: 'https://github.com/mozmorris/react-webcam',
         description: 'Thin React component over getUserMedia.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_REACT_WEBCAM,
         whatItDoes:
           'Wraps getUserMedia in a React component for quick webcam previews and screenshots. Typical uses are prototypes and simple capture UIs.',
         whyWeUseIt:
-          'Evaluate whether thin React glue beats calling MediaDevices directly in Songara apps — kept as a comparison, not assumed default.',
+          'Thin React glue comparison against MediaDevices directly — Preview-backed with Songara constraint helpers, not assumed default.',
       }),
     ],
   },
@@ -273,9 +389,9 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Platform audio APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
         description: 'Web Audio, media elements, worklets, and recording.',
-        status: 'Needs investigation',
+        status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: PLATFORM_NO_PREVIEW,
         whatItDoes:
           'Platform audio: HTMLAudioElement, AudioContext graphs, AudioWorklet, and MediaRecorder. Typical uses are SFX, voice notes, metering, and custom processing without an OSS kit.',
         whyWeUseIt:
@@ -287,12 +403,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Tone.js',
         ossUrl: 'https://tonejs.github.io/',
         description: 'Musical timing, synthesis, and transport for the web.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_TONE,
         whatItDoes:
           'High-level Web Audio for synths, samples, scheduling, and transport clocks. Typical uses are generative music, sequencers, and musical UX that needs sample-accurate timing.',
         whyWeUseIt:
-          'Strong candidate when products need musical graphs — evaluated against the Songara audio kit for overlap and weight.',
+          'Strong candidate when products need musical graphs — Preview-backed and evaluated against the Songara Stable audio kit for overlap and weight.',
       }),
       stack({
         id: 'Howler.js',
@@ -300,12 +416,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Howler.js',
         ossUrl: 'https://howlerjs.com/',
         description: 'Simple multi-format sound-effect playback.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_HOWLER,
         whatItDoes:
           'Plays and pools short sounds across formats with sprites and spatial helpers. Typical uses are UI SFX, game one-shots, and sprite sheets of clicks/alerts.',
         whyWeUseIt:
-          'SFX-oriented comparison. A Howler Preview package is out of Wave A scope; evaluation continues against native and foundation kit playback.',
+          'SFX-oriented comparison with a thin Preview façade — does not replace Stable `@songara/pwa-base/audio`.',
       }),
       stack({
         id: 'Songara-Audio-Kit',
@@ -313,9 +429,9 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: '@songara/pwa-base/audio',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
         description: 'Foundation Stable audio helpers for Songara PWAs.',
-        status: 'Needs investigation',
+        status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: STABLE_KIT_NO_PREVIEW,
         whatItDoes:
           'Songara’s Stable audio surface for product apps — playback patterns and shared helpers rather than a full DAW. Typical uses are consistent SFX/voice loops across PWAs.',
         whyWeUseIt:
@@ -335,9 +451,9 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Platform storage APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
         description: 'Raw IndexedDB and Origin Private File System.',
-        status: 'Needs investigation',
+        status: 'Ready',
         recommended: true,
-        preview: NO_PREVIEW,
+        preview: PLATFORM_NO_PREVIEW,
         whatItDoes:
           'Browser-native durable storage: IndexedDB for structured data and OPFS for file-like blobs. Typical uses are offline caches, large assets, and understanding platform limits before wrappers.',
         whyWeUseIt:
@@ -349,12 +465,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'idb',
         ossUrl: 'https://github.com/jakearchibald/idb',
         description: 'Tiny promise wrapper around IndexedDB.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_IDB,
         whatItDoes:
           'Promisifies IndexedDB with a minimal API. Typical uses are small stores where a full ODM would be overkill.',
         whyWeUseIt:
-          'Minimal-wrapper comparison against Dexie ergonomics — kept to see when “tiny” is enough.',
+          'Minimal-wrapper comparison against Dexie ergonomics — Preview-backed to see when “tiny” is enough.',
       }),
       stack({
         id: 'Dexie.js',
@@ -379,12 +495,12 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'localForage',
         ossUrl: 'https://localforage.github.io/localForage/',
         description: 'Legacy async key-value storage wrapper.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: PREVIEW_LOCALFORAGE,
         whatItDoes:
           'Async get/set storage that falls back across IndexedDB/WebSQL/localStorage. Typical uses are simple key-value persistence in older codebases.',
         whyWeUseIt:
-          'Legacy comparison only — not a Songara default when Dexie or idb fits.',
+          'Legacy comparison only — Preview-backed, not a Songara default when Dexie or idb fits.',
       }),
       stack({
         id: 'Songara-Pack-Store',
@@ -392,8 +508,8 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: '@songara/pwa-base runtime storage',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
         description: 'Foundation packStore for content packs vs app IDB.',
-        status: 'Needs investigation',
-        preview: NO_PREVIEW,
+        status: 'Ready',
+        preview: RUNTIME_NO_PREVIEW,
         whatItDoes:
           'Runtime storage for Songara content packs (cache/IDB details owned by the foundation). Typical uses are shipping offline content bundles — not general app databases.',
         whyWeUseIt:

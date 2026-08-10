@@ -80,7 +80,15 @@ export function CatalogueBrowseNav({
                           <span className="cat-nav__flyout-title">{g.title}</span>
                           <span className="cat-nav__flyout-meta">
                             {labMaturityLabel(maturity)}
-                            {g.preview.packageId ? ' · Preview' : ''}
+                            {g.preview.packageId
+                              ? ' · Preview'
+                              : g.preview.absence === 'stable-kit'
+                                ? ' · Stable'
+                                : g.preview.absence === 'runtime'
+                                  ? ' · Runtime'
+                                  : g.preview.absence === 'platform'
+                                    ? ' · Platform'
+                                    : ''}
                           </span>
                         </Link>
                       </li>
