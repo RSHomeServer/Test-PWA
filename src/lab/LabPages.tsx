@@ -142,75 +142,62 @@ export function StackOverviewPage() {
 
   const maturity = labMaturityFor(group)
   const openPreview = hash === '#preview-validation'
+  const areaKey = area?.id ?? areaId
 
   return (
     <LabChrome
-      areaId={area?.id ?? areaId}
+      areaId={areaKey}
       groupId={group.id}
       sectionId="Overview"
     >
-      <header className="cat__header">
-        <p className="cat__eyebrow">
-          {group.ossUrl ? (
-            <a href={group.ossUrl} target="_blank" rel="noreferrer">
-              {group.oss}
-            </a>
-          ) : (
-            group.oss
-          )}
-        </p>
-        <h1 className="cat__title">{group.title}</h1>
-        <p className="cat__lead">{group.description}</p>
-        <p className="cat__status-row">
-          <span
-            className={`lab-status-pill ${labMaturityClass(maturity)}`}
-          >
-            <span className="lab-tone-dot" aria-hidden="true" />
-            {labMaturityLabel(maturity)}
+      <header className="cat__header cat__header--stack">
+        <div className="cat__header-main">
+          <p className="cat__eyebrow">
+            {group.ossUrl ? (
+              <a href={group.ossUrl} target="_blank" rel="noreferrer">
+                {group.oss}
+              </a>
+            ) : (
+              group.oss
+            )}
+          </p>
+          <h1 className="cat__title">{group.title}</h1>
+          <p className="cat__lead">{group.description}</p>
+          <p className="cat__status-row">
+            <span className={`lab-status-pill ${labMaturityClass(maturity)}`}>
+              <span className="lab-tone-dot" aria-hidden="true" />
+              {labMaturityLabel(maturity)}
+            </span>
+            <span className="cat__muted"> · {group.status}</span>
+            {group.recommended ? (
+              <span className="cat__muted"> · Recommended for Songara</span>
+            ) : null}
+          </p>
+        </div>
+        <Link
+          className={`cat__examples-cta${
+            group.hasExamples ? ' cat__examples-cta--ready' : ''
+          }`}
+          to={`/${areaKey}/${group.id}/Examples`}
+        >
+          <span className="cat__examples-cta-label">Examples</span>
+          <span className="cat__examples-cta-meta">
+            {group.hasExamples ? 'Open experiences' : 'Coming in a later wave'}
           </span>
-          <span className="cat__muted"> · {group.status}</span>
-          {group.recommended ? (
-            <span className="cat__muted"> · Recommended for Songara</span>
-          ) : null}
-        </p>
+        </Link>
       </header>
 
       <PreviewValidationPanel group={group} defaultOpen={openPreview} />
 
       <section className="cat__panel" aria-labelledby="what-heading">
         <h2 id="what-heading">What it does</h2>
-        <p>{group.description}</p>
+        <p>{group.whatItDoes}</p>
       </section>
 
       <section className="cat__panel" aria-labelledby="why-heading">
-        <h2 id="why-heading">Why Songara</h2>
-        <p>{group.whySongara}</p>
+        <h2 id="why-heading">Why we use it</h2>
+        <p>{group.whyWeUseIt}</p>
       </section>
-
-      {group.preview.packageId ? (
-        <section className="cat__panel" aria-labelledby="preview-pkg-heading">
-          <h2 id="preview-pkg-heading">Preview package</h2>
-          <p>
-            <code>{group.preview.packageId}</code>
-            {group.preview.peers?.length ? (
-              <>
-                {' '}
-                · peers:{' '}
-                {group.preview.peers.map((p) => (
-                  <code key={p}> {p}</code>
-                ))}
-              </>
-            ) : null}
-          </p>
-        </section>
-      ) : null}
-
-      {group.songaraBehaviour ? (
-        <section className="cat__panel" aria-labelledby="behaviour-heading">
-          <h2 id="behaviour-heading">Songara-specific behaviour</h2>
-          <p>{group.songaraBehaviour}</p>
-        </section>
-      ) : null}
 
       <section className="cat__grid-notes" aria-label="Brief notes">
         {group.a11yNotes ? (
@@ -242,26 +229,6 @@ export function StackOverviewPage() {
           </div>
         ) : null}
       </section>
-
-      <p className="cat__muted">
-        {group.hasExamples ? (
-          <>
-            Examples are ready —{' '}
-            <Link to={`/${area?.id ?? areaId}/${group.id}/Examples`}>
-              open Examples
-            </Link>
-            .
-          </>
-        ) : (
-          <>
-            Examples wave later —{' '}
-            <Link to={`/${area?.id ?? areaId}/${group.id}/Examples`}>
-              placeholder
-            </Link>
-            .
-          </>
-        )}
-      </p>
     </LabChrome>
   )
 }

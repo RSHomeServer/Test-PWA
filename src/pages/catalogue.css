@@ -736,6 +736,58 @@
   gap: 0.35rem 0.5rem;
 }
 
+.cat__header--stack {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 720px) {
+  .cat__header--stack {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.cat__header-main {
+  min-width: 0;
+}
+
+.cat__examples-cta {
+  display: grid;
+  gap: 0.2rem;
+  align-content: center;
+  justify-items: start;
+  min-width: 10.5rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.cat__examples-cta:hover {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+
+.cat__examples-cta--ready {
+  border-color: color-mix(in srgb, var(--lab-examples) 45%, transparent);
+  background: color-mix(in srgb, var(--lab-examples) 12%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lab-examples) 20%, transparent);
+}
+
+.cat__examples-cta-label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cat__examples-cta-meta {
+  font-size: 0.8rem;
+  opacity: 0.78;
+  line-height: 1.3;
+}
+
 .lab-legend {
   list-style: none;
   margin: 0.35rem 0 0;

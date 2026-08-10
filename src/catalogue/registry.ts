@@ -66,15 +66,14 @@ export const capabilityAreas: CapabilityArea[] = [
         oss: 'Platform APIs',
         ossUrl:
           'https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API',
-        description:
-          'Browser platform motion APIs and accessibility policy — baseline before adopting OSS.',
+        description: 'Browser motion APIs and reduced-motion policy.',
         status: 'Ready',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara:
-          'Baseline before Motion/GSAP. Prefer for simple UI motion; pair with prefers-reduced-motion.',
-        songaraBehaviour:
-          'Foundation `useReducedMotion` from `@songara/pwa-base/animation` is the policy source of truth.',
+        whatItDoes:
+          'Covers the Web Animations API, CSS transitions/animations, View Transitions, and prefers-reduced-motion. Typical uses: simple UI pulses, page transitions, and accessibility gating before any OSS motion kit is introduced.',
+        whyWeUseIt:
+          'It is the free, zero-bundle baseline every browser already ships. We evaluate platform APIs first so OSS like Motion or GSAP is only adopted when the built-in surface is too thin.',
         a11yNotes:
           'Always honour prefers-reduced-motion; View Transitions need an instant fallback.',
         performanceNotes:
@@ -86,15 +85,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Motion',
         oss: 'Motion',
         ossUrl: 'https://motion.dev',
-        description:
-          'Motion for React (npm motion) via `@songara/pwa-base/preview/motion` — Wave 1 Preview consume.',
+        description: 'Declarative React UI motion — springs, layout, gestures, presence.',
         status: 'Ready',
         recommended: true,
         preview: PREVIEW_MOTION,
-        whySongara:
-          'Default React UI motion kit when WAAPI becomes verbose — springs, gestures, layout, presence in one kit.',
-        songaraBehaviour:
-          'Import Preview only (`@songara/pwa-base/preview/motion`). Helpers honour foundation reduced-motion via `resolveTransition` / `useSongaraMotion`.',
+        whatItDoes:
+          'Motion (formerly Framer Motion) animates React UI: enter/exit presence, spring physics, layout morphs, gestures (hover/tap/drag), scroll-triggered reveals, and SVG path draws. Typical product uses are sheets, list reorders, micro-interactions, and onboarding sequences.',
+        whyWeUseIt:
+          'It is the most productive React-first kit when WAAPI becomes verbose — springs, gestures, layout, and AnimatePresence in one API. That combination is the default Songara choice for interactive chrome after platform APIs.',
         a11yNotes:
           'Gate gestures and layout under reduced motion; snap exits with AnimatePresence.',
         performanceNotes:
@@ -106,15 +104,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Lottie',
         oss: 'Lottie',
         ossUrl: 'https://github.com/airbnb/lottie-web',
-        description:
-          'Designer-authored JSON / dotLottie motion graphics via `@songara/pwa-base/preview/lottie`.',
+        description: 'Playback for designer-authored vector motion graphics.',
         status: 'Ready',
         recommended: true,
         preview: PREVIEW_LOTTIE,
-        whySongara:
-          'Best for designer-authored icon and empty-state motion without hand-coding every path.',
-        songaraBehaviour:
-          'Prefer `SongaraLottie` / `resolveLottiePlayback` so reduced-motion freezes playback consistently.',
+        whatItDoes:
+          'Plays JSON / dotLottie animations exported from After Effects (and similar tools). Typical uses are icon flourishes, empty states, loaders, and marketing moments where a designer owns the motion — not hand-coded DOM animation.',
+        whyWeUseIt:
+          'It is the standard pipeline from design tools to the web for authored graphics. We picked it so product teams can ship designer motion without rebuilding every path in Motion or SVG.',
         a11yNotes: 'Freeze or swap to static under reduced motion; keep assets small.',
         performanceNotes: 'JSON size and complexity dominate cost; prefer icon-scale assets.',
         alternatives: 'Rive for interactive state machines; Motion/SVG for simple draws.',
@@ -127,8 +124,10 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Interactive state-machine graphics.',
         status: 'Experimental',
         preview: NO_PREVIEW,
-        whySongara:
-          'Evaluating for interactive illustrations. No Songara Preview package yet.',
+        whatItDoes:
+          'Runs .riv files with state machines so illustrations react to input (hover, progress, game-like states). Typical uses are interactive heroes, character UI, and complex illustration that Lottie cannot branch cleanly.',
+        whyWeUseIt:
+          'We are evaluating it where Lottie’s linear playback is not enough. It stays Experimental until we see a clear product need that outweighs shipping and tooling cost.',
         a11yNotes: 'Pause state machines under reduced motion.',
         performanceNotes: 'Ship `.riv` offline via content packs — CDN samples are catalogue-only.',
         alternatives: 'Lottie for linear playback; Motion for UI chrome.',
@@ -138,11 +137,13 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'GSAP',
         oss: 'GSAP',
         ossUrl: 'https://gsap.com',
-        description: 'Timeline-oriented animation toolkit (licence diligence required).',
+        description: 'Timeline-oriented animation for complex sequenced motion.',
         status: 'Experimental',
         preview: NO_PREVIEW,
-        whySongara:
-          'Not recommended as default UI kit. Licence review required before product use.',
+        whatItDoes:
+          'Builds precise, timeline-driven animations across DOM/SVG/canvas. Typical uses are long marketing sequences, scrubbed scroll stories, and choreography that needs fine control beyond component springs.',
+        whyWeUseIt:
+          'Kept as a comparison for deep timeline work only. Licence diligence is required, so it is not a Songara default UI kit — Motion/WAAPI cover chrome first.',
         alternatives: 'Prefer Motion/WAAPI for chrome; GSAP only when timeline depth is essential.',
       }),
       stack({
@@ -150,11 +151,13 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'tsParticles',
         oss: 'tsParticles',
         ossUrl: 'https://github.com/tsparticles/tsparticles',
-        description: 'Particle systems for ambient atmosphere.',
+        description: 'Particle fields for ambient visual atmosphere.',
         status: 'Experimental',
         preview: NO_PREVIEW,
-        whySongara:
-          'Atmosphere only. Prefer `@songara/pwa-base` ParticleField for branded glyphs when available.',
+        whatItDoes:
+          'Renders configurable particle systems (stars, dust, networks) as background atmosphere. Typical uses are decorative hero fields — not functional UI motion.',
+        whyWeUseIt:
+          'Useful as an atmosphere comparison. Branded glyph fields should prefer foundation ParticleField when available; tsParticles stays optional and motion-gated.',
         a11yNotes: 'Always gate / pause under reduced motion.',
         alternatives: 'CSS/canvas accents; foundation ParticleField.',
       }),
@@ -171,13 +174,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Rapier',
         oss: 'Rapier',
         ossUrl: 'https://rapier.rs',
-        description:
-          'Modern WASM physics (2D/3D). Songara default engine candidate; Preview held for product commit.',
+        description: 'Modern WASM rigid-body physics (2D and 3D).',
         status: 'Needs investigation',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara:
-          'Default engine candidate. Preview package deferred until Wave 1b + product commit — not Preview-backed yet.',
+        whatItDoes:
+          'Simulates rigid bodies, joints, and collisions in 2D/3D via WebAssembly. Typical uses are interactive toys, puzzles, vehicle/cloth experiments, and any UI that needs believable physical response.',
+        whyWeUseIt:
+          'Leading modern WASM engine and Songara’s default candidate. We hold a Preview package until a product commit justifies the integration cost.',
         alternatives: 'Matter.js for approachable 2D; cannon-es for classic 3D.',
       }),
       stack({
@@ -185,10 +189,13 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Matter.js',
         oss: 'Matter.js',
         ossUrl: 'https://brm.io/matter-js/',
-        description: 'Approachable 2D rigid-body engine for the web.',
+        description: 'Approachable 2D rigid-body physics for the web.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Comparison stack for Rapier — evaluate DX and constraint model.',
+        whatItDoes:
+          '2D rigid-body engine with constraints, composites, and a gentle learning curve. Typical uses are prototypes, educational demos, and lightweight interactive scenes.',
+        whyWeUseIt:
+          'Comparison stack against Rapier for DX and constraint modelling — not the intended long-term default.',
       }),
       stack({
         id: 'Planck.js',
@@ -198,17 +205,23 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Box2D-style 2D physics for JavaScript.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Box2D familiarity comparison — evaluation only.',
+        whatItDoes:
+          'Ports Box2D concepts to JavaScript for 2D worlds with fixtures, joints, and contacts. Typical uses are games and simulations that expect a Box2D mental model.',
+        whyWeUseIt:
+          'Evaluation-only comparison for teams already fluent in Box2D — not a Songara default pick.',
       }),
       stack({
         id: 'cannon-es',
         title: 'cannon-es',
         oss: 'cannon-es',
         ossUrl: 'https://github.com/pmndrs/cannon-es',
-        description: 'Classic 3D rigid-body engine (ES module fork of cannon.js).',
+        description: 'Classic 3D rigid-body physics (ES module fork of cannon.js).',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: '3D comparison vs Rapier 3D — evaluation only.',
+        whatItDoes:
+          '3D rigid-body simulation familiar from the cannon.js ecosystem. Typical uses are Three.js scenes needing bodies, contacts, and simple vehicles.',
+        whyWeUseIt:
+          '3D comparison against Rapier — kept to understand trade-offs, not as the preferred engine.',
       }),
     ],
   },
@@ -223,13 +236,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Native',
         oss: 'Platform MediaDevices',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices',
-        description:
-          'Browser platform camera APIs and permission patterns — baseline before wrappers.',
+        description: 'getUserMedia, devices, capture, and secure-context rules.',
         status: 'Needs investigation',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara:
-          'Platform baseline for getUserMedia, devices, capture, and secure-context constraints.',
+        whatItDoes:
+          'Browser MediaDevices APIs for live camera streams, device enumeration, still capture, track constraints, and permission flows. Typical uses are photo capture, QR/scan prep, and any feature that needs a live preview.',
+        whyWeUseIt:
+          'Platform baseline before wrappers. Understanding secure-context and permission UX here prevents fragile React glue later.',
         a11yNotes: 'Clear permission denial UX; never assume camera availability.',
       }),
       stack({
@@ -237,10 +251,13 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'react-webcam',
         oss: 'react-webcam',
         ossUrl: 'https://github.com/mozmorris/react-webcam',
-        description: 'Thin React glue around getUserMedia.',
+        description: 'Thin React component over getUserMedia.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Evaluate whether thin React glue beats direct MediaDevices usage.',
+        whatItDoes:
+          'Wraps getUserMedia in a React component for quick webcam previews and screenshots. Typical uses are prototypes and simple capture UIs.',
+        whyWeUseIt:
+          'Evaluate whether thin React glue beats calling MediaDevices directly in Songara apps — kept as a comparison, not assumed default.',
       }),
     ],
   },
@@ -255,11 +272,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Native',
         oss: 'Platform audio APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API',
-        description: 'Web Audio, media element, worklets, and recording baselines.',
+        description: 'Web Audio, media elements, worklets, and recording.',
         status: 'Needs investigation',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara: 'Platform baseline before Tone/Howler or foundation kit choices.',
+        whatItDoes:
+          'Platform audio: HTMLAudioElement, AudioContext graphs, AudioWorklet, and MediaRecorder. Typical uses are SFX, voice notes, metering, and custom processing without an OSS kit.',
+        whyWeUseIt:
+          'Baseline before Tone, Howler, or the foundation kit — so we know what the browser already covers.',
       }),
       stack({
         id: 'Tone.js',
@@ -269,32 +289,37 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Musical timing, synthesis, and transport for the web.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Musical graphs and transport — evaluate vs Songara audio kit.',
+        whatItDoes:
+          'High-level Web Audio for synths, samples, scheduling, and transport clocks. Typical uses are generative music, sequencers, and musical UX that needs sample-accurate timing.',
+        whyWeUseIt:
+          'Strong candidate when products need musical graphs — evaluated against the Songara audio kit for overlap and weight.',
       }),
       stack({
         id: 'Howler.js',
         title: 'Howler.js',
         oss: 'Howler.js',
         ossUrl: 'https://howlerjs.com/',
-        description: 'Simple multi-format SFX playback.',
+        description: 'Simple multi-format sound-effect playback.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara:
-          'SFX candidate. Howler Preview package is out of Wave A scope — not Preview-backed yet.',
+        whatItDoes:
+          'Plays and pools short sounds across formats with sprites and spatial helpers. Typical uses are UI SFX, game one-shots, and sprite sheets of clicks/alerts.',
+        whyWeUseIt:
+          'SFX-oriented comparison. A Howler Preview package is out of Wave A scope; evaluation continues against native and foundation kit playback.',
       }),
       stack({
         id: 'Songara-Audio-Kit',
         title: 'Songara Audio Kit',
         oss: '@songara/pwa-base/audio',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
-        description:
-          'Foundation Stable audio kit — compare against Tone/Howler/platform for Songara PWAs.',
+        description: 'Foundation Stable audio helpers for Songara PWAs.',
         status: 'Needs investigation',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara:
-          'Stable foundation kit for Songara PWAs. Lab validates fit vs OSS alternatives (not a Preview package).',
-        songaraBehaviour: 'Import `@songara/pwa-base/audio` — do not fork playback helpers locally.',
+        whatItDoes:
+          'Songara’s Stable audio surface for product apps — playback patterns and shared helpers rather than a full DAW. Typical uses are consistent SFX/voice loops across PWAs.',
+        whyWeUseIt:
+          'It is our owned Stable kit. The lab compares it with Tone/Howler/platform so products do not invent parallel helpers.',
       }),
     ],
   },
@@ -309,11 +334,14 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'Native',
         oss: 'Platform storage APIs',
         ossUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
-        description: 'Raw IndexedDB and Origin Private File System baselines.',
+        description: 'Raw IndexedDB and Origin Private File System.',
         status: 'Needs investigation',
         recommended: true,
         preview: NO_PREVIEW,
-        whySongara: 'Understand platform ceilings before choosing Dexie/idb wrappers.',
+        whatItDoes:
+          'Browser-native durable storage: IndexedDB for structured data and OPFS for file-like blobs. Typical uses are offline caches, large assets, and understanding platform limits before wrappers.',
+        whyWeUseIt:
+          'We learn ceilings and failure modes here first, then judge whether Dexie or idb is worth the abstraction.',
       }),
       stack({
         id: 'idb',
@@ -323,22 +351,24 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Tiny promise wrapper around IndexedDB.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Minimal wrapper comparison vs Dexie ergonomics.',
+        whatItDoes:
+          'Promisifies IndexedDB with a minimal API. Typical uses are small stores where a full ODM would be overkill.',
+        whyWeUseIt:
+          'Minimal-wrapper comparison against Dexie ergonomics — kept to see when “tiny” is enough.',
       }),
       stack({
         id: 'Dexie.js',
         title: 'Dexie.js',
         oss: 'Dexie.js',
         ossUrl: 'https://dexie.org/',
-        description:
-          'Ergonomic IndexedDB via `@songara/pwa-base/preview/dexie` (Wave 1 Preview).',
+        description: 'Ergonomic IndexedDB with schemas and migrations.',
         status: 'Ready',
         recommended: true,
         preview: PREVIEW_DEXIE,
-        whySongara:
-          'Preferred IndexedDB DX for Songara apps — app-owned schema, no Dexie Cloud.',
-        songaraBehaviour:
-          '`createSongaraDb` + `songaraDbName` + schema version helpers. Peer `dexie` required in the consumer.',
+        whatItDoes:
+          'Friendly IndexedDB API with typed tables, queries, live queries, and versioned schema upgrades. Typical uses are offline app state, notes/collections, and forward-only migrations without a server sync product.',
+        whyWeUseIt:
+          'Best IndexedDB DX for Songara apps so far — app-owned schema, no Dexie Cloud. Preferred over raw IDB and heavier legacy wrappers.',
         a11yNotes: 'Storage UX is mostly non-visual; surface migration failures clearly.',
         performanceNotes: 'Keep migrations forward-only; index thoughtfully.',
         alternatives: 'idb for minimal wrap; raw IndexedDB for learning ceilings.',
@@ -348,21 +378,26 @@ export const capabilityAreas: CapabilityArea[] = [
         title: 'localForage',
         oss: 'localForage',
         ossUrl: 'https://localforage.github.io/localForage/',
-        description: 'Legacy async storage wrapper — compare only.',
+        description: 'Legacy async key-value storage wrapper.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara: 'Legacy comparison only — not a Songara default.',
+        whatItDoes:
+          'Async get/set storage that falls back across IndexedDB/WebSQL/localStorage. Typical uses are simple key-value persistence in older codebases.',
+        whyWeUseIt:
+          'Legacy comparison only — not a Songara default when Dexie or idb fits.',
       }),
       stack({
         id: 'Songara-Pack-Store',
         title: 'Songara Pack Store',
         oss: '@songara/pwa-base runtime storage',
         ossUrl: 'https://github.com/RSHomeServer/PWA-Base',
-        description: 'Foundation packStore contrast for content packs vs app IDB.',
+        description: 'Foundation packStore for content packs vs app IDB.',
         status: 'Needs investigation',
         preview: NO_PREVIEW,
-        whySongara:
-          'Contrast content-pack storage vs app IndexedDB — packStore is not a Dexie substitute.',
+        whatItDoes:
+          'Runtime storage for Songara content packs (cache/IDB details owned by the foundation). Typical uses are shipping offline content bundles — not general app databases.',
+        whyWeUseIt:
+          'Contrast with app IndexedDB (Dexie). PackStore is not a Dexie substitute; the lab documents the boundary.',
       }),
     ],
   },

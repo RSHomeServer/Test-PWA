@@ -30,7 +30,7 @@ export const LAB_SECTIONS: LabSectionMeta[] = [
   {
     id: 'Overview',
     title: 'Overview',
-    blurb: 'What it does, why Songara selected it, status, and brief notes.',
+    blurb: 'What it does, why we use it, status, and brief notes.',
   },
   {
     id: 'Preview-Validation',
@@ -61,6 +61,7 @@ export interface CatalogueGroup {
   title: string
   oss: string
   ossUrl?: string
+  /** Short lead under the title */
   description: string
   status: ExplorationStatus
   recommended: boolean
@@ -70,10 +71,10 @@ export interface CatalogueGroup {
    */
   hasExamples?: boolean
   preview: PreviewBacking
-  /** Why Songara selected it, or current evaluation posture */
-  whySongara: string
-  /** Songara-specific behaviour / integration notes */
-  songaraBehaviour?: string
+  /** Purpose, typical use cases — not package wiring */
+  whatItDoes: string
+  /** Why this OSS (or platform API) was picked for Songara evaluation / use */
+  whyWeUseIt: string
   a11yNotes?: string
   performanceNotes?: string
   alternatives?: string
