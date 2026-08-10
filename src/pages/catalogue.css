@@ -811,7 +811,7 @@
   line-height: 1.35;
 }
 
-/* Area hover flyouts */
+/* Area hover flyouts — bridge gap so pointer can reach the panel */
 .cat-nav__area-item {
   position: relative;
 }
@@ -821,7 +821,7 @@
   margin: 0;
   padding: 0.4rem;
   position: absolute;
-  top: calc(100% + 0.35rem);
+  top: 100%;
   left: 0;
   min-width: 14rem;
   max-width: min(22rem, 80vw);
@@ -833,11 +833,26 @@
   border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
   border-radius: 0.45rem;
   box-shadow: 0 10px 28px color-mix(in srgb, #000 14%, transparent);
+  /* Visual offset without a dead hover zone */
+  margin-top: 0.35rem;
+}
+
+.cat-nav__flyout::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -0.35rem;
+  height: 0.35rem;
 }
 
 .cat-nav__area-item:hover > .cat-nav__flyout,
 .cat-nav__area-item:focus-within > .cat-nav__flyout {
   display: grid;
+}
+
+.cat-nav__flyout-item {
+  position: relative;
 }
 
 .cat-nav__flyout-link {
@@ -854,6 +869,8 @@
   border-left: 3px solid var(--lab-tone, transparent);
 }
 
+.cat-nav__flyout-item:hover > .cat-nav__flyout-link,
+.cat-nav__flyout-item:focus-within > .cat-nav__flyout-link,
 .cat-nav__flyout-link:hover,
 .cat-nav__flyout-link.cat-nav__link--current {
   background: color-mix(in srgb, var(--lab-tone, currentColor) 10%, transparent);
@@ -873,6 +890,61 @@
 
 .cat-nav__flyout-link .lab-tone-dot {
   grid-row: 1 / span 2;
+}
+
+/* Second-level: Overview | Examples to the right of a stack row */
+.cat-nav__submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem;
+  position: absolute;
+  left: calc(100% - 0.15rem);
+  top: 0;
+  min-width: 9.5rem;
+  z-index: 41;
+  display: none;
+  gap: 0.2rem;
+  background: var(--platform-color-bg, #fff);
+  color: var(--platform-color-fg, #1a1a1a);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.4rem;
+  box-shadow: 0 10px 24px color-mix(in srgb, #000 12%, transparent);
+}
+
+.cat-nav__submenu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.35rem;
+  width: 0.35rem;
+}
+
+.cat-nav__flyout-item:hover > .cat-nav__submenu,
+.cat-nav__flyout-item:focus-within > .cat-nav__submenu {
+  display: grid;
+}
+
+.cat-nav__submenu-link {
+  display: block;
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.cat-nav__submenu-link:hover,
+.cat-nav__submenu-link.cat-nav__link--current {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  text-decoration: none;
+}
+
+/* Keep area flyout open while pointer is in the right-hand submenu */
+.cat-nav__flyout:has(.cat-nav__flyout-item:hover),
+.cat-nav__flyout:has(.cat-nav__flyout-item:focus-within) {
+  display: grid;
 }
 
 /* Compact stack rail under areas when inside a stack */

@@ -64,14 +64,21 @@ export function CatalogueBrowseNav({
                   {a.groups.map((g) => {
                     const maturity = labMaturityFor(g)
                     const stackCurrent = current && g.id === groupId
+                    const overviewPath = `/${a.id}/${g.id}/Overview`
+                    const examplesPath = `/${a.id}/${g.id}/Examples`
+                    const onOverview =
+                      stackCurrent && (!sectionId || sectionId === 'Overview')
+                    const onExamples =
+                      stackCurrent && sectionId === 'Examples'
                     return (
-                      <li key={g.id}>
+                      <li key={g.id} className="cat-nav__flyout-item">
                         <Link
                           className={`cat-nav__flyout-link ${labMaturityClass(maturity)}${
                             stackCurrent ? ' cat-nav__link--current' : ''
                           }`}
-                          to={`/${a.id}/${g.id}/Overview`}
+                          to={overviewPath}
                           aria-current={stackCurrent ? 'page' : undefined}
+                          aria-haspopup="true"
                         >
                           <span
                             className="lab-tone-dot"
@@ -91,6 +98,34 @@ export function CatalogueBrowseNav({
                                     : ''}
                           </span>
                         </Link>
+                        <ul
+                          className="cat-nav__submenu"
+                          aria-label={`${g.title} sections`}
+                        >
+                          <li>
+                            <Link
+                              className={`cat-nav__submenu-link${
+                                onOverview ? ' cat-nav__link--current' : ''
+                              }`}
+                              to={overviewPath}
+                              aria-current={onOverview ? 'page' : undefined}
+                            >
+                              Overview
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              className={`cat-nav__submenu-link${
+                                onExamples ? ' cat-nav__link--current' : ''
+                              }`}
+                              to={examplesPath}
+                              aria-current={onExamples ? 'page' : undefined}
+                            >
+                              Examples
+                              {g.hasExamples ? '' : ' · later'}
+                            </Link>
+                          </li>
+                        </ul>
                       </li>
                     )
                   })}

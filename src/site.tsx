@@ -12,6 +12,7 @@ import {
   StackHubPage,
   StackOverviewPage,
 } from './lab/LabPages'
+import { motionExampleSiteRoutes } from './lab/motion-examples/routes'
 import { PreviewValidationPage } from './lab/PreviewValidationPage'
 
 function redirectPage(to: string): ComponentType {
@@ -44,6 +45,11 @@ export const testSite = defineSite({
   capabilities: [SITE_CAPABILITY.offline],
   routes: [
     { path: '', component: CatalogueHomePage },
+    // Named Examples experiences before section hubs (exact path match).
+    ...motionExampleSiteRoutes().map((r) => ({
+      path: r.path,
+      component: ExamplesPlaceholderPage,
+    })),
     // Lab routes before legacy redirects so Title-Case hubs are not
     // shadowed by lowercase flat redirects under case-insensitive matching.
     ...catalogueSiteRoutes().map((r) => {
