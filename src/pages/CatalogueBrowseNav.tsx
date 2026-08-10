@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import {
   capabilityAreas,
-  getAdjacentExplorations,
+  getAdjacentLabSections,
   getArea,
   getGroup,
-  listExplorations,
+  LAB_SECTIONS,
 } from '../catalogue/registry'
-import type { ExplorationStatus } from '../catalogue/types'
+import type { ExplorationStatus, LabSectionId } from '../catalogue/types'
 
 function statusClass(status: ExplorationStatus): string {
   switch (status) {
@@ -24,41 +24,36 @@ function statusClass(status: ExplorationStatus): string {
 }
 
 export type CatalogueBrowseNavProps = {
-  /** Active capability area id when on /{area} or deeper */
   areaId?: string
-  /** Active OSS/native group id when on /{area}/{group}/… */
   groupId?: string
-  /** Path under area for the active exploration, e.g. Motion/Layout-Transitions */
-  relativePath?: string
+  /** Active lab section when on Overview / Preview-Validation / Examples */
+  sectionId?: LabSectionId
 }
 
 /**
- * Persistent catalogue browse chrome — areas from registry; groups then
- * offerings under the active area; prev/next in registry order.
+ * Persistent lab browse chrome — areas → stacks → lab sections.
  */
 export function CatalogueBrowseNav({
   areaId,
   groupId,
-  relativePath,
+  sectionId,
 }: CatalogueBrowseNavProps) {
   const area = areaId ? getArea(areaId) : undefined
-  const group =
-    areaId && groupId ? getGroup(areaId, groupId) : undefined
+  const group = areaId && groupId ? getGroup(areaId, groupId) : undefined
   const adjacent =
-    areaId && relativePath
-      ? getAdjacentExplorations(areaId, relativePath)
+    areaId && groupId && sectionId
+      ? getAdjacentLabSections(areaId, groupId, sectionId)
       : null
-  const flatEntries = area && !area.groups?.length ? listExplorations(area) : []
 
   return (
-    <nav className="cat-nav" aria-label="Catalogue browse">
+    <nav className="cat-nav" aria-label="Capability lab browse">
       <div className="cat-nav__row">
         <Link
           className={`cat-nav__home${areaId ? '' : ' cat-nav__link--current'}`}
           to="/"
           aria-current={areaId ? undefined : 'page'}
         >
-          Catalogue
+          Lab
         </Link>
         <ul className="cat-nav__areas">
           {capabilityAreas.map((a) => {
@@ -68,7 +63,9 @@ export function CatalogueBrowseNav({
                 <Link
                   className={`cat-nav__area${current ? ' cat-nav__link--current' : ''}`}
                   to={`/${a.id}`}
-                  aria-current={current && !groupId && !relativePath ? 'page' : undefined}
+                  aria-current={
+                    current && !groupId && !sectionId ? 'page' : undefined
+                  }
                 >
                   /{a.id}
                 </Link>
@@ -78,7 +75,7 @@ export function CatalogueBrowseNav({
         </ul>
       </div>
 
-      {area?.groups?.length ? (
+      {area?.groups.length ? (
         <ul className="cat-nav__groups">
           {area.groups.map((g) => {
             const current = g.id === groupId
@@ -87,7 +84,7 @@ export function CatalogueBrowseNav({
                 <Link
                   className={`cat-nav__group${current ? ' cat-nav__link--current' : ''}`}
                   to={`/${area.id}/${g.id}`}
-                  aria-current={current && !relativePath ? 'page' : undefined}
+                  aria-current={current && !sectionId ? 'page' : undefined}
                 >
                   {g.title}
                 </Link>
@@ -99,46 +96,21 @@ export function CatalogueBrowseNav({
 
       {group ? (
         <ul className="cat-nav__explorations">
-          {group.explorations.map((ex) => {
-            const path = `${group.id}/${ex.id}`
-            const current = path === relativePath
+          {LAB_SECTIONS.map((section) => {
+            const current = section.id === sectionId
             return (
-              <li key={ex.id}>
+              <li key={section.id}>
                 <Link
                   className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${areaId}/${path}`}
+                  to={`/${areaId}/${group.id}/${section.id}`}
                   aria-current={current ? 'page' : undefined}
                 >
-                  <span className="cat-nav__ex-name">{ex.capability}</span>
-                  <span className={`cat-nav__badge ${statusClass(ex.status)}`}>
-                    {ex.status}
-                  </span>
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-
-      {flatEntries.length > 0 ? (
-        <ul className="cat-nav__explorations">
-          {flatEntries.map((entry) => {
-            const current = entry.relativePath === relativePath
-            return (
-              <li key={entry.relativePath}>
-                <Link
-                  className={`cat-nav__ex${current ? ' cat-nav__link--current' : ''}`}
-                  to={`/${areaId}/${entry.relativePath}`}
-                  aria-current={current ? 'page' : undefined}
-                >
-                  <span className="cat-nav__ex-name">
-                    {entry.record.capability}
-                  </span>
-                  <span
-                    className={`cat-nav__badge ${statusClass(entry.record.status)}`}
-                  >
-                    {entry.record.status}
-                  </span>
+                  <span className="cat__offering-name">{section.title}</span>
+                  {section.id === 'Overview' ? (
+                    <span className={`cat-nav__badge ${statusClass(group.status)}`}>
+                      {group.status}
+                    </span>
+                  ) : null}
                 </Link>
               </li>
             )
@@ -154,7 +126,7 @@ export function CatalogueBrowseNav({
               to={`/${areaId}/${adjacent.prev.relativePath}`}
               rel="prev"
             >
-              ← {adjacent.prev.capability}
+              ← {adjacent.prev.title}
             </Link>
           ) : (
             <span className="cat-nav__pager-gap" />
@@ -165,7 +137,7 @@ export function CatalogueBrowseNav({
               to={`/${areaId}/${adjacent.next.relativePath}`}
               rel="next"
             >
-              {adjacent.next.capability} →
+              {adjacent.next.title} →
             </Link>
           ) : (
             <span className="cat-nav__pager-gap" />

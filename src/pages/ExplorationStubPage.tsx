@@ -1,100 +1,38 @@
 import { Link, useLocation } from 'react-router-dom'
-import { getArea, getExploration } from '../catalogue/registry'
+import { getArea, getGroup } from '../catalogue/registry'
 import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
 /**
- * Placeholder exploration page until an Executor implements the artefact.
- * Route + registry row already exist — fill contract sections in place.
+ * Fallback page — Wave A routes should not need this; kept for safety.
  */
 export function ExplorationStubPage() {
   const { pathname } = useLocation()
   const parts = pathname.replace(/^\//, '').split('/').filter(Boolean)
   const areaId = parts[0] ?? ''
+  const groupId = parts[1]
   const area = getArea(areaId)
-  const relativePath = parts.slice(1).join('/')
-  const groupId = area?.groups?.length ? parts[1] : undefined
-  const record = getExploration(areaId, relativePath)
-
-  if (!record) {
-    return (
-      <main className="cat">
-        <CatalogueBrowseNav areaId={areaId || undefined} />
-        <p>Unknown exploration.</p>
-        <Link to="/">Back to catalogue</Link>
-      </main>
-    )
-  }
+  const group = areaId && groupId ? getGroup(areaId, groupId) : undefined
 
   return (
     <main className="cat">
-      <CatalogueBrowseNav
-        areaId={areaId}
-        groupId={groupId}
-        relativePath={relativePath}
-      />
-
-      <nav className="cat__crumb">
-        <Link to="/">Catalogue</Link>
-        <span aria-hidden="true"> / </span>
-        <Link to={`/${areaId}`}>{areaId}</Link>
-        {groupId ? (
-          <>
-            <span aria-hidden="true"> / </span>
-            <Link to={`/${areaId}/${groupId}`}>{groupId}</Link>
-            {parts[2] ? (
-              <>
-                <span aria-hidden="true"> / </span>
-                <span>{parts.slice(2).join('/')}</span>
-              </>
-            ) : null}
-          </>
-        ) : relativePath ? (
-          <>
-            <span aria-hidden="true"> / </span>
-            <span>{relativePath}</span>
-          </>
-        ) : null}
-      </nav>
-
+      <CatalogueBrowseNav areaId={areaId || undefined} groupId={groupId} />
       <header className="cat__header">
-        <p className="cat__eyebrow">Scaffold · Needs investigation</p>
-        <h1 className="cat__title">{record.capability}</h1>
+        <h1 className="cat__title">Unknown lab route</h1>
         <p className="cat__lead">
-          This subroute is reserved for a permanent evaluation of{' '}
-          <strong>{record.oss}</strong>. An Executor ticket should replace this
-          shell with a practical implementation and complete the artefact
-          contract below.
-        </p>
-        <p>
-          <strong>Status:</strong> {record.status}
+          Primary navigation uses Overview, Preview Validation, and Examples under
+          each stack. Facet leaves redirect into those sections.
         </p>
       </header>
-
-      <section className="cat__panel">
-        <h2>Artefact contract (to complete)</h2>
-        <ul>
-          <li>Concise explanation</li>
-          <li>OSS project(s) under evaluation</li>
-          <li>Practical implementation using that stack</li>
-          <li>Visual validation (where appropriate)</li>
-          <li>Performance observations</li>
-          <li>Browser compatibility</li>
-          <li>Strengths / weaknesses</li>
-          <li>Developer experience</li>
-          <li>Product ideas unlocked</li>
-          <li>Reusable implementation ideas</li>
-          <li>
-            Status: Ready · Experimental · Rejected · Needs investigation
-          </li>
-        </ul>
-        <p className="cat__muted">
-          Update scores and notes in <code>src/catalogue/registry.ts</code> when
-          done. Architecture:{' '}
-          <code>docs/architecture/capability-catalogue-app.md</code> · Deep dive:{' '}
-          <code>docs/architecture/top-five-routes.md</code>
-        </p>
-      </section>
+      <p>
+        {group ? (
+          <Link to={`/${areaId}/${groupId}`}>Open {group.title} hub</Link>
+        ) : area ? (
+          <Link to={`/${areaId}`}>Open /{area.id}</Link>
+        ) : (
+          <Link to="/">Back to lab</Link>
+        )}
+      </p>
     </main>
   )
 }

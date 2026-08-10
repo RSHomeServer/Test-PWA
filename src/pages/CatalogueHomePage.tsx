@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom'
-import { capabilityAreas, explorationCount } from '../catalogue/registry'
+import { capabilityAreas, stackCount } from '../catalogue/registry'
 import { CatalogueBrowseNav } from './CatalogueBrowseNav'
 import './catalogue.css'
 
-/** Catalogue home — index of capability areas (engineering reference, not products). */
+/** Lab home — index of capability areas. */
 export function CatalogueHomePage() {
   return (
     <main className="cat">
       <CatalogueBrowseNav />
       <header className="cat__header">
-        <p className="cat__eyebrow">Songara · Engineering reference</p>
-        <h1 className="cat__title">Capability Catalogue</h1>
+        <p className="cat__eyebrow">Songara · Engineering Capability Lab</p>
+        <h1 className="cat__title">Capability Lab</h1>
         <p className="cat__lead">
-          Discover, evaluate, and document mature browser capabilities and the OSS
-          behind them. Each area is a permanent reference — not a product, not a
-          throwaway demo.
+          Evaluate mature browser capabilities and OSS stacks for Songara PWAs.
+          Each stack has Overview, Preview Validation, and Examples — not an
+          MDN/Storybook API reference of facet leaves.
         </p>
       </header>
 
@@ -24,11 +24,7 @@ export function CatalogueHomePage() {
             <Link className="cat__area-link" to={`/${area.id}`}>
               <span className="cat__area-name">/{area.id}</span>
               <span className="cat__area-meta">
-                {explorationCount(area)} exploration
-                {explorationCount(area) === 1 ? '' : 's'}
-                {area.groups?.length
-                  ? ` · ${area.groups.length} stack${area.groups.length === 1 ? '' : 's'}`
-                  : ''}
+                {stackCount(area)} stack{stackCount(area) === 1 ? '' : 's'}
                 {area.planned?.length
                   ? ` · ${area.planned.length} planned`
                   : ''}

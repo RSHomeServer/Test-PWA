@@ -644,3 +644,25 @@
   background: color-mix(in srgb, currentColor 16%, transparent);
   border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
 }
+
+.cat__check-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cat__check {
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.4rem;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.cat__check--ok {
+  background: color-mix(in srgb, #1b7f4e 12%, transparent);
+}
+
+.cat__check--fail {
+  background: color-mix(in srgb, #a33b3b 12%, transparent);
+}
