@@ -1,40 +1,34 @@
-import { useEffect, useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { AnimatePresence, motion } from '@songara/pwa-base/preview/motion'
+import { MotionStage, ReduceMotionToggle } from '../../explorations/animation/Motion/_shared'
+import { useCatalogueMotion } from '../../explorations/animation/Motion/motionKit'
 import {
   DemoBlock,
   ExperienceHeader,
   MotionExamplesChrome,
 } from './shared'
-import { MotionStage, ReduceMotionToggle } from '../../explorations/animation/Motion/_shared'
-import { MOTION_SPRING, useCatalogueMotion } from '../../explorations/animation/Motion/motionKit'
+import { liftStageStyle } from './liftTheme'
 
 /**
- * Buttons & pressables — copy confirm, morphing action, FAB.
+ * Buttons & pressables — public lifts:
+ * - https://motion.dev/examples/react-gestures
+ * - https://motion.dev/examples/react-layout-animation
+ * - https://motion.dev/examples/react-exit-animation (whileTap button)
+ *
+ * Adapted: Preview Motion imports; reduced-motion disables gestures / snaps layout.
  */
 export function PressablesExperience() {
-  const { reduce, reduceId, setForceReduce, transition } =
-    useCatalogueMotion(MOTION_SPRING)
-  const [copied, setCopied] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [fabOpen, setFabOpen] = useState(false)
-
-  useEffect(() => {
-    if (!copied) return
-    const t = window.setTimeout(() => setCopied(false), 1600)
-    return () => window.clearTimeout(t)
-  }, [copied])
-
-  useEffect(() => {
-    if (!busy) return
-    const t = window.setTimeout(() => setBusy(false), 1400)
-    return () => window.clearTimeout(t)
-  }, [busy])
+  const { reduce, reduceId, setForceReduce, transition } = useCatalogueMotion({
+    type: 'spring',
+    stiffness: 400,
+    damping: 17,
+  })
 
   return (
     <MotionExamplesChrome experienceId="Pressables">
       <ExperienceHeader
         title="Buttons & pressables"
-        lead="Hover/tap micro-interactions — copy confirm, morphing action, and a floating control."
+        lead="Public Motion tutorial ports — Gestures, Layout animation toggle, and Exit whileTap — via Preview Motion."
       />
       <ReduceMotionToggle
         id={reduceId}
@@ -43,133 +37,176 @@ export function PressablesExperience() {
       />
 
       <DemoBlock
-        title="Copy button"
-        hint="Label morphs to confirmation; snaps under reduced motion."
+        title="Gestures"
+        hint="Port of motion.dev/examples/react-gestures — whileHover / whileTap on a motion box."
       >
-        <MotionStage label="Copy button stage">
-          <motion.button
-            type="button"
-            className="mex__btn mex__btn--wide"
-            whileHover={reduce ? undefined : { scale: 1.03 }}
-            whileTap={reduce ? undefined : { scale: 0.96 }}
-            transition={transition}
-            onClick={() => setCopied(true)}
-            aria-live="polite"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={copied ? 'done' : 'idle'}
-                initial={reduce ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
-                transition={transition}
-              >
-                {copied ? 'Copied' : 'Copy link'}
-              </motion.span>
-            </AnimatePresence>
-          </motion.button>
-        </MotionStage>
-      </DemoBlock>
-
-      <DemoBlock
-        title="Morphing action"
-        hint="Idle → busy dots → done check; gestures disabled while busy."
-      >
-        <MotionStage label="Morph button stage">
-          <motion.button
-            type="button"
-            className="mex__morph"
-            disabled={busy}
-            whileHover={reduce || busy ? undefined : { scale: 1.04 }}
-            whileTap={reduce || busy ? undefined : { scale: 0.95 }}
-            transition={transition}
-            onClick={() => setBusy(true)}
-            aria-busy={busy}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-                  {busy ? (
-                <motion.span
-                  key="dots"
-                  className="mex__dots"
-                  data-reduced={reduce ? 'true' : 'false'}
-                  initial={reduce ? false : { opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={transition}
-                  aria-label="Working"
-                >
-                  <span />
-                  <span />
-                  <span />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="label"
-                  initial={reduce ? false : { opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={transition}
-                >
-                  Create
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
-        </MotionStage>
-      </DemoBlock>
-
-      <DemoBlock
-        title="Floating action"
-        hint="FAB expands a small action stack on press."
-      >
-        <MotionStage className="mex__fab-stage" label="FAB stage">
-          <div className="mex__fab-cluster">
-            <AnimatePresence>
-              {fabOpen ? (
-                <motion.div
-                  key="stack"
-                  className="mex__fab-stack"
-                  initial={reduce ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: 8 }}
-                  transition={transition}
-                >
-                  {['Note', 'Photo', 'Link'].map((label, i) => (
-                    <motion.button
-                      key={label}
-                      type="button"
-                      className="mex__fab-secondary"
-                      initial={reduce ? false : { opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reduce
-                          ? transition
-                          : { ...transition, delay: i * 0.04 }
-                      }
-                      onClick={() => setFabOpen(false)}
-                    >
-                      {label}
-                    </motion.button>
-                  ))}
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-            <motion.button
-              type="button"
-              className="mex__fab"
-              aria-expanded={fabOpen}
-              aria-label={fabOpen ? 'Close actions' : 'Open actions'}
-              whileHover={reduce ? undefined : { scale: 1.06 }}
-              whileTap={reduce ? undefined : { scale: 0.92 }}
-              animate={reduce ? undefined : { rotate: fabOpen ? 45 : 0 }}
+        <MotionStage label="Gestures stage">
+          <div style={{ display: 'grid', placeItems: 'center', minHeight: '8rem' }}>
+            <motion.div
+              whileHover={
+                reduce
+                  ? undefined
+                  : {
+                      scale: 1.2,
+                      rotate: 5,
+                      backgroundColor: '#2BB95D',
+                      transition: { duration: 0.2 },
+                    }
+              }
+              whileTap={
+                reduce
+                  ? undefined
+                  : {
+                      scale: 0.8,
+                      rotate: -5,
+                      backgroundColor: '#1A7A3E',
+                    }
+              }
               transition={transition}
-              onClick={() => setFabOpen((v) => !v)}
-            >
-              +
-            </motion.button>
+              style={gestureBox}
+            />
           </div>
+        </MotionStage>
+      </DemoBlock>
+
+      <DemoBlock
+        title="Layout animation"
+        hint="Port of motion.dev/examples/react-layout-animation — layout spring on justify-content toggle."
+      >
+        <div style={liftStageStyle}>
+          <LayoutToggle reduce={reduce} />
+        </div>
+      </DemoBlock>
+
+      <DemoBlock
+        title="Pressable exit"
+        hint="Exit animation + whileTap from motion.dev/examples/react-exit-animation."
+      >
+        <MotionStage label="Pressable exit stage">
+          <PressableExit reduce={reduce} transition={transition} />
         </MotionStage>
       </DemoBlock>
     </MotionExamplesChrome>
   )
+}
+
+const gestureBox: CSSProperties = {
+  width: 100,
+  height: 100,
+  backgroundColor: '#46CF76',
+  borderRadius: 5,
+}
+
+function LayoutToggle({ reduce }: { reduce: boolean }) {
+  const [isOn, setIsOn] = useState(false)
+
+  return (
+    <button
+      type="button"
+      className="toggle-container"
+      style={{
+        ...container,
+        justifyContent: isOn ? 'flex-start' : 'flex-end',
+      }}
+      onClick={() => setIsOn((v) => !v)}
+      aria-pressed={isOn}
+      aria-label="Toggle layout switch"
+    >
+      <motion.div
+        className="toggle-handle"
+        style={handle}
+        layout={!reduce}
+        transition={
+          reduce
+            ? { duration: 0 }
+            : { type: 'spring', visualDuration: 0.2, bounce: 0.2 }
+        }
+      />
+    </button>
+  )
+}
+
+const container: CSSProperties = {
+  width: 100,
+  height: 50,
+  backgroundColor: 'rgba(156, 26, 255, 0.25)',
+  borderRadius: 50,
+  cursor: 'pointer',
+  display: 'flex',
+  padding: 10,
+  border: 'none',
+}
+
+const handle: CSSProperties = {
+  width: 50,
+  height: 50,
+  backgroundColor: '#9c1aff',
+  borderRadius: '50%',
+}
+
+function PressableExit({
+  reduce,
+  transition,
+}: {
+  reduce: boolean
+  transition: object
+}) {
+  const [isVisible, setIsVisible] = useState(true)
+
+  return (
+    <div style={exitContainer}>
+      <AnimatePresence initial={false}>
+        {isVisible ? (
+          <motion.div
+            key="box"
+            initial={reduce ? false : { opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0 }}
+            transition={transition}
+            style={exitBox}
+          />
+        ) : null}
+      </AnimatePresence>
+      <motion.button
+        type="button"
+        style={exitButton}
+        onClick={() => setIsVisible((v) => !v)}
+        whileTap={reduce ? undefined : { y: 1, scale: 0.98 }}
+        transition={transition}
+      >
+        {isVisible ? 'Hide' : 'Show'}
+      </motion.button>
+    </div>
+  )
+}
+
+const exitContainer: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  width: 100,
+  height: 160,
+  position: 'relative',
+  margin: '0 auto',
+}
+
+const exitBox: CSSProperties = {
+  width: 100,
+  height: 100,
+  backgroundColor: '#ff5449',
+  borderRadius: 10,
+}
+
+const exitButton: CSSProperties = {
+  backgroundColor: '#ff5449',
+  borderRadius: 10,
+  padding: '10px 20px',
+  color: '#0f1115',
+  border: 'none',
+  font: 'inherit',
+  fontWeight: 650,
+  cursor: 'pointer',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
 }

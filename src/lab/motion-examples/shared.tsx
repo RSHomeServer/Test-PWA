@@ -48,12 +48,13 @@ export function MotionExamplesChrome({
         })}
       </nav>
       <p className="mex__attr cat__muted">
-        Patterns adapted from{' '}
+        Lifted from public{' '}
         <a href="https://motion.dev/examples" target="_blank" rel="noreferrer">
-          Motion examples
+          Motion tutorials
         </a>{' '}
-        (MIT). Import only{' '}
-        <code>@songara/pwa-base/preview/motion</code> in products.
+        (not Motion+). Imports only{' '}
+        <code>@songara/pwa-base/preview/motion</code>; reduced-motion snaps via
+        Preview helpers.
       </p>
     </>
   )

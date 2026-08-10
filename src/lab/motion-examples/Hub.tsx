@@ -14,7 +14,7 @@ export function MotionExamplesHub() {
     <MotionExamplesChrome>
       <ExperienceHeader
         title="Motion examples"
-        lead="Product-shaped experiences built only on `@songara/pwa-base/preview/motion` — menus, transitions, and pressables with reduced-motion honouring."
+        lead="Product-shaped ports of public Motion tutorials (not Motion+) on `@songara/pwa-base/preview/motion` — menus, transitions, and pressables with reduced-motion honouring."
       />
       <ul className="mex__hub-grid">
         {MOTION_EXPERIENCES.map((e) => (

@@ -9,7 +9,7 @@ export type MotionExperience = {
   id: MotionExperienceId
   title: string
   blurb: string
-  /** motion.dev examples adapted (MIT) */
+  /** Public (non-Motion+) motion.dev tutorials lifted into the lab */
   inspiredBy: { name: string; url: string }[]
 }
 
@@ -21,19 +21,15 @@ export const MOTION_EXPERIENCES: readonly MotionExperience[] = [
     id: 'Menus-Overlays',
     title: 'Menus & overlays',
     blurb:
-      'Dropdown presence, a context panel, and a draggable sheet — product chrome that enters and exits cleanly.',
+      'Public ports of the Variants sidebar menu and Exit animation tutorials — clip-path reveal, stagger, and presence.',
     inspiredBy: [
       {
-        name: 'Mega Menu',
-        url: 'https://motion.dev/examples/react-mega-menu',
+        name: 'Variants',
+        url: 'https://motion.dev/examples/react-variants',
       },
       {
-        name: 'Context Menu',
-        url: 'https://motion.dev/examples/react-context-menu',
-      },
-      {
-        name: 'Sheet Modal',
-        url: 'https://motion.dev/examples/react-sheet-modal',
+        name: 'Exit animation',
+        url: 'https://motion.dev/examples/react-exit-animation',
       },
     ],
   },
@@ -41,15 +37,19 @@ export const MOTION_EXPERIENCES: readonly MotionExperience[] = [
     id: 'Transitions',
     title: 'Page & section transitions',
     blurb:
-      'Crossfading panels, layout morphs, and a shared-element expand — continuity between UI states.',
+      'Public ports of Shared layout tabs, AnimatePresence modes (sync/wait/popLayout), and layout reorder.',
     inspiredBy: [
       {
-        name: 'AnimateView: Toggle',
-        url: 'https://motion.dev/examples/react-animate-view-toggle',
+        name: 'Shared layout animation',
+        url: 'https://motion.dev/examples/react-shared-layout-animation',
       },
       {
-        name: 'App Store (simplified)',
-        url: 'https://motion.dev/examples/react-app-store',
+        name: 'AnimatePresence modes',
+        url: 'https://motion.dev/examples/react-animate-presence-modes',
+      },
+      {
+        name: 'Reorder items',
+        url: 'https://motion.dev/examples/react-reorder-items',
       },
     ],
   },
@@ -57,19 +57,19 @@ export const MOTION_EXPERIENCES: readonly MotionExperience[] = [
     id: 'Pressables',
     title: 'Buttons & pressables',
     blurb:
-      'Copy confirmation, a morphing action button, and a floating action control — micro-interactions that feel intentional.',
+      'Public ports of Gestures (hover/tap), Layout animation toggle, and Exit whileTap.',
     inspiredBy: [
       {
-        name: 'Copy Button',
-        url: 'https://motion.dev/examples/react-copy-button',
+        name: 'Gestures',
+        url: 'https://motion.dev/examples/react-gestures',
       },
       {
-        name: 'Dots Morph Button',
-        url: 'https://motion.dev/examples/react-dots-morph-button',
+        name: 'Layout animation',
+        url: 'https://motion.dev/examples/react-layout-animation',
       },
       {
-        name: 'Floating Action Button',
-        url: 'https://motion.dev/examples/react-floating-action-button',
+        name: 'Exit animation',
+        url: 'https://motion.dev/examples/react-exit-animation',
       },
     ],
   },

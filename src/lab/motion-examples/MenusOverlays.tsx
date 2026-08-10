@@ -1,44 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import {
   AnimatePresence,
   motion,
   type Variants,
 } from '@songara/pwa-base/preview/motion'
+import { MotionStage, ReduceMotionToggle } from '../../explorations/animation/Motion/_shared'
+import { useCatalogueMotion } from '../../explorations/animation/Motion/motionKit'
 import {
   DemoBlock,
   ExperienceHeader,
   MotionExamplesChrome,
 } from './shared'
-import { MotionStage, ReduceMotionToggle } from '../../explorations/animation/Motion/_shared'
-import { MOTION_SPRING, useCatalogueMotion } from '../../explorations/animation/Motion/motionKit'
-
-const menuItemVariants: Variants = {
-  hidden: { opacity: 0, y: -6 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.04 },
-  }),
-  exit: { opacity: 0, y: -4 },
-}
+import { liftStageStyle } from './liftTheme'
 
 /**
- * Menus & overlays — dropdown presence, context panel, sheet modal.
+ * Menus & overlays — public lifts:
+ * - https://motion.dev/examples/react-variants (hamburger / clip-path sidebar)
+ * - https://motion.dev/examples/react-exit-animation (presence exit)
+ *
+ * Adapted: Preview Motion imports; `staggerChildren` instead of `stagger()`;
+ * reduced-motion snaps via `useCatalogueMotion`.
  */
 export function MenusOverlaysExperience() {
-  const { reduce, reduceId, setForceReduce, transition } =
-    useCatalogueMotion(MOTION_SPRING)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [ctxOpen, setCtxOpen] = useState(false)
-  const [sheetOpen, setSheetOpen] = useState(false)
-
-  const menuItems = ['Overview', 'Examples', 'Settings', 'Sign out']
+  const { reduce, reduceId, setForceReduce, transition } = useCatalogueMotion()
 
   return (
     <MotionExamplesChrome experienceId="Menus-Overlays">
       <ExperienceHeader
         title="Menus & overlays"
-        lead="Enter/exit presence for dropdowns, a context panel, and a spring sheet — via Preview Motion."
+        lead="Public Motion tutorial ports — the Variants sidebar menu and Exit animation presence — via Preview Motion."
       />
       <ReduceMotionToggle
         id={reduceId}
@@ -47,169 +37,316 @@ export function MenusOverlaysExperience() {
       />
 
       <DemoBlock
-        title="Dropdown menu"
-        hint="Staggered item enter; instant close under reduced motion."
+        title="Variants menu"
+        hint="Port of motion.dev/examples/react-variants — clip-path reveal + staggered items."
       >
-        <div className="mex__menu-anchor">
-          <button
-            type="button"
-            className="mex__btn"
-            aria-expanded={menuOpen}
-            aria-haspopup="menu"
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            Open menu
-          </button>
-          <AnimatePresence>
-            {menuOpen ? (
-              <motion.ul
-                key="menu"
-                className="mex__menu"
-                role="menu"
-                initial={reduce ? false : { opacity: 0, y: -8, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={
-                  reduce
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: -6, scale: 0.98 }
-                }
-                transition={transition}
-              >
-                {menuItems.map((label, i) => (
-                  <motion.li
-                    key={label}
-                    role="none"
-                    custom={reduce ? 0 : i}
-                    variants={reduce ? undefined : menuItemVariants}
-                    initial={reduce ? false : 'hidden'}
-                    animate="show"
-                    exit="exit"
-                  >
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className="mex__menu-item"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {label}
-                    </button>
-                  </motion.li>
-                ))}
-              </motion.ul>
-            ) : null}
-          </AnimatePresence>
+        <div style={liftStageStyle}>
+          <VariantsMenu reduce={reduce} />
         </div>
       </DemoBlock>
 
       <DemoBlock
-        title="Context panel"
-        hint="Click the stage to open a floating panel (inspired by context menus)."
+        title="Exit animation"
+        hint="Port of motion.dev/examples/react-exit-animation — AnimatePresence enter/exit."
       >
-        <MotionStage label="Context panel stage">
-          <button
-            type="button"
-            className="mex__ctx-stage"
-            onClick={() => setCtxOpen(true)}
-          >
-            Click to open panel
-          </button>
-          <AnimatePresence>
-            {ctxOpen ? (
-              <motion.div
-                key="ctx"
-                className="mex__ctx-panel"
-                role="dialog"
-                aria-label="Context panel"
-                initial={reduce ? false : { opacity: 0, scale: 0.92, y: 8 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
-                transition={transition}
-              >
-                <p className="mex__ctx-title">Quick actions</p>
-                <div className="mex__ctx-actions">
-                  <button type="button" className="mex__btn mex__btn--quiet">
-                    Duplicate
-                  </button>
-                  <button type="button" className="mex__btn mex__btn--quiet">
-                    Archive
-                  </button>
-                  <button
-                    type="button"
-                    className="mex__btn"
-                    onClick={() => setCtxOpen(false)}
-                  >
-                    Close
-                  </button>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+        <MotionStage label="Exit animation stage">
+          <ExitAnimationDemo reduce={reduce} transition={transition} />
         </MotionStage>
-      </DemoBlock>
-
-      <DemoBlock
-        title="Sheet modal"
-        hint="Bottom sheet with backdrop; drag down to dismiss when motion is allowed."
-      >
-        <button
-          type="button"
-          className="mex__btn"
-          onClick={() => setSheetOpen(true)}
-        >
-          Open sheet
-        </button>
-        <AnimatePresence>
-          {sheetOpen ? (
-            <motion.div
-              key="sheet-root"
-              className="mex__sheet-root"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={reduce ? { duration: 0 } : { duration: 0.2 }}
-            >
-              <button
-                type="button"
-                className="mex__sheet-backdrop"
-                aria-label="Dismiss sheet"
-                onClick={() => setSheetOpen(false)}
-              />
-              <motion.div
-                className="mex__sheet"
-                role="dialog"
-                aria-modal="true"
-                aria-label="Example sheet"
-                initial={reduce ? false : { y: '100%' }}
-                animate={{ y: 0 }}
-                exit={reduce ? { opacity: 0 } : { y: '100%' }}
-                transition={transition}
-                drag={reduce ? false : 'y'}
-                dragConstraints={{ top: 0, bottom: 0 }}
-                dragElastic={{ top: 0, bottom: 0.4 }}
-                onDragEnd={(_, info) => {
-                  if (info.offset.y > 80 || info.velocity.y > 400) {
-                    setSheetOpen(false)
-                  }
-                }}
-              >
-                <div className="mex__sheet-handle" aria-hidden="true" />
-                <h3 className="mex__sheet-title">Sheet modal</h3>
-                <p className="cat__muted">
-                  Spring sheet with swipe-to-dismiss — product pattern for
-                  filters, confirmations, and mobile detail.
-                </p>
-                <button
-                  type="button"
-                  className="mex__btn"
-                  onClick={() => setSheetOpen(false)}
-                >
-                  Done
-                </button>
-              </motion.div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
       </DemoBlock>
     </MotionExamplesChrome>
   )
+}
+
+/* ---------- Variants menu (public source, adapted) ---------- */
+
+function VariantsMenu({ reduce }: { reduce: boolean }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { height } = useDimensions(containerRef)
+
+  return (
+    <div style={variantsOuter}>
+      <motion.nav
+        initial={false}
+        animate={isOpen ? 'open' : 'closed'}
+        custom={height}
+        ref={containerRef}
+        style={nav}
+      >
+        <motion.div
+          style={background}
+          variants={reduce ? instantSidebar : sidebarVariants}
+        />
+        <Navigation reduce={reduce} />
+        <MenuToggle toggle={() => setIsOpen((v) => !v)} />
+      </motion.nav>
+    </div>
+  )
+}
+
+/** Preview barrel has no `stagger()` — use classic staggerChildren. */
+const navVariants: Variants = {
+  open: {
+    transition: { staggerChildren: 0.07, delayChildren: 0.2 },
+  },
+  closed: {
+    transition: { staggerChildren: 0.05, staggerDirection: -1 },
+  },
+}
+
+const Navigation = ({ reduce }: { reduce: boolean }) => (
+  <motion.ul style={list} variants={reduce ? undefined : navVariants}>
+    {[0, 1, 2, 3, 4].map((i) => (
+      <MenuItem i={i} key={i} reduce={reduce} />
+    ))}
+  </motion.ul>
+)
+
+const itemVariants: Variants = {
+  open: {
+    y: 0,
+    opacity: 1,
+    transition: { y: { stiffness: 1000, velocity: -100 } },
+  },
+  closed: {
+    y: 50,
+    opacity: 0,
+    transition: { y: { stiffness: 1000 } },
+  },
+}
+
+const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF']
+
+const MenuItem = ({ i, reduce }: { i: number; reduce: boolean }) => {
+  const border = `2px solid ${colors[i]}`
+  return (
+    <motion.li
+      style={listItem}
+      variants={reduce ? undefined : itemVariants}
+      whileHover={reduce ? undefined : { scale: 1.1 }}
+      whileTap={reduce ? undefined : { scale: 0.95 }}
+    >
+      <div style={{ ...iconPlaceholder, border }} />
+      <div style={{ ...textPlaceholder, border }} />
+    </motion.li>
+  )
+}
+
+const sidebarVariants: Variants = {
+  open: (height = 1000) => ({
+    clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
+    transition: {
+      type: 'spring',
+      stiffness: 20,
+      restDelta: 2,
+    },
+  }),
+  closed: {
+    clipPath: 'circle(30px at 40px 40px)',
+    transition: {
+      delay: 0.2,
+      type: 'spring',
+      stiffness: 400,
+      damping: 40,
+    },
+  },
+}
+
+const instantSidebar: Variants = {
+  open: { clipPath: 'circle(2000px at 40px 40px)', transition: { duration: 0 } },
+  closed: { clipPath: 'circle(30px at 40px 40px)', transition: { duration: 0 } },
+}
+
+const Path = (props: {
+  d?: string
+  variants: Variants
+  transition?: { duration: number }
+}) => (
+  <motion.path
+    fill="transparent"
+    strokeWidth="3"
+    stroke="hsl(0, 0%, 18%)"
+    strokeLinecap="round"
+    {...props}
+  />
+)
+
+const MenuToggle = ({ toggle }: { toggle: () => void }) => (
+  <button type="button" style={toggleContainer} onClick={toggle} aria-label="Toggle menu">
+    <svg width="23" height="23" viewBox="0 0 23 23" aria-hidden="true">
+      <Path
+        variants={{
+          closed: { d: 'M 2 2.5 L 20 2.5' },
+          open: { d: 'M 3 16.5 L 17 2.5' },
+        }}
+      />
+      <Path
+        d="M 2 9.423 L 20 9.423"
+        variants={{
+          closed: { opacity: 1 },
+          open: { opacity: 0 },
+        }}
+        transition={{ duration: 0.1 }}
+      />
+      <Path
+        variants={{
+          closed: { d: 'M 2 16.346 L 20 16.346' },
+          open: { d: 'M 3 2.5 L 17 16.346' },
+        }}
+      />
+    </svg>
+  </button>
+)
+
+const useDimensions = (ref: RefObject<HTMLDivElement | null>) => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  useEffect(() => {
+    if (!ref.current) return
+    const el = ref.current
+    const update = () =>
+      setDimensions({ width: el.offsetWidth, height: el.offsetHeight })
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [ref])
+  return dimensions
+}
+
+const variantsOuter: CSSProperties = {
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'stretch',
+  width: 'min(500px, 100%)',
+  height: 400,
+  backgroundColor: 'var(--mex-accent, #ff008c)',
+  borderRadius: 20,
+  overflow: 'hidden',
+}
+
+const nav: CSSProperties = { width: 300, height: '100%', position: 'relative' }
+
+const background: CSSProperties = {
+  backgroundColor: '#fff',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  width: 300,
+}
+
+const toggleContainer: CSSProperties = {
+  outline: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  position: 'absolute',
+  top: 18,
+  left: 15,
+  width: 50,
+  height: 50,
+  borderRadius: '50%',
+  background: 'transparent',
+}
+
+const list: CSSProperties = {
+  listStyle: 'none',
+  padding: 25,
+  margin: 0,
+  position: 'absolute',
+  top: 80,
+  width: 230,
+}
+
+const listItem: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  padding: 0,
+  margin: 0,
+  marginBottom: 20,
+  cursor: 'pointer',
+}
+
+const iconPlaceholder: CSSProperties = {
+  width: 40,
+  height: 40,
+  borderRadius: '50%',
+  flex: '40px 0',
+  marginRight: 20,
+}
+
+const textPlaceholder: CSSProperties = {
+  borderRadius: 5,
+  width: 200,
+  height: 20,
+  flex: 1,
+}
+
+/* ---------- Exit animation (public source, adapted) ---------- */
+
+function ExitAnimationDemo({
+  reduce,
+  transition,
+}: {
+  reduce: boolean
+  transition: object
+}) {
+  const [isVisible, setIsVisible] = useState(true)
+
+  return (
+    <div style={exitContainer}>
+      <AnimatePresence initial={false}>
+        {isVisible ? (
+          <motion.div
+            key="box"
+            initial={reduce ? false : { opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0 }}
+            transition={transition}
+            style={exitBox}
+          />
+        ) : null}
+      </AnimatePresence>
+      <motion.button
+        type="button"
+        style={exitButton}
+        onClick={() => setIsVisible((v) => !v)}
+        whileTap={reduce ? undefined : { y: 1 }}
+      >
+        {isVisible ? 'Hide' : 'Show'}
+      </motion.button>
+    </div>
+  )
+}
+
+const exitContainer: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  width: 100,
+  height: 160,
+  position: 'relative',
+  margin: '0 auto',
+}
+
+const exitBox: CSSProperties = {
+  width: 100,
+  height: 100,
+  backgroundColor: '#ff5449',
+  borderRadius: 10,
+}
+
+const exitButton: CSSProperties = {
+  backgroundColor: '#ff5449',
+  borderRadius: 10,
+  padding: '10px 20px',
+  color: '#0f1115',
+  border: 'none',
+  font: 'inherit',
+  fontWeight: 650,
+  cursor: 'pointer',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
 }
