@@ -31,7 +31,6 @@ export function MotionExamplesChrome({
           </>
         ) : null}
       </nav>
-      {children}
       <nav className="mex__experience-rail" aria-label="Motion experiences">
         {MOTION_EXPERIENCES.map((e) => {
           const current = e.id === experienceId
@@ -47,6 +46,7 @@ export function MotionExamplesChrome({
           )
         })}
       </nav>
+      {children}
       <p className="mex__attr cat__muted">
         Lifted from public{' '}
         <a href="https://motion.dev/examples" target="_blank" rel="noreferrer">
