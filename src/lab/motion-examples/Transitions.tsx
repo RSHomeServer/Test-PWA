@@ -402,12 +402,13 @@ function shuffle([...array]: string[]) {
 
 function ReorderDemo({ reduce }: { reduce: boolean }) {
   const [order, setOrder] = useState(initialOrder)
+  const [autoShuffle, setAutoShuffle] = useState(false)
 
   useEffect(() => {
-    if (reduce) return
+    if (reduce || !autoShuffle) return
     const timeout = window.setTimeout(() => setOrder(shuffle(order)), 1200)
     return () => window.clearTimeout(timeout)
-  }, [order, reduce])
+  }, [order, reduce, autoShuffle])
 
   const spring: Transition = reduce
     ? { duration: 0 }
@@ -433,6 +434,22 @@ function ReorderDemo({ reduce }: { reduce: boolean }) {
       >
         Shuffle
       </button>
+      <label
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.4rem',
+          marginTop: '0.55rem',
+          fontSize: '0.82rem',
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={autoShuffle}
+          onChange={(e) => setAutoShuffle(e.target.checked)}
+        />
+        Auto-shuffle
+      </label>
     </div>
   )
 }

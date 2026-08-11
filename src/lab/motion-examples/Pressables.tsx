@@ -128,18 +128,20 @@ function LayoutToggle({ reduce }: { reduce: boolean }) {
 
 const container: CSSProperties = {
   width: 100,
-  height: 50,
+  height: 56,
   backgroundColor: 'rgba(156, 26, 255, 0.25)',
   borderRadius: 50,
   cursor: 'pointer',
   display: 'flex',
-  padding: 10,
+  padding: 6,
   border: 'none',
+  alignItems: 'center',
+  boxSizing: 'border-box',
 }
 
 const handle: CSSProperties = {
-  width: 50,
-  height: 50,
+  width: 44,
+  height: 44,
   backgroundColor: '#9c1aff',
   borderRadius: '50%',
 }

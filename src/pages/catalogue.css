@@ -696,18 +696,16 @@
   --lab-tone: var(--lab-examples);
 }
 
-.lab-tone--not-started .lab-tone-dot,
-.lab-tone--in-progress .lab-tone-dot,
-.lab-tone--complete .lab-tone-dot,
-.lab-tone--examples .lab-tone-dot,
 .lab-status-pill .lab-tone-dot,
 .cat-nav__flyout-link .lab-tone-dot,
 .cat-nav__stack-chip .lab-tone-dot,
-.cat__group-card .lab-tone-dot {
+.cat__group-card .lab-tone-dot,
+.lab-legend__item .lab-tone-dot {
   background: var(--lab-tone);
 }
 
-.lab-tone--examples .lab-tone-dot,
+.lab-legend__item.lab-tone--examples .lab-tone-dot,
+.cat__group-card.lab-tone--examples .lab-tone-dot,
 .lab-tone--examples.lab-status-pill .lab-tone-dot,
 .cat-nav__flyout-link.lab-tone--examples .lab-tone-dot,
 .cat-nav__stack-chip.lab-tone--examples .lab-tone-dot {
