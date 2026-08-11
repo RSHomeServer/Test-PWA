@@ -204,6 +204,7 @@ export const capabilityAreas: CapabilityArea[] = [
         description: 'Declarative React UI motion — springs, layout, gestures, presence.',
         status: 'Ready',
         recommended: true,
+        hasExamples: true,
         preview: PREVIEW_MOTION,
         whatItDoes:
           'Motion (formerly Framer Motion) animates React UI: enter/exit presence, spring physics, layout morphs, gestures (hover/tap/drag), scroll-triggered reveals, and SVG path draws. Typical product uses are sheets, list reorders, micro-interactions, and onboarding sequences.',

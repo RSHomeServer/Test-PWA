@@ -4,12 +4,8 @@ import {
 import { Link } from 'react-router-dom'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
-import {
-  MOTION_SPRING,
-  MotionStage,
-  ReduceMotionToggle,
-  useCatalogueMotion,
-} from './_shared'
+import { MotionStage, ReduceMotionToggle } from './_shared'
+import { MOTION_SPRING, useCatalogueMotion } from './motionKit'
 
 /**
  * Motion Overview — declarative animate / initial via Preview Motion.

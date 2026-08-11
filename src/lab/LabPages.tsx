@@ -10,6 +10,7 @@ import type { LabSectionId } from '../catalogue/types'
 import { LAB_SECTION_IDS } from '../catalogue/types'
 import { CatalogueBrowseNav } from '../pages/CatalogueBrowseNav'
 import '../pages/catalogue.css'
+import { MotionExamplesPage } from './motion-examples/MotionExamplesPage'
 import { PreviewValidationPanel } from './PreviewValidationPanel'
 
 function parseLabLocation(pathname: string): {
@@ -233,13 +234,21 @@ export function StackOverviewPage() {
   )
 }
 
-/** Examples hub — Wave A placeholder only. */
+/**
+ * Examples hub — Motion ships rich experiences; other stacks stay on the
+ * Wave A placeholder until their Examples wave.
+ */
 export function ExamplesPlaceholderPage() {
   const { pathname } = useLocation()
   const { areaId, groupId, sectionId } = parseLabLocation(pathname)
   const group = getGroup(areaId, groupId)
 
-  if (!group || sectionId !== 'Examples') {
+  // Named experience paths still have Examples as the lab section segment.
+  const onExamplesSection =
+    sectionId === 'Examples' ||
+    pathname.includes(`/${groupId}/Examples/`)
+
+  if (!group || !onExamplesSection) {
     return (
       <main className="cat">
         <CatalogueBrowseNav />
@@ -253,6 +262,18 @@ export function ExamplesPlaceholderPage() {
     return <Navigate to={`/${area.id}/${group.id}/Examples`} replace />
   }
 
+  if (group.hasExamples && areaId === 'animation' && group.id === 'Motion') {
+    return (
+      <LabChrome
+        areaId={area?.id ?? areaId}
+        groupId={group.id}
+        sectionId="Examples"
+      >
+        <MotionExamplesPage />
+      </LabChrome>
+    )
+  }
+
   return (
     <LabChrome
       areaId={area?.id ?? areaId}
@@ -263,9 +284,8 @@ export function ExamplesPlaceholderPage() {
         <p className="cat__eyebrow">Examples</p>
         <h1 className="cat__title">{group.title} examples</h1>
         <p className="cat__lead">
-          {group.hasExamples
-            ? 'Experience demos for this stack.'
-            : 'Examples wave later. Wave A ships this placeholder only — prior facet demos are retained in source for Wave B folding.'}
+          Examples wave later. Wave A ships this placeholder only — prior facet
+          demos are retained in source for Wave B folding.
         </p>
       </header>
       <section className="cat__panel">

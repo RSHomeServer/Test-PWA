@@ -1,0 +1,490 @@
+.mex__crumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.mex__crumb a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.mex__crumb a:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+.mex__experience-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.mex__rail-link {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.35rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.mex__rail-link:hover,
+.mex__rail-link--current {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  text-decoration: none;
+}
+
+.mex__rail-link--current {
+  border-color: color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.mex__attr {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+}
+
+.mex__hub-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.mex__hub-card {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.55rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentColor 5%, transparent);
+  min-height: 9rem;
+  align-content: start;
+}
+
+.mex__hub-card:hover {
+  border-color: color-mix(in srgb, currentColor 32%, transparent);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  text-decoration: none;
+}
+
+.mex__hub-card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.mex__hub-card-blurb {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.mex__hub-card-meta {
+  font-size: 0.75rem;
+  margin-top: auto;
+}
+
+.mex__demo {
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.mex__demo-head {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.mex__demo-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.mex__demo-hint {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.mex__btn {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.45rem;
+  cursor: pointer;
+}
+
+.mex__btn:hover {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.mex__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mex__btn--quiet {
+  background: transparent;
+  font-weight: 600;
+}
+
+.mex__btn--wide {
+  min-width: 9rem;
+  justify-self: start;
+}
+
+.mex__menu-anchor {
+  position: relative;
+  display: inline-block;
+}
+
+.mex__menu {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.35rem;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 11rem;
+  z-index: 5;
+  display: grid;
+  gap: 0.15rem;
+  background: var(--platform-color-bg, #fff);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.45rem;
+  box-shadow: 0 10px 24px color-mix(in srgb, #000 12%, transparent);
+}
+
+.mex__menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.mex__menu-item:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.mex__ctx-stage {
+  width: 100%;
+  min-height: 8rem;
+  border: 1px dashed color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, currentColor 3%, transparent);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mex__ctx-panel {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: min(16rem, calc(100% - 2rem));
+  padding: 0.85rem;
+  border-radius: 0.5rem;
+  background: var(--platform-color-bg, #fff);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  box-shadow: 0 12px 28px color-mix(in srgb, #000 14%, transparent);
+  display: grid;
+  gap: 0.65rem;
+}
+
+.cat__motion-stage {
+  position: relative;
+}
+
+.mex__ctx-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mex__ctx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.mex__sheet-root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  align-items: end;
+}
+
+.mex__sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in srgb, #000 35%, transparent);
+  cursor: pointer;
+}
+
+.mex__sheet {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  width: min(28rem, 100%);
+  padding: 0.75rem 1.1rem 1.25rem;
+  border-radius: 1rem 1rem 0 0;
+  background: var(--platform-color-bg, #fff);
+  color: var(--platform-color-fg, #1a1a1a);
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-bottom: 0;
+  display: grid;
+  gap: 0.65rem;
+  touch-action: none;
+}
+
+.mex__sheet-handle {
+  width: 2.5rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  margin: 0.15rem auto 0.35rem;
+  background: color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.mex__sheet-title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.mex__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.mex__tab {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.mex__tab--current,
+.mex__tab:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.mex__panel-frame {
+  position: relative;
+  min-height: 7rem;
+  overflow: hidden;
+}
+
+.mex__panel {
+  padding: 0.25rem 0;
+}
+
+.mex__panel-title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.mex__layout-tile {
+  width: min(12rem, 100%);
+  padding: 1rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.mex__layout-tile--wide {
+  width: min(100%, 22rem);
+}
+
+.mex__card-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.mex__share-card {
+  appearance: none;
+  text-align: left;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  min-height: 6rem;
+}
+
+.mex__share-title {
+  font-weight: 700;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+.mex__share-title--ghost {
+  opacity: 0;
+}
+
+.mex__share-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 0.75rem;
+}
+
+.mex__share-detail {
+  position: relative;
+  z-index: 1;
+  width: min(22rem, 100%);
+  padding: 1.1rem;
+  border-radius: 0.75rem;
+  background: var(--platform-color-bg, #fff);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  box-shadow: 0 16px 36px color-mix(in srgb, #000 16%, transparent);
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mex__morph {
+  appearance: none;
+  min-width: 7.5rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+}
+
+.mex__morph:disabled {
+  cursor: wait;
+}
+
+.mex__dots {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.mex__dots span {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.75;
+  animation: mex-dot 0.9s ease-in-out infinite;
+}
+
+.mex__dots span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.mex__dots span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+@keyframes mex-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mex__dots span {
+    animation: none;
+  }
+}
+
+.mex__dots[data-reduced='true'] span {
+  animation: none;
+}
+
+.mex__fab-stage {
+  min-height: 12rem;
+  display: grid;
+  align-items: end;
+  justify-items: end;
+}
+
+.mex__fab-cluster {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+}
+
+.mex__fab-stack {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: end;
+}
+
+.mex__fab,
+.mex__fab-secondary {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mex__fab {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.mex__fab-secondary {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}

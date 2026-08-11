@@ -7,12 +7,8 @@ import {
 } from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
-import {
-  MOTION_SOFT_SPRING,
-  MotionStage,
-  ReduceMotionToggle,
-  useCatalogueMotion,
-} from './_shared'
+import { MotionStage, ReduceMotionToggle } from './_shared'
+import { MOTION_SOFT_SPRING, useCatalogueMotion } from './motionKit'
 
 /**
  * Motion Values — useMotionValue / useSpring / useTransform via Preview.

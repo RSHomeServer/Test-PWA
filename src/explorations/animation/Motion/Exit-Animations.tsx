@@ -2,12 +2,8 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from '@songara/pwa-base/preview/motion'
 import { getExploration } from '../../../catalogue/registry'
 import { ExplorationShell } from '../../ExplorationShell'
-import {
-  MOTION_SPRING,
-  MotionStage,
-  ReduceMotionToggle,
-  useCatalogueMotion,
-} from './_shared'
+import { MotionStage, ReduceMotionToggle } from './_shared'
+import { MOTION_SPRING, useCatalogueMotion } from './motionKit'
 
 /**
  * Exit Animations — AnimatePresence via Preview Motion.
